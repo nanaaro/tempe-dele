@@ -1,0 +1,81 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../images/background.svg') no-repeat center center;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+.container {
+    position: relative;
+    width: 350px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    padding-bottom: 35px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.container h2 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #666464;
+}
+
+.input-group input {
+    width: 95%;
+    padding: 10px;
+    border: none;
+    background: rgba(144, 133, 133, 0.1);
+    border-radius: 8px;
+    color: black;
+    font-size: 14px;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #1f2d52;
+    color: white;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+.submit-btn:hover {
+    background: #293b6a;
+}
+
+.footer {
+    margin-top: 10px;
+    font-size: 12px;
+    display: block;
+    text-align: start;
+    padding-left: 5px;
+    color: white;
+}
+
+.footer a {
+    text-decoration: none;
+    color: rgb(202, 94, 27);
+}

@@ -13,9 +13,7 @@
                 <!-- Trigger -->
                 <button type="button" id="periodBtn"
                         class="inline-flex items-center h-10 gap-2 px-4 text-sm font-semibold
-                        border border-[#faa938] bg-white text-gray-900 rounded-full shadow-sm
-                        transition hover:-translate-y-0.5 hover:bg-[#faa938] hover:text-white
-                        focus:outline-none focus:ring-2 focus:ring-[#faa938]/40">
+                        border border-[#faa938] bg-white text-gray-900 rounded-full shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
                         <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
                         </svg>

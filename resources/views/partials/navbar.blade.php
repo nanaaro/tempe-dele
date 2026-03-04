@@ -15,7 +15,7 @@
     <div class="flex items-center lg:order-2">
 
     <!-- Profile Dropdown -->
-    <div class="relative group">
+    <div class="relative group z-50">
 
         <!-- Trigger -->
         <div class="flex items-center gap-2 cursor-pointer text-gray-700">

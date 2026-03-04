@@ -102,8 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const gridEl = document.getElementById('presensiGrid');
   const rangeEl = document.getElementById('rangeText');
 
-  // state bulan aktif (mulai dari tampilan kamu: 2026-01)
-  let current = new Date('2026-01-01');
+  // state bulan aktif
+  const now = new Date ();
+  let current = new Date(now.getFullYear(), now.getMonth(), 1);
 
   // dummy data (key: YYYY-MM-DD)
   const data = {
@@ -254,4 +255,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endpush
-

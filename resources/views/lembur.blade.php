@@ -72,14 +72,14 @@
 
     <div class="flex justify-center mt-6">
         <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
-            <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600" href="#">
+            <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]" href="#">
                 <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
                 </svg>
             </a>
             <p class="text-gray-500">Page 1 of 10</p>
-            <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600" href="#">
+            <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]" href="#">
                 <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
@@ -114,6 +114,24 @@
 
             <!-- Body -->
             <form class="px-6 py-5 space-y-5">
+
+                {{-- Ketua Tim --}}
+                <div>
+                    <label for="approver_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Ketua Tim
+                    </label>
+
+                    <select
+                        id="approver_id"
+                        name="approver_id"
+                        required
+                        class="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm
+                            focus:outline-none focus:ring-1 focus:ring-gray-900">
+                        <option value="" selected>Pilih Ketua Tim</option>
+                        <option value="1">User 1 (Ketua Tim)</option>
+                        <option value="3">User 3 (Ketua Tim)</option>
+                    </select>
+                </div>
 
                 <!-- Tanggal -->
                 <div>

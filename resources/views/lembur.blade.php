@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="w-4/5 mx-auto flex flex-col">
+<div class="w-full mx-auto flex flex-col sm:px-8 md:px-10 lg:px-10">
       <div class=" overflow-x-auto">
         <div class="w-full inline-block align-middle">
             <div class="flex justify-start mb-5 mt-5">
@@ -19,55 +19,70 @@
                 </a>
             </div>
             <div class="overflow-hidden ">
-                <table class=" min-w-full rounded-xl">
+                <table class="min-w-full rounded-xl table-auto">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-tl-xl"> Tanggal </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Jam diajukan</th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Jam disetujui</th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Uraian Kegiatan </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Status </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Dokumentasi </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-tr-xl"> Catatan</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize rounded-tl-xl">Tanggal</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Jam Diajukan</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Jam Disetujui</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Uraian Kegiatan</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Ketua Tim</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Nama Tim</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Status</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Dokumentasi</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize rounded-tr-xl">Catatan</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-300 ">
+                    <tbody class="divide-y divide-gray-300">
                         <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> 24 Februari 2026</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Customer</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                <span class=" bg-amber-100 rounded-full px-4 text-sm text-amber-700 py-0.5"> Diproses </span>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">24 Februari 2026</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 max-w-35">Customer</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">User 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">Tim 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                <span class="bg-amber-100 rounded-full px-3 text-xs text-amber-700 py-0.5">Diproses</span>
                             </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> - </td>
-                            <td class=" p-5 "> - </td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center"> </td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center">-</td>
                         </tr>
                         <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> 18 Februari 2026</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Customer</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                <span class=" bg-red-100 rounded-full px-5 text-sm text-red-600 py-0.5"> Ditolak </span>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">18 Februari 2026</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 max-w-35">Customer</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">User 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">Tim 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                <span class="bg-red-100 rounded-full px-3 text-xs text-red-600 py-0.5">Ditolak</span>
                             </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> - </td>
-                            <td class=" p-5 "> - </td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                <span class="cursor-not-allowed">-</span>
+                            </td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center">-</td>
                         </tr>
                         <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> 10 Februari 2026</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 16.00 - 18.00</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Customer</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                <span class=" bg-green-100 rounded-full px-4 text-sm text-green-700 py-0.5"> Disetujui </span>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">10 Februari 2026</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 max-w-35">Customer</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">User 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">Tim 1</td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                <span class="bg-green-100 rounded-full px-3 text-xs text-green-700 py-0.5">Disetujui</span>
                             </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> - </td>
-                            <td class=" p-5 "> - </td>
+                            <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                <label class="cursor-pointer">
+                                    <span id="doc-1" class="text-xs text-gray-400">Pilih file</span>
+                                    <input type="file" class="hidden" onchange="handleFile(this, 'doc-1')">
+                                </label>
+                            </td>
+                            <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center">-</td>
                         </tr>
+                    </tbody>
                 </table>
             </div>
-        </div>
       </div>
 
     <div class="flex justify-center mt-6">
@@ -212,6 +227,11 @@
   btnClose.addEventListener('click', closeModal);
   btnCancel.addEventListener('click', closeModal);
   overlay.addEventListener('click', closeModal);
+
+  function handleFile(input, labelId) {
+    const label = document.getElementById(labelId);
+    label.textContent = input.files[0].name;
+}
 </script>
 @endpush
 @endsection

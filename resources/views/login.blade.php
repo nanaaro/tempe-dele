@@ -11,12 +11,12 @@
     <div class="container">
         <h2>LOGIN</h2>
 
-        <form method="POST" action="#">
+        <form method="POST" action="{{route('login.proses')}}">
             @csrf
 
             <div class="input-group">
-                <label>USERNAME</label>
-                <input type="text" name="username" placeholder="Enter Username">
+                <label>EMAIL</label>
+                <input type="email" name="email" placeholder="Enter Email">
             </div>
 
             <div class="input-group">
@@ -26,10 +26,6 @@
 
             <button type="submit" class="submit-btn">LOGIN</button>
         </form>
-
-        <div class="footer">
-            <a href="#">FORGOT PASSWORD?</a>
-        </div>
     </div>
 </body>
 </html>

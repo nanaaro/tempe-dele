@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Pesensi Kantor')
+
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
      x-data="{ open: false, detail: null }"
@@ -9,10 +11,7 @@
      ">
 
     <!-- Header -->
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h1 class="text-xl font-semibold text-gray-900">Presensi Kantor</h1>
-        </div>
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
 
         <div class="flex flex-wrap items-center gap-2">
             <!-- Nav -->

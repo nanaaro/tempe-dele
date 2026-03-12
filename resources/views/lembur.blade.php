@@ -114,7 +114,7 @@
     <!-- Modal Container -->
     <div class="relative flex min-h-screen items-center justify-center p-4">
 
-        <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl">
+        <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl">
 
             <!-- Header -->
             <div class="flex items-center justify-between border-b px-6 py-4">
@@ -143,8 +143,14 @@
                         class="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm
                             focus:outline-none focus:ring-1 focus:ring-gray-900">
                         <option value="" selected>Pilih Ketua Tim</option>
-                        <option value="1">User 1 (Ketua Tim)</option>
-                        <option value="3">User 3 (Ketua Tim)</option>
+                        @forelse($ketuaTim as $ketua)
+                            <option value="{{ $ketua['nip'] }}">
+                                {{ $ketua['nama'] }} - {{ $ketua['nip'] }} ({{ $ketua['tim'] }})
+                            </option>
+                        @empty
+                            <option disabled>Kamu tidak terdaftar di tim manapun</option>
+                        @endforelse
+
                     </select>
                 </div>
 

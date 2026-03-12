@@ -51,10 +51,10 @@
                         <tr class="bg-gray-50">
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize rounded-tl-xl">Nama Pegawai</th>
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">NIP</th>
-                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Presensi</th>
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Jam Diajukan</th>
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Uraian Kegiatan</th>
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Keputusan</th>
+                            <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize">Data Kehadiran</th>
                             <th scope="col" class="px-3 py-3 text-center text-xs leading-6 font-semibold text-gray-900 capitalize rounded-tr-xl">Status</th>
                         </tr>
                     </thead>
@@ -62,16 +62,16 @@
                         <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
                             <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Pegawai 1</td>
                             <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 text-center">12345</td>
-                            <td class="px-3 py-3 text-center">
-                                <span id="presensi-badge-1">
-                                    <button onclick="openModal(1, 'terlambat')" class="text-xs font-semibold text-slate-500 hover:underline">Validasi</button>
-                                </span>
-                            </td>
                             <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center">16.00 - 18.00</td>
                             <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center">Input data</td>
                             <td class="px-3 py-3 text-center">
                                 <span id="keputusan-btn-1">
                                     <button onclick="openModalKeputusan(1)" class="text-xs font-semibold text-slate-500 hover:underline">Tinjau</button>
+                                </span>
+                            </td>
+                            <td class="px-3 py-3 text-center">
+                                <span id="presensi-badge-1">
+                                    <button onclick="openModal(1, 'terlambat')" class="text-xs font-semibold text-slate-500 hover:underline">Validasi</button>
                                 </span>
                             </td>
                             <td class="px-3 py-3 text-center">

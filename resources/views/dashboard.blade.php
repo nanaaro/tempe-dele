@@ -3,8 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <section class="mx-auto max-w-7xl py-8 px-4 sm:px-8 md:px-10 lg:px-20 ">
+
   <div
     class="relative flex w-full flex-col items-center bg-[#f9b800]
            rounded-[30px] px-10 py-10 lg:py-12 lg:flex-row
@@ -14,7 +14,7 @@
     <!-- Text -->
     <div class="text-center md:text-left lg:flex-1 max-w-xl">
       <h2 id="greeting" class="mb-4 text-2xl lg:text-3xl font-semibold leading-tight">
-        Selamat Datang, User
+        Selamat Datang, {{ session('user')['nama'] }}
       </h2>
 
       <p class="text-[18px] leading-relaxed text-gray-900">
@@ -208,7 +208,7 @@
   const greeting = getGreeting(hour);
 
   const el = document.getElementById("greeting");
-  const userName = "User";
+  const userName = "{{session('user')['nama']}}";
   el.textContent = `${greeting}, ${userName}`;
 </script>
 

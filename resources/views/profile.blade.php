@@ -19,7 +19,7 @@
 
           <div class="min-w-0">
             <p class="truncate text-lg font-semibold text-gray-900">
-              {{ $user->name ?? 'Nama Lengkap' }}
+              {{ $user->nama ?? 'Nama Lengkap' }}
             </p>
             <p class="truncate text-sm text-gray-500">
               {{ $user->email ?? 'user@email.com' }}
@@ -43,7 +43,7 @@
 
           <div class="rounded-xl bg-gray-50 p-4">
             <p class="text-xs font-medium text-gray-500">NIP Baru</p>
-            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $user->nip_baru ?? '-' }}</p>
+            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $user->nip ?? '-' }}</p>
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
 
           <div class="rounded-xl bg-gray-50 p-4">
             <p class="text-xs font-medium text-gray-500">Bidang</p>
-            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $user->email ?? '-' }}</p>
+            <p class="mt-1 text-sm font-semibold text-gray-900">{{ $user->satker ?? '-' }}</p>
           </div>
         </div>
       </div>

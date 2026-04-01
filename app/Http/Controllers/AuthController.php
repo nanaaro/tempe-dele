@@ -12,7 +12,6 @@ class AuthController extends Controller
     {
         return view('login');
     }
-
     public function login(Request $request)
     {
         $response = Http::withHeaders([
@@ -30,7 +29,6 @@ class AuthController extends Controller
             $existing = \DB::table('m_pegawai')->where('nip', $data['nip'])->first();
 
             if ($existing) {
-                // Update data tapi JANGAN timpa role yang sudah ada
                 \DB::table('m_pegawai')->where('nip', $data['nip'])->update([
                     'nama'      => $data['nama'],
                     'email'     => $data['email'],
@@ -40,7 +38,6 @@ class AuthController extends Controller
                     'kd_satker' => $data['kd_satker'],
                 ]);
             } else {
-                // Pegawai baru, insert dengan default role user
                 \DB::table('m_pegawai')->insert([
                     'nama'      => $data['nama'],
                     'email'     => $data['email'],
@@ -53,7 +50,6 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Ambil id_pegawai yang baru disimpan
             $pegawaiData = \DB::table('m_pegawai')->where('nip', $data['nip'])->first();
 
             // Hit API tim
@@ -73,13 +69,11 @@ class AuthController extends Controller
                 $nipUser = $data['nip'];
 
                 foreach ($semuaTim as $tim) {
-                    // Cek apakah dia ketua tim
                     if ($tim['nipbaru_ketua'] == $nipUser) {
                         $jenisUser = 'ketua_tim';
                         break;
                     }
 
-                    // Cek apakah dia anggota tim
                     foreach ($tim['anggota_tim'] as $anggota) {
                         if ($anggota['nipbaru'] == $nipUser) {
                             $jenisUser = 'anggota';
@@ -95,6 +89,7 @@ class AuthController extends Controller
             // Simpan ke session
             Session::put('user', $data);
             Session::put('logged_in', true);
+            // Session::put('jenis_user', 'ketua_tim');
             Session::put('id_pegawai', $pegawaiData->id_pegawai);
 
             return redirect()->route('dashboard');

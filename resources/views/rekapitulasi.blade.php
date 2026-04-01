@@ -187,121 +187,63 @@
                         </thead>
 
                         <tbody class="divide-y divide-gray-300">
+                            @forelse($rows as $r)
+                            @php
+                                $jam   = $r['jam'];
+                                $isHb  = $r['hari'] == 0;
+                                $isHl  = $r['hari'] == 1;
+                                $centang = '<svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"/></svg>';
+                            @endphp
                             <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">2 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Bekerja</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">2</td>
-
-                                <td class="p-5 text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
+                                <td class="p-5 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ \Carbon\Carbon::parse($r['tanggal'])->translatedFormat('d F Y') }}
                                 </td>
+                                <td class="p-5 whitespace-nowrap text-sm font-medium text-gray-900">{{ $r['jenis_hari'] }}</td>
+                                <td class="p-5 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $jam }}</td>
 
-                                <td colspan="7"></td>
+                                {{-- HB2 --}}
+                                <td class="p-5 text-center">{!! ($isHb && $jam == 2) ? $centang : '' !!}</td>
+                                {{-- HB3 --}}
+                                <td class="p-5 text-center">{!! ($isHb && $jam == 3) ? $centang : '' !!}</td>
+                                {{-- HB4 --}}
+                                <td class="p-5 text-center">{!! ($isHb && $jam == 4) ? $centang : '' !!}</td>
+                                {{-- HL2 --}}
+                                <td class="p-5 text-center">{!! ($isHl && $jam == 2) ? $centang : '' !!}</td>
+                                {{-- HL3 --}}
+                                <td class="p-5 text-center">{!! ($isHl && $jam == 3) ? $centang : '' !!}</td>
+                                {{-- HL4 --}}
+                                <td class="p-5 text-center">{!! ($isHl && $jam == 4) ? $centang : '' !!}</td>
+                                {{-- HL5 --}}
+                                <td class="p-5 text-center">{!! ($isHl && $jam == 5) ? $centang : '' !!}</td>
+                                {{-- HL6 --}}
+                                <td class="p-5 text-center">{!! ($isHl && $jam == 6) ? $centang : '' !!}</td>
                             </tr>
-
-                            <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">5 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Bekerja</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">3</td>
-
-                                <td></td>
-
-                                <td class="text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
-                                </td>
-
-                                <td colspan="6"></td>
-                            </tr>
-
-                            <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">8 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Libur</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">6</td>
-
-                                <td colspan="7"></td>
-
-                                <td class="text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
+                            @empty
+                            <tr>
+                                <td colspan="11" class="p-8 text-center text-sm text-gray-400">
+                                    Tidak ada data lembur untuk periode ini.
                                 </td>
                             </tr>
-
-                            <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">11 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Bekerja</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">2</td>
-
-                                <td class="p-5 text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
-                                </td>
-
-                                <td colspan="7"></td>
-                            </tr>
-
-                            <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">12 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Bekerja</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">3</td>
-
-                                <td></td>
-
-                                <td class="text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
-                                </td>
-
-                                <td colspan="6"></td>
-                            </tr>
-
-                            <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">14 Februari 2026</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">Libur</td>
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 text-center">6</td>
-
-                                <td colspan="7"></td>
-
-                                <td class="text-center">
-                                    <svg class="w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"
-                                        />
-                                    </svg>
-                                </td>
-                            </tr>
+                            @endforelse
                         </tbody>
 
                         <tfoot>
                             <tr class="border-t border-gray-600 font-semibold">
                                 <td colspan="3" class="p-5 text-right">Total</td>
-                                <td class="p-5 text-center">2</td>
-                                <td class="p-5 text-center">2</td>
-                                <td colspan="5"></td>
-                                <td class="p-5 text-center">2</td>
+                                <td class="p-5 text-center">{{ $total['hb2'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hb3'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hb4'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hl2'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hl3'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hl4'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hl5'] ?: '-' }}</td>
+                                <td class="p-5 text-center">{{ $total['hl6'] ?: '-' }}</td>
                             </tr>
-
                             <tr class="border-t border-gray-600 font-semibold">
                                 <td colspan="3" class="p-5 text-right">Jumlah Bekerja Hari Biasa</td>
-                                <td class="p-5 text-center">10</td>
+                                <td class="p-5 text-center">{{ $jumlahHb ?: '-' }}</td>
                                 <td colspan="6" class="p-5 text-right">Jumlah Bekerja Hari Libur</td>
-                                <td class="p-5 text-center">12</td>
+                                <td class="p-5 text-center">{{ $jumlahHl ?: '-' }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -309,35 +251,6 @@
             </div>
         </div>
 
-        <div class="flex justify-center mt-6">
-            <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
-                <a
-                    class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]"
-                    href="#"
-                >
-                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                            fill-rule="evenodd"
-                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
-                        />
-                    </svg>
-                </a>
-
-                <p class="text-gray-500">Page 1 of 10</p>
-
-                <a
-                    class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]"
-                    href="#"
-                >
-                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                            fill-rule="evenodd"
-                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                        />
-                    </svg>
-                </a>
-            </nav>
-        </div>
     </div>
 
 <script>
@@ -367,10 +280,10 @@
     "Januari","Februari","Maret","April","Mei","Juni",
     "Juli","Agustus","September","Oktober","November","Desember"
   ];
-
   const now = new Date();
-  let selectedYear = now.getFullYear();
-  let selectedMonth = now.getMonth() + 1; // 1-12
+
+  let selectedYear = {{ \Carbon\Carbon::parse($bulan . '-01')->year }};
+  let selectedMonth = {{ \Carbon\Carbon::parse($bulan . '-01')->month }};
   let viewYear = selectedYear;
 
   function pad2(n) { return String(n).padStart(2, "0"); }
@@ -378,13 +291,10 @@
   function setPeriod(year, month) {
     selectedYear = year;
     selectedMonth = month;
-
     periodLabel.textContent = `${monthNames[month - 1]} ${year}`;
     periodValue.value = `${year}-${pad2(month)}`;
-
-    // TODO: filter/fetch data based on periodValue.value
-    // console.log("period selected:", periodValue.value);
-  }
+    window.location.href = `?bulan=${year}-${pad2(month)}`;
+}
 
   function syncYearUI() {
     if (yearLabel) yearLabel.textContent = String(viewYear);
@@ -516,7 +426,9 @@
   });
 
   // Init default realtime
-  setPeriod(selectedYear, selectedMonth);
+    periodLabel.textContent = `${monthNames[selectedMonth - 1]} ${selectedYear}`;
+    periodValue.value = `${selectedYear}-${pad2(selectedMonth)}`;
+    renderMonths();
 })();
 
 document.addEventListener('DOMContentLoaded', () => {

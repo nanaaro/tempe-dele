@@ -14,7 +14,7 @@
     <!-- Text -->
     <div class="text-center md:text-left lg:flex-1 max-w-xl">
       <h2 id="greeting" class="mb-4 text-2xl lg:text-3xl font-semibold leading-tight">
-        Selamat Datang, Admin
+        Selamat Datang, {{ session('user')['nama'] }}
       </h2>
 
       <p class="text-[18px] leading-relaxed text-gray-900">

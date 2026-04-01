@@ -11,7 +11,7 @@
             default => 'User',
         };
     @endphp
-    
+
     {{-- Page Title --}}
     <span class="text-xl font-bold tracking-tight text-slate-800">
         @yield('title')
@@ -70,7 +70,7 @@
 
                 <div class="hidden flex-col text-left leading-tight sm:flex">
                     <span class="max-w-28 truncate text-sm font-semibold text-slate-700">
-                        {{ Auth::user()->name ?? 'Nama User' }}
+                        {{ session('user')['nama'] ?? 'Nama User' }}
                     </span>
                     <span class="text-xs leading-none text-slate-400">
                         {{ $roleLabel }}
@@ -121,7 +121,7 @@
 
                     <div class="flex min-w-0 flex-col leading-tight">
                         <span class="truncate text-sm font-semibold text-slate-700">
-                            {{ Auth::user()->name ?? 'Nama Lengkap' }}
+                            {{ session('user')['nama'] ?? 'Nama User' }}
                         </span>
                         <span class="truncate text-xs text-slate-400">
                             {{ $roleLabel }}
@@ -131,24 +131,6 @@
 
                 {{-- Menu items --}}
                 <div class="px-1.5 py-2">
-                    @if ($role === 'pegawai')
-                        <a
-                            href="{{ route('presensi') }}"
-                            class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                        >
-                            <svg
-                                class="h-4 w-4 fill-current text-slate-400"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 640 640"
-                            >
-                                <path
-                                    d="M360 160L280 160C266.7 160 256 149.3 256 136C256 122.7 266.7 112 280 112L360 112C373.3 112 384 122.7 384 136C384 149.3 373.3 160 360 160zM360 208C397.1 208 427.6 180 431.6 144L448 144C456.8 144 464 151.2 464 160L464 512C464 520.8 456.8 528 448 528L192 528C183.2 528 176 520.8 176 512L176 160C176 151.2 183.2 144 192 144L208.4 144C212.4 180 242.9 208 280 208L360 208zM419.9 96C407 76.7 385 64 360 64L280 64C255 64 233 76.7 220.1 96L192 96C156.7 96 128 124.7 128 160L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 160C512 124.7 483.3 96 448 96L419.9 96z"
-                                />
-                            </svg>
-                            Presensi
-                        </a>
-                    @endif
-
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button

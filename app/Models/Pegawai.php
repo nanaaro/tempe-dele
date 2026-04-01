@@ -6,13 +6,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Pegawai extends Authenticatable
 {
-    protected $table = 'pegawai';
-
+    protected $table = 'm_pegawai';
     protected $primaryKey = 'id_pegawai';
-
     public $incrementing = true;
-
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'email',

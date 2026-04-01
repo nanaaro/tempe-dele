@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class DokumenViewController extends Controller
+{
+    public function index(Request $request)
+    {
+        $bulan = $request->get('bulan', now()->format('Y-m'));
+
+        $dokumenList = DB::table('t_dokumen')->orderBy('periode', 'desc')->get();
+
+        // Ambil semua periode unik dari transaksi approved + dari dokumen yang sudah ada
+        $periodeTransaksi = DB::table('t_transaksi')
+            ->where('status', 'approved')
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as periode")
+            ->distinct()
+            ->pluck('periode');
+
+        $periodeDokumen = $dokumenList->pluck('periode');
+        $periodeList = $periodeTransaksi->merge($periodeDokumen)->unique()->sortDesc()->values();
+
+        $pejabat = DB::table('m_pejabat')->where('status', 'aktif')->get();
+        $ppk = $pejabat->firstWhere('jabatan', 'PPK');
+        $kbu = $pejabat->firstWhere('jabatan', 'Kepala BPS');
+
+        return view('admin.dokumen', compact('periodeList', 'dokumenList', 'bulan', 'ppk', 'kbu'));
+    }
+
+    public function hapus(Request $request)
+    {
+        $bulan = $request->get('bulan');
+        DB::table('t_dokumen')->where('periode', $bulan)->delete();
+        return back()->with('success', 'Dokumen berhasil dihapus.');
+    }
+
+    public function hapusSatu($id)
+    {
+        DB::table('t_dokumen')->where('id_dokumen', $id)->delete();
+        return back()->with('success', 'Dokumen berhasil dihapus.');
+    }
+
+    public function view($id)
+    {
+        $dokumen = DB::table('t_dokumen')->where('id_dokumen', $id)->first();
+        if (!$dokumen || !$dokumen->file_blob) abort(404);
+
+        $timestamp = $dokumen->generated_at
+            ? \Carbon\Carbon::parse($dokumen->generated_at)->format('Ymd_His')
+            : now()->format('Ymd_His');
+
+        $namaFile = match($dokumen->type) {
+            'spkl'         => "SPKL_{$dokumen->periode}_{$timestamp}.pdf",
+            'laporan_pns'  => "Laporan_Lembur_PNS_{$dokumen->periode}_{$timestamp}.pdf",
+            'laporan_pppk' => "Laporan_Lembur_PPPK_{$dokumen->periode}_{$timestamp}.pdf",
+            default        => "Dokumen_{$dokumen->periode}_{$timestamp}.pdf",
+        };
+
+        return response($dokumen->file_blob, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$namaFile}\"",
+        ]);
+    }
+}

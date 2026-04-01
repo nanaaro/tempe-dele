@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class LemburController extends Controller
 {
     public function index()
     {
         $nipUser = session('user')['nip'];
+
+        $transaksi = \DB::table('t_transaksi as t')
+            ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
+            ->leftJoin('m_pegawai as kp', 't.approver_employee_id', '=', 'kp.nip')
+            ->where('t.submitted_by_NIP', $nipUser)
+            ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua')
+            ->orderBy('t.date', 'desc')
+            ->paginate(10);
 
         $responseTim = Http::withHeaders([
             'Content-Type'  => 'application/json',
@@ -32,6 +42,7 @@ class LemburController extends Controller
                             'nip'  => $tim['nipbaru_ketua'],
                             'nama' => $tim['nama_ketua'],
                             'tim'  => $tim['nama_tim'],
+                            'kode_tim' => $tim['kode_tim'],
                         ];
                         break;
                     }
@@ -39,6 +50,53 @@ class LemburController extends Controller
             }
         }
 
-        return view('lembur', compact('ketuaTim'));
+        return view('lembur', compact('ketuaTim', 'transaksi'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'approver_id' => 'required|string',
+            'kode_tim'    => 'required|string',
+            'tanggal'     => 'required|date',
+            'jam_mulai'   => 'required',
+            'jam_selesai' => 'required|after:jam_mulai',
+            'uraian'      => 'required|string|max:255',
+        ], [
+            'jam_selesai.after' => 'Jam selesai harus setelah jam mulai.',
+            'uraian.required'   => 'Uraian kegiatan wajib diisi.',
+        ]);
+
+        $nip     = session('user')['nip'];
+        $tanggal = Carbon::parse($request->tanggal);
+        $hari    = $tanggal->isWeekend() ? 1 : 0;
+
+        DB::table('t_transaksi')->insert([
+            'submitted_by_NIP'     => $nip,
+            'date'                 => $request->tanggal,
+            'jam_mulai'            => $request->jam_mulai,
+            'jam_selesai'          => $request->jam_selesai,
+            'uraian'               => $request->uraian,
+            'approver_employee_id' => $request->approver_id,
+            'tim_kode_tim'         => $request->kode_tim,
+            'status'               => 'pending',
+            'submitted_at'         => now()->toDateString(),
+            'hari'                 => $hari,
+        ]);
+
+        return back()->with('success', 'Pengajuan lembur berhasil dikirim.');
+    }
+
+    public function timPegawai()
+    {
+        $idPegawai = session('id_pegawai');
+
+        $tim = \DB::table('t_anggota_tim as at')
+            ->join('m_tim as mt', 'at.tim_kode_tim', '=', 'mt.kode_tim')
+            ->where('at.pegawai_id_pegawai', $idPegawai)
+            ->select('mt.kode_tim', 'mt.nama_tim')
+            ->get();
+
+        return response()->json($tim);
     }
 }

@@ -10,95 +10,78 @@
         detail = $event.detail;
      ">
 
-    <!-- Header + Filter -->
-    <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+    <div class="flex items-center gap-2">
 
-        <!-- Left: Filter + Download -->
-        <div class="flex flex-col sm:flex-row sm:items-end gap-3 w-full xl:w-auto">
-
-            <!-- Filter Pegawai -->
-            <div class="w-full sm:w-[320px]">
-                <label for="pegawaiFilter" class="mb-1.5 block text-sm font-medium text-gray-700">
-                    Pegawai
-                </label>
-                <select id="pegawaiFilter"
-                    class="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-700 shadow-sm transition focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20">
-                    <option value="">Pilih nama - NIP</option>
-                </select>
-            </div>
-
-            <!-- Filter Bulan -->
-            <div class="w-full sm:w-47.5">
-                <label for="monthFilter" class="mb-1.5 block text-sm font-medium text-gray-700">
-                    Periode
-                </label>
-                <input id="monthFilter" type="month"
-                    class="h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-700 shadow-sm transition focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20">
-            </div>
-
-            <!-- Upload -->
-            <div class="relative shrink-0" id="downloadMenu">
-                <label class="mb-1.5 block text-sm font-medium text-transparent select-none">
-                    Aksi
-                </label>
-                <button type="button" id="downloadBtn"
-                    class="inline-flex h-11 items-center gap-2 rounded-xl border border-[#faa938] bg-white px-4 text-sm font-medium text-[#d98b18] shadow-sm transition hover:bg-[#fff7ed]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-4 w-4 fill-current">
-                        <path d="M352 173.3L352 384C352 401.7 337.7 416 320 416C302.3 416 288 401.7 288 384L288 173.3L246.6 214.7C234.1 227.2 213.8 227.2 201.3 214.7C188.8 202.2 188.8 181.9 201.3 169.4L297.3 73.4C309.8 60.9 330.1 60.9 342.6 73.4L438.6 169.4C451.1 181.9 451.1 202.2 438.6 214.7C426.1 227.2 405.8 227.2 393.3 214.7L352 173.3zM320 464C364.2 464 400 428.2 400 384L480 384C515.3 384 544 412.7 544 448L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 448C96 412.7 124.7 384 160 384L240 384C240 428.2 275.8 464 320 464zM464 488C477.3 488 488 477.3 488 464C488 450.7 477.3 440 464 440C450.7 440 440 450.7 440 464C440 477.3 450.7 488 464 488z"/>
-                    </svg>
-                    <span>Unduh</span>
-                </button>
-
-                <div id="downloadPanel"
-                    class="hidden absolute left-0 sm:left-auto sm:right-0 z-50 mt-2 w-56 rounded-xl border border-gray-200 bg-white p-2 shadow-lg">
-                    <a id="downloadSpkl" href="#"
-                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                        <span class="font-medium">SPKL</span>
-                        <span class="ml-auto text-xs text-gray-400">PDF</span>
-                    </a>
-                    <a id="downloadLembur" href="#"
-                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                        <span class="font-medium">Laporan Lembur</span>
-                        <span class="ml-auto text-xs text-gray-400">PDF</span>
-                    </a>
-                    <div class="my-2 border-t border-gray-100"></div>
-                    <p id="downloadHint" class="px-3 pb-1 text-xs text-gray-500">
-                        Pilih periode dulu
-                    </p>
+        {{-- Filter Periode --}}
+        <div class="relative shrink-0" id="periodPicker">
+            <button type="button" id="periodBtn"
+                class="inline-flex items-center h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
+                    <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
+                </svg>
+                <span id="periodLabel" class="leading-none">Mar 2026</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-50">
+                    <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L160 301.5l119.1-119.1c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"/>
+                </svg>
+            </button>
+            <input type="hidden" id="periodValue" name="period" value="">
+            <div id="periodPanel" class="hidden absolute z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
+                <div class="flex items-center justify-between mb-3">
+                    <button type="button" id="yearPrev" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
+                            <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
+                        </svg>
+                    </button>
+                    <span id="yearLabel" class="text-sm font-medium text-gray-900">2026</span>
+                    <button type="button" id="yearNext" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
+                            <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="grid grid-cols-3 gap-2" id="monthGrid"></div>
+                <div class="flex items-center justify-between mt-3">
+                    <button type="button" id="btnThisMonth" class="text-sm font-medium text-gray-500 hover:text-[#faa938]">Bulan ini</button>
+                    <button type="button" id="btnClosePanel" class="px-3 py-1 text-sm font-medium rounded-full border border-gray-200 text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">Tutup</button>
                 </div>
             </div>
-
         </div>
 
-        <!-- Right: Calendar Navigation -->
-        <div class="flex items-center justify-between sm:justify-end gap-2 rounded-2xl bg-white px-3 py-2 shadow-sm ring-1 ring-gray-200">
-            <div id="rangeText" class="px-2 text-sm font-semibold text-gray-700"></div>
-
-            <div class="flex items-center gap-2">
-                <button id="btnToday"
-                    class="h-9 rounded-xl bg-[#faa938] px-4 text-sm font-medium text-black transition hover:brightness-95">
-                    Hari ini
-                </button>
-
-                <button id="btnPrev"
-                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
-                    <span class="sr-only">Prev</span>
-                    ‹
-                </button>
-
-                <button id="btnNext"
-                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
-                    <span class="sr-only">Next</span>
-                    ›
-                </button>
+        {{-- Filter Pegawai --}}
+        <div class="relative shrink-0">
+            <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
+                onclick="toggleDropdown()" oninput="filterDropdown()" autocomplete="off"
+                class="w-120 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
+                    <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
+                </svg>
+            </div>
+            <div id="dropdownPegawai" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+                <ul id="listPegawai"></ul>
             </div>
         </div>
 
-    </div>
+        {{-- Spacer + Divider --}}
+        <div class="flex-1"></div>
+        <div class="h-6 self-center border-l border-gray-200"></div>
 
-    <!-- Legend -->
-    <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-        <span class="ml-auto text-xs text-gray-500">Klik tanggal/event untuk lihat detail</span>
+        {{-- Riwayat Upload --}}
+        <a href="{{route ("admin.riwayat_presensi")}}" title="Riwayat Upload"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </a>
+
+        {{-- Upload --}}
+        <button type="button" title="Upload Presensi" onclick="openUploadModal()"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+        </button>
+
     </div>
 
     <!-- Calendar card -->
@@ -153,6 +136,41 @@
         </div>
     </div>
 
+    {{-- Modal Upload --}}
+    <div id="modalUpload" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-semibold text-gray-800">Upload Presensi</h2>
+                <button onclick="closeUploadModal()" class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="uploadDropzone"
+                class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#faa938] transition-colors"
+                onclick="document.getElementById('fileInput').click()"
+                ondragover="event.preventDefault(); this.classList.add('border-[#faa938]')"
+                ondragleave="this.classList.remove('border-[#faa938]')"
+                ondrop="handleDrop(event)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+                <p class="text-sm text-gray-500">Drag & drop file xlsx atau <span class="text-[#faa938] font-medium">browse</span></p>
+                <p id="fileName" class="text-xs text-gray-400 mt-1">Belum ada file dipilih</p>
+                <input type="file" id="fileInput" accept=".xlsx,.xls" class="hidden" onchange="handleFileSelect(this)"/>
+            </div>
+
+            <div id="uploadAlert" class="hidden mt-3 rounded-xl px-4 py-3 text-sm font-medium"></div>
+
+            <div class="flex justify-end gap-2 mt-5">
+                <button onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm text-gray-600 border border-gray-200 hover:bg-gray-50">Batal</button>
+                <button onclick="submitUpload()" class="px-4 py-2 rounded-lg text-sm text-white bg-[#faa938] hover:brightness-95">Upload</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -160,54 +178,311 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const gridEl = document.getElementById('presensiGrid');
-    const rangeEl = document.getElementById('rangeText');
-
-    const pegawaiFilter = document.getElementById('pegawaiFilter');
-    const monthFilter = document.getElementById('monthFilter');
-
-    const selectedPeriod = document.getElementById('selectedPeriod');
-
+    // =====================
+    // GLOBAL STATE
+    // =====================
     const now = new Date();
     let current = new Date(now.getFullYear(), now.getMonth(), 1);
+    let selectedEmployeeId = null;
+    let selectedTeamId = null;
+    let cachedTim = [];
+    let cachedPegawai = [];
+    let selYear  = now.getFullYear();
+    let selMonth = now.getMonth();
+    let presensiData = {};
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-    // dummy data pegawai
-    const employees = [
-        { id: '1', name: 'Budi Santoso', nip: '12345' },
-        { id: '2', name: 'Ayu Lestari', nip: '67890' },
-        { id: '3', name: 'Budi Santoso', nip: '54321' },
-    ];
+    function pad2(n) { return String(n).padStart(2, '0'); }
 
-    // dummy data presensi per pegawai
-    const attendanceData = {
-        '1': {
-            '2026-02-01': { in:'07:10:21', out:'17:16:45', status:'WFO', note:'' },
-            '2026-02-02': { in:'07:01:40', out:'16:10:28', status:'WFO', note:'' },
-            '2026-02-03': { in:'07:12:23', out:'17:23:41', status:'WFOL', note:'' },
-            '2026-02-08': { in:'-', out:'-', status:'CUTI', note:'' },
-            '2026-02-14': { in:'-', out:'-', status:'KN', note:'Tidak ada presensi' },
-        },
-        '2': {
-            '2026-02-02': { in:'08:01:00', out:'17:02:00', status:'WFA', note:'' },
-            '2026-02-05': { in:'07:45:00', out:'17:20:00', status:'WFO', note:'' },
-            '2026-02-11': { in:'-', out:'-', status:'DL', note:'Perjalanan dinas' },
-        },
-        '3': {
-            '2026-02-03': { in:'07:05:33', out:'17:00:12', status:'WFO', note:'' },
-            '2026-02-07': { in:'-', out:'-', status:'CUTI', note:'' },
+    function makeBtn(text, cls, onClick) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = text;
+        b.className = cls;
+        b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
+        return b;
+    }
+
+    // =====================
+    // FETCH DATA
+    // =====================
+    async function fetchTim() {
+        const res = await fetch('/admin/presensi/tim');
+        cachedTim = await res.json();
+        populateDropdownTim('', cachedTim);
+    }
+
+    async function fetchPegawai(kodeTim = '') {
+        const url = kodeTim
+            ? `/admin/presensi/pegawai?kode_tim=${kodeTim}`
+            : '/admin/presensi/pegawai';
+        const res = await fetch(url);
+        cachedPegawai = await res.json();
+        populateDropdown('', cachedPegawai);
+    }
+
+    // =====================
+    // DROPDOWN PEGAWAI
+    // =====================
+    function populateDropdown(filter = '', data = []) {
+        const list = document.getElementById('listPegawai');
+        list.innerHTML = '';
+        data
+            .filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
+            .forEach(emp => {
+                const li = document.createElement('li');
+                li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+                li.textContent = `${emp.nama} - ${emp.nip}`;
+                li.onclick = () => pilihPegawai(emp);
+                list.appendChild(li);
+            });
+    }
+
+    window.toggleDropdown = function () {
+        document.getElementById('dropdownPegawai').classList.toggle('hidden');
+        populateDropdown('', cachedPegawai);
+    };
+
+    window.filterDropdown = function () {
+        const search = document.getElementById('searchPegawai').value;
+        populateDropdown(search, cachedPegawai);
+        document.getElementById('dropdownPegawai').classList.remove('hidden');
+    };
+
+    window.pilihPegawai = function (emp) {
+        selectedEmployeeId = emp.id_pegawai;
+        document.getElementById('searchPegawai').value = `${emp.nama} - ${emp.nip}`;
+        document.getElementById('dropdownPegawai').classList.add('hidden');
+        fetchPresensi();
+    };
+
+    // =====================
+    // PERIOD PICKER
+    // =====================
+    (function () {
+        const el = (id) => document.getElementById(id);
+
+        const picker       = el('periodPicker');
+        const btn          = el('periodBtn');
+        const panel        = el('periodPanel');
+        const grid         = el('monthGrid');
+        const navLabel     = el('yearLabel');
+        const periodLabel  = el('periodLabel');
+        const periodValue  = el('periodValue');
+        const btnPrev      = el('yearPrev');
+        const btnNext      = el('yearNext');
+        const btnThisMonth = el('btnThisMonth');
+        const btnClose     = el('btnClosePanel');
+
+        if (!picker || !btn || !panel) return;
+
+        const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+        let view     = 'month';
+        let viewYear = now.getFullYear();
+
+        function setPeriod(y, m) {
+            selYear = y; selMonth = m;
+            periodLabel.textContent = `${monthShort[m]} ${y}`;
+            periodValue.value = `${y}-${pad2(m + 1)}`;
+            current = new Date(y, m, 1);
+            if (selectedEmployeeId) {
+                fetchPresensi();
+            } else {
+                render();
+            }
+        }
+
+        function renderMonth() {
+            view = 'month';
+            navLabel.textContent = String(viewYear);
+            navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
+            grid.innerHTML = '';
+            monthNames.forEach((name, m) => {
+                const isSelected = (m === selMonth && viewYear === selYear);
+                const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
+                const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
+                    isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                    :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+                );
+                grid.appendChild(makeBtn(name.slice(0, 3), cls, () => {
+                    setPeriod(viewYear, m);
+                    closePanel();
+                }));
+            });
+        }
+
+        function renderYear() {
+            view = 'year';
+            const startYear = Math.floor(viewYear / 12) * 12;
+            navLabel.textContent = `${startYear} - ${startYear + 11}`;
+            navLabel.className = 'text-sm font-medium text-gray-400 select-none cursor-default';
+            grid.innerHTML = '';
+            for (let y = startYear; y < startYear + 12; y++) {
+                const isSelected = (y === selYear);
+                const isNow      = (y === now.getFullYear());
+                const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
+                    isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                    :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+                );
+                const _y = y;
+                grid.appendChild(makeBtn(_y, cls, () => { viewYear = _y; renderMonth(); }));
+            }
+        }
+
+        function navigate(dir) {
+            if (view === 'month') { viewYear += dir; renderMonth(); }
+            else if (view === 'year') { viewYear += dir * 12; renderYear(); }
+        }
+
+        function openPanel() {
+            viewYear = selYear;
+            renderMonth();
+            panel.classList.remove('hidden');
+        }
+
+        function closePanel() { panel.classList.add('hidden'); }
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.contains('hidden') ? openPanel() : closePanel();
+        });
+
+        navLabel.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (view === 'month') renderYear();
+        });
+
+        btnPrev?.addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+        btnNext?.addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+
+        btnThisMonth?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setPeriod(now.getFullYear(), now.getMonth());
+            closePanel();
+        });
+
+        btnClose?.addEventListener('click', (e) => { e.stopPropagation(); closePanel(); });
+
+        document.addEventListener('click', (e) => {
+            if (!picker.contains(e.target)) closePanel();
+        });
+
+        setPeriod(selYear, selMonth);
+    })();
+
+    // =====================
+    // UPLOAD MODAL
+    // =====================
+    let selectedFile = null;
+
+    window.openUploadModal = function () {
+        selectedFile = null;
+        document.getElementById('fileName').textContent = 'Belum ada file dipilih';
+        document.getElementById('uploadAlert').classList.add('hidden');
+        const modal = document.getElementById('modalUpload');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
+
+    window.closeUploadModal = function () {
+        const modal = document.getElementById('modalUpload');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
+
+    window.handleFileSelect = function (input) {
+        if (input.files[0]) {
+            selectedFile = input.files[0];
+            document.getElementById('fileName').textContent = selectedFile.name;
         }
     };
 
-    function populateEmployeeFilter() {
-        employees.forEach(emp => {
-            const option = document.createElement('option');
-            option.value = emp.id;
-            option.textContent = `${emp.name} - ${emp.nip}`;
-            pegawaiFilter.appendChild(option);
-        });
+    window.handleDrop = function (e) {
+        e.preventDefault();
+        document.getElementById('uploadDropzone').classList.remove('border-[#faa938]');
+        const file = e.dataTransfer.files[0];
+        if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+            selectedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+        }
+    };
+
+    function showUploadAlert(message, type = 'success') {
+        const el = document.getElementById('uploadAlert');
+        el.textContent = message;
+        el.className = type === 'success'
+            ? 'mt-3 rounded-xl px-4 py-3 text-sm font-medium bg-green-50 text-green-700 border border-green-200'
+            : 'mt-3 rounded-xl px-4 py-3 text-sm font-medium bg-red-50 text-red-700 border border-red-200';
+        el.classList.remove('hidden');
     }
 
+    window.submitUpload = async function () {
+        if (!selectedFile) {
+            showUploadAlert('Pilih file xlsx terlebih dahulu.', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        try {
+            showUploadAlert('Sedang memproses...');
+            const res = await fetch('{{ route("admin.presensi.upload") }}', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showUploadAlert(data.message ?? 'Upload berhasil!');
+                setTimeout(() => closeUploadModal(), 1500);
+            } else {
+                showUploadAlert(data.message ?? 'Gagal upload.', 'error');
+            }
+        } catch {
+            showUploadAlert('Gagal menghubungi server.', 'error');
+        }
+    };
+
+    document.getElementById('modalUpload')?.addEventListener('click', function (e) {
+        if (e.target === this) closeUploadModal();
+    });
+
+    // =====================
+    // FETCH PRESENSI
+    // =====================
+    async function fetchPresensi() {
+        console.log('fetchPresensi dipanggil');
+        console.log('selectedEmployeeId:', selectedEmployeeId);
+
+        if (!selectedEmployeeId) { console.log('stop: tidak ada pegawai'); return; }
+
+        const year  = current.getFullYear();
+        const month = String(current.getMonth() + 1).padStart(2, '0');
+        const pegawai = cachedPegawai.find(p => p.id_pegawai === selectedEmployeeId);
+        console.log('pegawai ditemukan:', pegawai);
+
+        const niplama = pegawai?.nip_lama ?? '';
+        console.log('niplama:', niplama);
+
+        if (!niplama) { console.log('stop: niplama kosong'); return; }
+
+        const url = `{{ route('admin.presensi.kalender') }}?niplama=${niplama}&periode=${year}-${month}`;
+        console.log('fetch url:', url);
+
+        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        presensiData = await res.json();
+        console.log('presensiData:', presensiData);
+        render();
+    }
+
+    // =====================
+    // RENDER KALENDER
+    // =====================
     function statusColor(st) {
         return {
             WFO: 'text-green-600',
@@ -226,54 +501,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${y}-${m}-${day}`;
     }
 
-    function formatMonthLabel(date) {
-        return new Intl.DateTimeFormat('id-ID', {
-            month: 'long',
-            year: 'numeric'
-        }).format(date);
-    }
-
-    function getSelectedEmployee() {
-        return employees.find(emp => emp.id === pegawaiFilter.value) || null;
-    }
-
-    function getCurrentEmployeeData() {
-        if (!pegawaiFilter.value) return {};
-        return attendanceData[pegawaiFilter.value] || {};
-    }
-
-    function syncMonthInput() {
-        monthFilter.value = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
-    }
-
-
     function render() {
-        rangeEl.textContent = formatMonthLabel(current);
+        const gridEl = document.getElementById('presensiGrid');
+        if (!gridEl) return;
 
-        const year = current.getFullYear();
+        const year  = current.getFullYear();
         const month = current.getMonth();
 
-        const first = new Date(year, month, 1);
-        const last = new Date(year, month + 1, 0);
+        const start = new Date(year, month, 1);
+        start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
 
-        const start = new Date(first);
-        const day = (start.getDay() + 6) % 7;
-        start.setDate(start.getDate() - day);
+        const end = new Date(year, month + 1, 0);
+        end.setDate(end.getDate() + (6 - (end.getDay() + 6) % 7));
 
-        const end = new Date(last);
-        const endDay = (end.getDay() + 6) % 7;
-        end.setDate(end.getDate() + (6 - endDay));
-
-        const today = new Date();
-        const todayKey = fmt(today);
-
+        const today = fmt(new Date());
         const days = [];
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
             days.push(new Date(d));
         }
 
-        const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const currentData = getCurrentEmployeeData();
+        const dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
         gridEl.innerHTML = `
             <div class="grid grid-cols-7 gap-px rounded-2xl overflow-hidden ring-1 ring-gray-200 bg-gray-200">
@@ -282,117 +529,73 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${n}
                     </div>
                 `).join('')}
-
                 ${days.map(d => {
                     const key = fmt(d);
                     const inMonth = d.getMonth() === month;
                     const isSun = ((d.getDay() + 6) % 7) === 6;
-                    const cell = currentData[key];
+                    const p = presensiData[key];
 
-                    const inT = cell?.in ?? '';
-                    const outT = cell?.out ?? '';
-                    const st = cell?.status ?? '';
-                    const stClass = statusColor(st);
+                    const statusHtml = p
+                        ? `<div class="mt-1 text-xs font-medium text-center ${statusColor(p.status)}">${p.status}</div>
+                        <div class="text-xs text-gray-400 text-center">${p.jam_mulai ? p.jam_mulai.split(' ')[1].slice(0,8) : '—'}</div>
+                        <div class="text-xs text-gray-400 text-center">${p.jam_selesai ? p.jam_selesai.split(' ')[1].slice(0,8) : '—'}</div>`
+                        : `<div class="flex-1 flex items-center justify-center text-xs text-gray-300 select-none">—</div>`;
 
                     return `
-                        <button
-                            type="button"
-                            data-date="${key}"
-                            class="bg-white px-4 py-3 text-left min-h-[108px] hover:bg-gray-50 transition flex flex-col
-                                   ${inMonth ? '' : 'opacity-40'}
-                                   focus:outline-none"
-                        >
-                            <div class="flex items-start justify-between">
-                                <div class="text-sm font-semibold">
-                                    ${key === todayKey ? `
-                                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#faa938] text-white">
-                                            ${d.getDate()}
-                                        </span>
-                                    ` : `
-                                        <span class="${isSun ? 'text-rose-600' : 'text-gray-900'}">
-                                            ${d.getDate()}
-                                        </span>
-                                    `}
-                                </div>
-                            </div>
-
-                            <div class="flex-1 flex items-center justify-center text-xs leading-5 text-gray-800">
-                                ${pegawaiFilter.value
-                                    ? cell
-                                        ? `
-                                            <div class="text-center">
-                                                <div>${inT}</div>
-                                                <div>${outT}</div>
-                                                <div class="font-semibold ${stClass}">${st}</div>
-                                            </div>
-                                        `
-                                        : `<div class="text-gray-300 select-none">—</div>`
-                                    : `<div class="text-gray-300 select-none">—</div>`
+                        <button type="button" data-date="${key}" data-presensi='${p ? JSON.stringify(p) : ""}'
+                            class="bg-white px-4 py-3 text-left min-h-[108px] ${p ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default'} transition flex flex-col
+                                ${inMonth ? '' : 'opacity-40'} focus:outline-none">
+                            <div class="text-sm font-semibold">
+                                ${key === today
+                                    ? `<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#faa938] text-white">${d.getDate()}</span>`
+                                    : `<span class="${isSun ? 'text-rose-600' : 'text-gray-900'}">${d.getDate()}</span>`
                                 }
                             </div>
+                            ${statusHtml}
                         </button>
                     `;
                 }).join('')}
             </div>
         `;
-
-        gridEl.querySelectorAll('button[data-date]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!pegawaiFilter.value) return;
-
-                const date = btn.getAttribute('data-date');
-                const cell = currentData[date];
-
-                window.dispatchEvent(new CustomEvent('presensi-detail', {
-                    detail: {
-                        date,
-                        status: cell?.status ?? '-',
-                        checkIn: cell?.in ?? '-',
-                        checkOut: cell?.out ?? '-',
-                        note: cell?.note ?? 'Tidak ada data',
-                        source: 'Upload Admin',
-                    }
-                }));
-            });
-        });
-
-        updateSelectedInfo();
     }
 
-    document.getElementById('btnToday').addEventListener('click', () => {
-        const now = new Date();
-        current = new Date(now.getFullYear(), now.getMonth(), 1);
-        syncMonthInput();
+    function dispatchDetail(date, p) {
+        window.dispatchEvent(new CustomEvent('presensi-detail', {
+            detail: {
+                date,
+                status:   p.status,
+                checkIn:  p.jam_mulai  ? p.jam_mulai.split(' ')[1].slice(0,5)  : '—',
+                checkOut: p.jam_selesai ? p.jam_selesai.split(' ')[1].slice(0,5) : '—',
+            }
+        }));
+    }
+
+    // =====================
+    // INIT
+    // =====================
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchTim();
+        fetchPegawai();
         render();
+
+        document.getElementById('presensiGrid').addEventListener('click', function(e) {
+            const btn = e.target.closest('button[data-presensi]');
+            if (!btn || !btn.dataset.presensi) return;
+            const p = JSON.parse(btn.dataset.presensi);
+            const date = btn.dataset.date;
+            if (p && date) dispatchDetail(date, p);
+        });
+
+        document.addEventListener('click', function (e) {
+            const wrapperTim = document.getElementById('searchTim')?.closest('.relative');
+            if (wrapperTim && !wrapperTim.contains(e.target))
+                document.getElementById('dropdownTim').classList.add('hidden');
+
+            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+            if (wrapperPegawai && !wrapperPegawai.contains(e.target))
+                document.getElementById('dropdownPegawai').classList.add('hidden');
+        });
     });
-
-    document.getElementById('btnPrev').addEventListener('click', () => {
-        current = new Date(current.getFullYear(), current.getMonth() - 1, 1);
-        syncMonthInput();
-        render();
-    });
-
-    document.getElementById('btnNext').addEventListener('click', () => {
-        current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
-        syncMonthInput();
-        render();
-    });
-
-    pegawaiFilter.addEventListener('change', () => {
-        render();
-    });
-
-    monthFilter.addEventListener('change', (e) => {
-        if (!e.target.value) return;
-
-        const [year, month] = e.target.value.split('-');
-        current = new Date(Number(year), Number(month) - 1, 1);
-        render();
-    });
-
-    populateEmployeeFilter();
-    syncMonthInput();
-    render();
-});
 </script>
+
 @endpush

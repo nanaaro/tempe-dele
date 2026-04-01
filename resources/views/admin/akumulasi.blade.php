@@ -4,42 +4,29 @@
 
 @section('content')
 
-<div class="w-9/10 mx-auto flex flex-col">
-    <div class="overflow-x-auto">
-        <div class="w-full inline-block align-middle">
+    <div class="flex items-center gap-3 max-w-7xl mx-auto px-8 my-5">
 
-        <!-- /Filter -->
-        <div class="mt-5 mb-5 flex w-full items-center gap-4">
-
-        <!-- Periode -->
+        {{-- Filter Periode --}}
         <div class="relative shrink-0" id="periodPicker">
             <button type="button" id="periodBtn"
-                class="inline-flex items-center h-10 gap-2 px-3 text-sm font-semibold border border-gray-300 bg-white text-gray-900 rounded-full shadow-sm">
+                class="inline-flex items-center h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
                     <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
                 </svg>
-                <span id="periodLabel" class="leading-none">Periode</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-80">
+                <span id="periodLabel" class="leading-none">Mar 2026</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-50">
                     <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L160 301.5l119.1-119.1c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"/>
                 </svg>
             </button>
-
             <input type="hidden" id="periodValue" name="period" value="">
-
-            <div id="periodPanel" class="hidden absolute z-50 mt-2 w-80 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
+            <div id="periodPanel" class="hidden absolute z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
                 <div class="flex items-center justify-between mb-3">
                     <button type="button" id="yearPrev" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
                             <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
                         </svg>
                     </button>
-                    <div class="w-20 text-center">
-                        <button type="button" id="yearDisplay" class="w-full text-sm font-semibold text-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200">
-                            <span id="yearLabel">2026</span>
-                        </button>
-                        <input id="yearInput" type="number" min="1900" max="2100"
-                            class="hidden w-full text-center text-sm font-semibold bg-transparent border-b border-transparent focus:border-[#faa938] focus:outline-none"/>
-                    </div>
+                    <span id="yearLabel" class="text-sm font-medium text-gray-900">2026</span>
                     <button type="button" id="yearNext" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
                             <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
@@ -48,56 +35,42 @@
                 </div>
                 <div class="grid grid-cols-3 gap-2" id="monthGrid"></div>
                 <div class="flex items-center justify-between mt-3">
-                    <button type="button" id="btnThisMonth" class="text-sm font-medium text-gray-600 hover:text-[#faa938]">Bulan ini</button>
-                    <button type="button" id="btnClosePanel" class="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium rounded-full border border-gray-300 text-gray-700 hover:border-[#faa938] hover:text-[#faa938]">Tutup</button>
+                    <button type="button" id="btnThisMonth" class="text-sm font-medium text-gray-500 hover:text-[#faa938]">Bulan ini</button>
+                    <button type="button" id="btnClosePanel" class="px-3 py-1 text-sm font-medium rounded-full border border-gray-200 text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">Tutup</button>
                 </div>
             </div>
         </div>
 
-        <!-- Cari Pegawai -->
-        <div class="relative flex-1">
+        {{-- Filter Pegawai --}}
+        <div class="relative shrink-0">
             <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
                 onclick="toggleDropdown()" oninput="filterDropdown()" autocomplete="off"
-                class="h-10 w-full rounded-full border border-gray-300 px-4 pr-10 text-sm text-gray-700 outline-none focus:ring-1 focus:ring-gray-400"/>
+                class="w-120 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
             <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-4 w-4 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
                     <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
                 </svg>
             </div>
             <div id="dropdownPegawai" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
-                <ul id="listPegawai">
-                    <li onclick="pilihPegawai('Pegawai 1')" class="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Pegawai 1</li>
-                    <li onclick="pilihPegawai('Pegawai 2')" class="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Pegawai 2</li>
-                    <li onclick="pilihPegawai('Pegawai 3')" class="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Pegawai 3</li>
-                </ul>
+                <ul id="listPegawai"></ul>
             </div>
         </div>
 
-        <!-- Download -->
-        <div class="relative shrink-0" id="downloadMenu">
-            <button type="button" id="downloadBtn"
-                class="inline-flex h-10 items-center justify-center rounded-full border border-[#faa938] bg-white px-4 text-[#faa938] shadow-sm hover:bg-[#fff7ed]">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-5 w-5 fill-current">
-                    <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z"/>
-                </svg>
-            </button>
-            <div id="downloadPanel" class="hidden absolute right-0 z-50 mt-2 w-56 rounded-xl border border-gray-200 bg-white p-2 shadow-lg">
-                <a id="downloadSpkl" href="#" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                    <span class="font-medium">SPKL</span>
-                    <span class="ml-auto text-xs text-gray-400">PDF</span>
-                </a>
-                <a id="downloadLembur" href="#" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-50">
-                    <span class="font-medium">Laporan Lembur</span>
-                    <span class="ml-auto text-xs text-gray-400">PDF</span>
-                </a>
-                <div class="my-2 border-t border-gray-100"></div>
-                <p id="downloadHint" class="px-3 pb-1 text-xs text-gray-500">Pilih periode dulu</p>
-            </div>
-        </div>
+    {{-- Spacer atau devider --}}
+    <div class="flex-1"></div>
+
+    {{-- tombol upload --}}
+        <button type="button" title="Upload Presensi"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+        </button>
+
     </div>
 
-            <!-- Tabel -->
-            <div class="overflow-hidden">
+    <!-- Tabel -->
+    <div class="overflow-hidden max-w-7xl mx-auto px-8 my-5">
                 <table class="min-w-full rounded-xl">
                     <thead>
                         <tr class="bg-gray-50">
@@ -116,48 +89,42 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300">
+                        @forelse($akumulasi as $a)
                         <tr class="bg-white transition-all duration-500 hover:bg-gray-50 text-center">
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">24 Februari 2026</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Pegawai 1</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">12345</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Bekerja</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">III/b</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">300.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">37.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">337.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">16.850</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">320.150</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">
+                                {{ \Carbon\Carbon::parse($a->date)->translatedFormat('d F Y') }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">{{ $a->nama }}</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">{{ $a->nip }}</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">
+                                {{ $a->hari == 0 ? 'Bekerja' : 'Libur' }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">{{ $a->jam_diajukan }} jam</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900">{{ $a->jam_disetujui }} jam</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-center">{{ $a->golongan ?? '-' }}</td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-left">
+                                {{ number_format($a->total_uang_lembur, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-left">
+                                {{ number_format($a->total_uang_makan, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-left">
+                                {{ number_format($a->total_jumlah, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-left">
+                                {{ number_format($a->total_pajak, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3 whitespace-nowrap text-xs text-gray-900 text-left">
+                                {{ number_format($a->total_terima, 0, ',', '.') }}
+                            </td>
                         </tr>
-                        <tr class="bg-white transition-all duration-500 hover:bg-gray-50 text-center">
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">24 Februari 2026</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Pegawai 2</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">56789</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Bekerja</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">III/b</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">300.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">37.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">337.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">16.850</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">320.150</td>
+                        @empty
+                        <tr>
+                            <td colspan="12" class="p-8 text-center text-sm text-gray-400">
+                                Tidak ada data akumulasi untuk periode ini.
+                            </td>
                         </tr>
-                        <tr class="bg-white transition-all duration-500 hover:bg-gray-50 text-center">
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">24 Februari 2026</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Pegawai 3</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">11443</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">Bekerja</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">5</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">III/b</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">300.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">37.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">337.000</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">16.850</td>
-                            <td class="p-3 whitespace-nowrap text-xs leading-6 font-medium text-gray-900">320.150</td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -166,227 +133,212 @@
         </div>
     </div>
 
-    <!-- Pagination -->
+<!-- Pagination -->
+@if($akumulasi->hasPages())
     <div class="flex justify-center mt-6">
         <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
-            <a href="#" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
-                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                </svg>
-            </a>
-            <p class="text-gray-500">Page 1 of 10</p>
-            <a href="#" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
-                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
-            </a>
+            @if($akumulasi->onFirstPage())
+                <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </span>
+            @else
+                <a href="{{ $akumulasi->previousPageUrl() }}" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </a>
+            @endif
+            <p class="text-gray-500">Page {{ $akumulasi->currentPage() }} of {{ $akumulasi->lastPage() }}</p>
+            @if($akumulasi->hasMorePages())
+                <a href="{{ $akumulasi->nextPageUrl() }}" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            @else
+                <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </span>
+            @endif
         </nav>
     </div>
-    <!-- /Pagination -->
+@endif
 
 </div>
 
 
 <script>
+const now = new Date();
+let selectedEmployeeId = null;
+let selectedTeamId = null;
+let cachedTim = @json($tim);
+let cachedPegawai = [];
+
+function pad2(n) { return String(n).padStart(2, '0'); }
+function makeBtn(text, cls, onClick) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = text; b.className = cls;
+    b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
+    return b;
+}
+
+function updateURL() {
+    const params = new URLSearchParams();
+    params.set('bulan', '{{ $bulan }}');
+    if (selectedTeamId)     params.set('tim', selectedTeamId);
+    if (selectedEmployeeId) params.set('pegawai', selectedEmployeeId);
+    window.location.href = '?' + params.toString();
+}
+
+// DROPDOWN PEGAWAI
+function populateDropdown(filter = '', data = []) {
+    const list = document.getElementById('listPegawai');
+    list.innerHTML = '';
+    const liSemua = document.createElement('li');
+    liSemua.className = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
+    liSemua.textContent = 'Semua pegawai';
+    liSemua.onclick = () => { selectedEmployeeId = null; document.getElementById('searchPegawai').value = ''; document.getElementById('dropdownPegawai').classList.add('hidden'); updateURL(); };
+    list.appendChild(liSemua);
+    data.filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(emp => {
+            const li = document.createElement('li');
+            li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+            li.textContent = `${emp.nama} - ${emp.nip}`;
+            li.onclick = () => { selectedEmployeeId = emp.nip; document.getElementById('searchPegawai').value = `${emp.nama} - ${emp.nip}`; document.getElementById('dropdownPegawai').classList.add('hidden'); updateURL(); };
+            list.appendChild(li);
+        });
+}
+window.toggleDropdown = function() { document.getElementById('dropdownPegawai').classList.toggle('hidden'); populateDropdown('', cachedPegawai); };
+window.filterDropdown = function() { populateDropdown(document.getElementById('searchPegawai').value, cachedPegawai); document.getElementById('dropdownPegawai').classList.remove('hidden'); };
+
+// DROPDOWN TIM
+function populateDropdownTim(filter = '', data = []) {
+    const list = document.getElementById('listTim');
+    list.innerHTML = '';
+    data.filter(t => t.nama_tim.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(tim => {
+            const li = document.createElement('li');
+            li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+            li.textContent = tim.nama_tim;
+            li.onclick = () => {
+                selectedTeamId = tim.kode_tim;
+                document.getElementById('searchTim').value = tim.nama_tim;
+                document.getElementById('dropdownTim').classList.add('hidden');
+                selectedEmployeeId = null;
+                document.getElementById('searchPegawai').value = '';
+                fetch(`/admin/presensi/pegawai?kode_tim=${tim.kode_tim}`)
+                    .then(r => r.json()).then(d => { cachedPegawai = d; populateDropdown('', d); });
+                updateURL();
+            };
+            list.appendChild(li);
+        });
+}
+window.toggleDropdownTim = function() {
+    document.getElementById('dropdownTim').classList.toggle('hidden');
+    populateDropdownTim('', cachedTim);
+};
+window.filterDropdownTim = function() {
+    populateDropdownTim(document.getElementById('searchTim').value, cachedTim);
+    document.getElementById('dropdownTim').classList.remove('hidden');
+};
+
+// PERIOD PICKER
 (function () {
-  const el = (id) => document.getElementById(id);
+    const el = (id) => document.getElementById(id);
+    const picker = el('periodPicker'), btn = el('periodBtn'), panel = el('periodPanel');
+    const grid = el('monthGrid'), navLabel = el('yearLabel');
+    const periodLabel = el('periodLabel'), periodValue = el('periodValue');
+    const btnPrev = el('yearPrev'), btnNext = el('yearNext');
+    const btnThisMonth = el('btnThisMonth'), btnClose = el('btnClosePanel');
 
-  const periodPicker = el("periodPicker");
-  const btn = el("periodBtn");
-  const panel = el("periodPanel");
+    if (!picker || !btn || !panel) return;
 
-  const monthGrid = el("monthGrid");
-  const yearLabel = el("yearLabel");
-  const yearDisplay = el("yearDisplay");
-  const yearInput = el("yearInput");
+    const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-  const periodLabel = el("periodLabel");
-  const periodValue = el("periodValue");
+    let viewYear = now.getFullYear();
+    let selYear  = {{ \Carbon\Carbon::parse($bulan . '-01')->year }};
+    let selMonth = {{ \Carbon\Carbon::parse($bulan . '-01')->month - 1 }};
+    let view = 'month';
 
-  const yearPrev = el("yearPrev");
-  const yearNext = el("yearNext");
-  const btnThisMonth = el("btnThisMonth");
-  const btnClosePanel = el("btnClosePanel");
+    function setPeriod(y, m) {
+        selYear = y; selMonth = m;
+        periodLabel.textContent = `${monthShort[m]} ${y}`;
+        periodValue.value = `${y}-${pad2(m + 1)}`;
+        window.location.href = `?bulan=${y}-${pad2(m + 1)}`;
+    }
 
-  if (!periodPicker || !btn || !panel) return;
+    function renderMonth() {
+        view = 'month';
+        navLabel.textContent = String(viewYear);
+        navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
+        grid.innerHTML = '';
+        // hapus: const g = document.createElement('div'); g.className = ...
+        monthNames.forEach((name, m) => {
+            const isSelected = (m === selMonth && viewYear === selYear);
+            const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
+            const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
+                isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+            );
+            grid.appendChild(makeBtn(name.slice(0, 3), cls, () => setPeriod(viewYear, m))); // ← langsung ke grid
+        });
+    }
 
-  const monthNames = [
-    "Januari","Februari","Maret","April","Mei","Juni",
-    "Juli","Agustus","September","Oktober","November","Desember"
-  ];
+    function renderYear() {
+        view = 'year';
+        const startYear = Math.floor(viewYear / 12) * 12;
+        navLabel.textContent = `${startYear} - ${startYear + 11}`;
+        navLabel.className = 'text-sm font-medium text-gray-400 select-none cursor-default';
+        grid.innerHTML = '';
+        // hapus: const g = document.createElement('div'); g.className = ...
+        for (let y = startYear; y < startYear + 12; y++) {
+            const isSelected = (y === selYear);
+            const isNow = (y === now.getFullYear());
+            const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
+                isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+            );
+            grid.appendChild(makeBtn(String(y), cls, () => { viewYear = y; renderMonth(); })); // ← langsung ke grid
+        }
+    }
 
-  const now = new Date();
-  let selectedYear = now.getFullYear();
-  let selectedMonth = now.getMonth() + 1; // 1-12
-  let viewYear = selectedYear;
+    function openPanel()  { viewYear = selYear; renderMonth(); panel.classList.remove('hidden'); }
+    function closePanel() { panel.classList.add('hidden'); }
 
-  function pad2(n) { return String(n).padStart(2, "0"); }
-
-  function setPeriod(year, month) {
-    selectedYear = year;
-    selectedMonth = month;
-
-    periodLabel.textContent = `${monthNames[month - 1]} ${year}`;
-    periodValue.value = `${year}-${pad2(month)}`;
-
-    // TODO: filter/fetch data based on periodValue.value
-    // console.log("period selected:", periodValue.value);
-  }
-
-  function syncYearUI() {
-    if (yearLabel) yearLabel.textContent = String(viewYear);
-    if (yearInput) yearInput.value = String(viewYear);
-  }
-
-  function renderMonths() {
-    syncYearUI();
-    monthGrid.innerHTML = "";
-
-    for (let m = 1; m <= 12; m++) {
-      const isSelected = (m === selectedMonth && viewYear === selectedYear);
-
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className =
-        "px-2 py-2 text-sm rounded-lg border transition " +
-        (isSelected
-          ? "bg-[#faa938] text-white border-[#faa938]"
-          : "bg-white text-gray-800 border-gray-200 hover:border-[#faa938] hover:text-[#faa938]");
-
-      b.textContent = monthNames[m - 1].slice(0, 3);
-
-      b.addEventListener("click", (e) => {
+    navLabel?.addEventListener('click', (e) => {
         e.stopPropagation();
-        setPeriod(viewYear, m);
-        closePanel();
-      });
+        if (view === 'month') renderYear();
+        else if (view === 'year') renderMonth();
+    });
 
-      monthGrid.appendChild(b);
-    }
-  }
+    btn.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.contains('hidden') ? openPanel() : closePanel(); });
+    btnPrev?.addEventListener('click', (e) => { e.stopPropagation(); viewYear--; renderMonth(); });
+    btnNext?.addEventListener('click', (e) => { e.stopPropagation(); viewYear++; renderMonth(); });
+    btnThisMonth?.addEventListener('click', (e) => { e.stopPropagation(); setPeriod(now.getFullYear(), now.getMonth()); });
+    btnClose?.addEventListener('click', (e) => { e.stopPropagation(); closePanel(); });
+    document.addEventListener('click', (e) => { if (!picker.contains(e.target)) closePanel(); });
 
-  function openPanel() {
-    panel.classList.remove("hidden");
-    viewYear = selectedYear;
-    renderMonths();
-  }
-
-  function exitEditMode() {
-    if (!yearInput || !yearDisplay) return;
-    yearInput.classList.add("hidden");
-    yearDisplay.classList.remove("hidden");
-  }
-
-  function closePanel() {
-    panel.classList.add("hidden");
-    exitEditMode();
-  }
-
-  function startYearEdit() {
-    if (!yearInput || !yearDisplay) return;
-    yearDisplay.classList.add("hidden");
-    yearInput.classList.remove("hidden");
-    yearInput.focus();
-    yearInput.select();
-  }
-
-  function applyYearFromInput(commit) {
-    if (!yearInput) return;
-
-    if (commit) {
-      const y = parseInt(yearInput.value, 10);
-      if (!Number.isNaN(y)) {
-        selectedYear = y;
-        viewYear = y;
-      } else {
-        yearInput.value = String(viewYear);
-      }
-    } else {
-      yearInput.value = String(viewYear);
-    }
-
-    exitEditMode();
-    renderMonths();
-  }
-
-  // Trigger popup
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    panel.classList.contains("hidden") ? openPanel() : closePanel();
-  });
-
-  // Klik tahun -> edit
-  yearDisplay?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    startYearEdit();
-  });
-
-  // Enter / Escape / blur pada input
-  yearInput?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); applyYearFromInput(true); }
-    if (e.key === "Escape") { e.preventDefault(); applyYearFromInput(false); }
-  });
-
-  yearInput?.addEventListener("blur", () => applyYearFromInput(true));
-
-  // Prev / Next year
-  yearPrev?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    viewYear -= 1;
-    selectedYear = viewYear;
-    renderMonths();
-  });
-
-  yearNext?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    viewYear += 1;
-    selectedYear = viewYear;
-    renderMonths();
-  });
-
-  // Bulan ini
-  btnThisMonth?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    setPeriod(now.getFullYear(), now.getMonth() + 1);
-    closePanel();
-  });
-
-  // Tutup
-  btnClosePanel?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    closePanel();
-  });
-
-  // Klik luar -> tutup
-  document.addEventListener("click", (e) => {
-    if (!periodPicker.contains(e.target)) closePanel();
-  });
-
-  // Init default realtime
-  setPeriod(selectedYear, selectedMonth);
+    periodLabel.textContent = `${monthShort[selMonth]} ${selYear}`;
+    renderMonth();
 })();
 
-// Dropdown Pegawai
-function toggleDropdown() {
-    document.getElementById('dropdownPegawai').classList.toggle('hidden');
-}
+// INIT
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/admin/pegawai/all').then(r => r.json()).then(d => { cachedPegawai = d; });
 
-function filterDropdown() {
-    const search = document.getElementById('searchPegawai').value.toLowerCase();
-    document.querySelectorAll('#listPegawai li').forEach(item => {
-        item.style.display = item.textContent.toLowerCase().includes(search) ? '' : 'none';
+    document.addEventListener('click', function (e) {
+        const wTim = document.getElementById('searchTim')?.closest('.relative');
+        if (wTim && !wTim.contains(e.target)) document.getElementById('dropdownTim').classList.add('hidden');
+        const wPeg = document.getElementById('searchPegawai')?.closest('.relative');
+        if (wPeg && !wPeg.contains(e.target)) document.getElementById('dropdownPegawai').classList.add('hidden');
     });
-}
-
-function pilihPegawai(nama) {
-    document.getElementById('pegawaiLabel').textContent = nama;
-    document.getElementById('dropdownPegawai').classList.add('hidden');
-}
-
-document.addEventListener('click', function(e) {
-    if (!document.getElementById('pegawaiPicker').contains(e.target)) {
-        document.getElementById('dropdownPegawai').classList.add('hidden');
-    }
 });
 </script>
 

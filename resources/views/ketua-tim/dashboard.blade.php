@@ -14,7 +14,7 @@
     <!-- Text -->
     <div class="text-center md:text-left lg:flex-1 max-w-xl">
       <h2 id="greeting" class="mb-4 text-2xl lg:text-3xl font-semibold leading-tight">
-        Selamat Datang, Ketua Tim
+        Selamat Datang, {{ session('user')['nama'] }}
       </h2>
 
       <p class="text-[18px] leading-relaxed text-gray-900">
@@ -64,38 +64,28 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-slate-700">
+                        @forelse($pengajuan as $p)
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-medium text-slate-800">Pegawai 1</td>
-                            <td class="px-6 py-4">11 Maret 2026</td>
-                            <td class="px-6 py-4">18.00 - 21.00</td>
+                            <td class="px-6 py-4 font-medium text-slate-800">{{ $p->nama_pegawai }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($p->date)->translatedFormat('d F Y') }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600">
-                                    Menunggu
-                                </span>
+                                {{ $p->jam_mulai ? substr($p->jam_mulai,0,5).' - '.substr($p->jam_selesai,0,5) : '-' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($p->status === 'pending')
+                                    <span class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600">Menunggu</span>
+                                @elseif($p->status === 'approved')
+                                    <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">Disetujui</span>
+                                @elseif($p->status === 'rejected')
+                                    <span class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-xs font-medium text-rose-600">Ditolak</span>
+                                @endif
                             </td>
                         </tr>
-
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-medium text-slate-800">Pegawai 2</td>
-                            <td class="px-6 py-4">11 Maret 2026</td>
-                            <td class="px-6 py-4">19.00 - 22.00</td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
-                                    Disetujui
-                                </span>
-                            </td>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-sm text-slate-400">Belum ada pengajuan.</td>
                         </tr>
-
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-medium text-slate-800">Pegawai 3</td>
-                            <td class="px-6 py-4">11 Maret 2026</td>
-                            <td class="px-6 py-4">17.30 - 20.30</td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-xs font-medium text-rose-600">
-                                    Ditolak
-                                </span>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -109,20 +99,16 @@
             </div>
 
             <div class="p-5 space-y-4">
+                @forelse($lemburHariIni as $l)
                 <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-slate-800">Pegawai 1</p>
-                    </div>
-                    <span class="text-sm text-slate-500">18.00 - 21.00</span>
+                    <p class="text-sm font-medium text-slate-800">{{ $l->nama_pegawai }}</p>
+                    <span class="text-sm text-slate-500">
+                        {{ $l->jam_mulai_disetujui ? substr($l->jam_mulai_disetujui,0,5).' - '.substr($l->jam_selesai_disetujui,0,5) : '-' }}
+                    </span>
                 </div>
-
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-slate-800">Pegawai 2</p>
-                    </div>
-                    <span class="text-sm text-slate-500">19.00 - 22.00</span>
-                </div>
-
+                @empty
+                <p class="text-sm text-slate-400">Tidak ada lembur hari ini.</p>
+                @endforelse
             </div>
         </div>
 
@@ -143,7 +129,7 @@
 
   const el = document.getElementById("greeting");
   const userName = "User";
-  el.textContent = `${greeting}, ${userName}`;
+  el.textContent = `${greeting}, {{ session('user')['nama'] ?? 'User' }}`;
 </script>
 
 @endsection

@@ -15,17 +15,23 @@ class PengajuanController extends Controller
         $tim = DB::table('m_tim')->where('nipbaru_ketua', $nipKetua)->first();
 
         $pengajuan = DB::table('t_transaksi as t')
-            ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
-            ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
-            ->where('t.approver_employee_id', $nipKetua)
-            ->select(
-                't.*',
-                'p.nama as nama_pegawai',
-                'p.nip as nip_pegawai',
-                'mt.nama_tim'
-            )
-            ->orderBy('t.date', 'desc')
-            ->paginate(10);
+        ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
+        ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
+        ->where('t.approver_employee_id', $nipKetua)
+        ->select([
+            't.*',
+            'p.nama as nama_pegawai',
+            'p.nip as nip_pegawai',
+            'p.nip_lama',
+            'mt.nama_tim',
+            DB::raw('EXISTS(
+                SELECT 1 FROM t_presensi pr
+                WHERE pr.niplama = p.nip_lama
+                AND DATE(pr.tanggal) = t.date
+            ) as has_presensi')
+        ])
+        ->orderBy('t.date', 'desc')
+        ->paginate(10);
 
         return view('ketua-tim.pengajuan', compact('pengajuan'));
     }

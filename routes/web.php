@@ -9,8 +9,9 @@ use App\Http\Controllers\admin\PenggunaController;
 use App\Http\Controllers\admin\RateController;
 use App\Http\Controllers\admin\DokumenController;
 use App\Http\Controllers\admin\PresensiUploadController;
-use App\Http\Controllers\pegawai\LemburController as PegawaiLemburController;
+
 use App\Http\Controllers\LemburController;
+use App\Http\Controllers\admin\DokumenGenerateController;
 
 // ─── Public ───────────────────────────────────────────────
 Route::get('/', fn() => view('welcome'));
@@ -34,12 +35,7 @@ Route::middleware('checksession')->group(function () {
 
     // ─── Pegawai ──────────────────────────────────────────
     Route::prefix('pegawai')->name('pegawai.')->group(function () {
-        Route::get('/lembur',  [PegawaiLemburController::class, 'index'])->name('lembur');
-        Route::post('/lembur', [PegawaiLemburController::class, 'store'])->name('lembur.store');
-        Route::get('/dokumen',          [\App\Http\Controllers\pegawai\DokumenController::class, 'index'])->name('pegawai.dokumen')->middleware('checksession');
-        Route::get('/dokumen/view/{id}', [\App\Http\Controllers\pegawai\DokumenController::class, 'view'])->name('pegawai.dokumen.view')->middleware('checksession');
-        Route::get('/dokumen/view/{id}', [\App\Http\Controllers\pegawai\DokumenController::class, 'view'])->name('pegawai.dokumen.view')->middleware('checksession');
-    });
+});
 
     // ─── Ketua Tim ────────────────────────────────────────
     Route::prefix('ketua-tim')->name('ketua-tim.')->group(function () {
@@ -64,15 +60,18 @@ Route::middleware('checksession')->group(function () {
         Route::get('/spkl', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('spkl');
         Route::get('/rekapitulasi', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('rekapitulasi');
         Route::get('/rekapitulasi', [\App\Http\Controllers\pegawai\RekapitulasiController::class, 'index'])->name('rekapitulasi')->middleware('checksession');
+        Route::get('/dokumen/download/{type}', [\App\Http\Controllers\admin\DokumenGenerateController::class, 'download'])->name('dokumen.download')->middleware('checksession');
 
         //Laporan
         Route::get('/laporan', [\App\Http\Controllers\admin\LaporanController::class, 'index'])->name('laporan');
 
         //Akumulasi
         Route::get('/akumulasi', [\App\Http\Controllers\admin\AkumulasiController::class, 'index'])->name('akumulasi');
+        Route::get('/akumulasi/download', [\App\Http\Controllers\admin\AkumulasiController::class, 'download'])->name('akumulasi.download')->middleware('checksession');
 
         //Daftar Hadir
         Route::get('/daftar-hadir', [\App\Http\Controllers\admin\DaftarHadirController::class, 'index'])->name('daftar_hadir');
+        Route::get('/daftar-hadir/download', [\App\Http\Controllers\admin\DaftarHadirController::class, 'download'])->name('daftar_hadir.download')->middleware('checksession');
 
         // Presensi
         Route::get('/presensi', [\App\Http\Controllers\admin\PresensiController::class, 'index'])->name('presensi');

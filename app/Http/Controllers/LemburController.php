@@ -27,21 +27,20 @@ class LemburController extends Controller
             'Origin'        => 'https://jateng.web.bps.go.id',
         ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
             'tahun' => '2025',
-            'type' => '1',
+            'type'  => '1',
         ]);
 
         $ketuaTim = [];
 
         if ($responseTim->successful()) {
             $semuaTim = $responseTim->json()['data'];
-
             foreach ($semuaTim as $tim) {
                 foreach ($tim['anggota_tim'] as $anggota) {
                     if ($anggota['nipbaru'] == $nipUser) {
                         $ketuaTim[] = [
-                            'nip'  => $tim['nipbaru_ketua'],
-                            'nama' => $tim['nama_ketua'],
-                            'tim'  => $tim['nama_tim'],
+                            'nip'      => $tim['nipbaru_ketua'],
+                            'nama'     => $tim['nama_ketua'],
+                            'tim'      => $tim['nama_tim'],
                             'kode_tim' => $tim['kode_tim'],
                         ];
                         break;
@@ -60,22 +59,26 @@ class LemburController extends Controller
             'kode_tim'    => 'required|string',
             'tanggal'     => 'required|date',
             'jam_mulai'   => 'required',
-            'jam_selesai' => 'required|after:jam_mulai',
             'uraian'      => 'required|string|max:255',
         ], [
-            'jam_selesai.after' => 'Jam selesai harus setelah jam mulai.',
-            'uraian.required'   => 'Uraian kegiatan wajib diisi.',
+            'uraian.required' => 'Uraian kegiatan wajib diisi.',
         ]);
 
         $nip     = session('user')['nip'];
         $tanggal = Carbon::parse($request->tanggal);
         $hari    = $tanggal->isWeekend() ? 1 : 0;
 
+        if ($request->filled('jam_selesai')) {
+            $jamSelesai = $request->jam_selesai;
+        } else {
+            $jamSelesai = null;
+        }
+
         DB::table('t_transaksi')->insert([
             'submitted_by_NIP'     => $nip,
             'date'                 => $request->tanggal,
             'jam_mulai'            => $request->jam_mulai,
-            'jam_selesai'          => $request->jam_selesai,
+            'jam_selesai'          => $jamSelesai,
             'uraian'               => $request->uraian,
             'approver_employee_id' => $request->approver_id,
             'tim_kode_tim'         => $request->kode_tim,

@@ -35,7 +35,7 @@
             <td style="text-align:center">{{ $i + 1 }}</td>
             <td>{{ $p->nama }}<br><small>{{ $p->nip }}</small></td>
             <td style="text-align:center">{{ $p->tanggal }}</td>
-            <td>{{ $p->uraian }}</td>
+            <td style="white-space: pre-line;">{{ $p->uraian }}</td>
         </tr>
         @endforeach
     </tbody>

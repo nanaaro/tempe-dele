@@ -58,56 +58,63 @@
 
     {{-- Spacer atau devider --}}
     <div class="flex-1"></div>
+    <div class="h-6 self-center border-l border-gray-200"></div>
+
+        {{-- Input Nomer Surat --}}
+        <a href="javascript:void(0)" onclick="openModalNomor()" title="Input Nomer Surat"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+            </svg>
+        </a>
 
     {{-- tombol upload --}}
-        <button type="button" title="Upload Presensi"
+        <a href="{{ route('admin.dokumen.download', ['type' => 'spkl', 'bulan' => $bulan]) }}"
+            title="Unduh SPKL"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
             </svg>
-        </button>
+        </a>
 
 </div>
 
-<div class="overflow-x-auto max-w-7xl mx-auto px-8">
+<div class="max-w-7xl mx-auto px-8 my-5">
+    <div class="overflow-x-auto rounded-xl border border-gray-200">
         <table class="min-w-full rounded-xl">
             <thead>
                 <tr class="bg-gray-50">
-                    <th class="p-4 text-left text-xs font-semibold text-gray-900 rounded-tl-xl">Nama</th>
-                    <th class="p-4 text-left text-xs font-semibold text-gray-900">NIP</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HB 2</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HB 3</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HB 4</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HL 2</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HL 3</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HL 4</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HL 5</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">HL 6</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">Jumlah HB</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900">Jumlah HL</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-900 rounded-tr-xl">Tanggal</th>
+                    <th class="sticky left-0 z-5 bg-gray-50 p-4 text-left text-xs font-semibold text-gray-900">Nama</th>
+                    <th class="sticky left-16 z-5 bg-gray-50 p-4 text-left text-xs font-semibold text-gray-900">NIP</th>
+                    @for ($i = 1; $i <= 13; $i++)
+                    <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">HB {{ $i }}</th>
+                    @endfor
+                    @for ($i = 1; $i <= 13; $i++)
+                    <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">HL {{ $i }}</th>
+                    @endfor
+                    <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">Jumlah HB</th>
+                    <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">Jumlah HL</th>
+                    <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">Tanggal</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-300">
                 @forelse($rekapitulasi as $r)
                 <tr class="bg-white hover:bg-gray-50 transition-all duration-300">
-                    <td class="p-4 text-xs text-gray-900">{{ $r['nama'] }}</td>
-                    <td class="p-4 text-xs text-gray-900 whitespace-nowrap">{{ $r['nip'] }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hb2'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hb3'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hb4'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl2'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl3'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl4'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl5'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl6'] ?: '-' }}</td>
+                    <td class="sticky left-0 z-5 bg-white p-4 text-xs text-gray-900 min-w-[180px]">{{ $r['nama'] }}</td>
+                    <td class="sticky left-[180px] z-5 bg-white p-4 text-xs text-gray-900 whitespace-nowrap">{{ $r['nip'] }}</td>
+                    @for ($i = 1; $i <= 13; $i++)
+                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hb'.$i] ?? '-' }}</td>
+                    @endfor
+                    @for ($i = 1; $i <= 13; $i++)
+                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl'.$i] ?? '-' }}</td>
+                    @endfor
                     <td class="p-4 text-xs text-gray-900 text-center font-semibold">{{ $r['jumlah_hb'] ?: '-' }}</td>
                     <td class="p-4 text-xs text-gray-900 text-center font-semibold">{{ $r['jumlah_hl'] ?: '-' }}</td>
-                    <td class="p-4 text-xs text-gray-900 text-center">{{ $r['tanggal'] ?: '-' }}</td>
+                    <td class="p-4 text-xs text-gray-900 text-center whitespace-nowrap">{{ $r['tanggal'] ?: '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="13" class="p-8 text-center text-sm text-gray-400">
+                    <td colspan="31" class="p-8 text-center text-sm text-gray-400">
                         Tidak ada data lembur untuk periode ini.
                     </td>
                 </tr>
@@ -115,6 +122,7 @@
             </tbody>
         </table>
     </div>
+</div>
 
 <!-- Pagination -->
 <div class="flex justify-center mt-6">
@@ -149,6 +157,66 @@
             </span>
         @endif
     </nav>
+</div>
+
+{{-- Modal Nomor Surat --}}
+<div id="modalNomor" class="fixed inset-0 z-50 hidden">
+
+    <!-- Overlay (lebih ringan) -->
+    <div class="absolute inset-0 bg-black/30" onclick="closeModalNomor()"></div>
+
+    <!-- Modal -->
+    <div class="relative flex min-h-screen items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Generate SPKL
+                </h2>
+                <button onclick="closeModalNomor()"
+                    class="text-gray-400 hover:text-gray-700 text-xl leading-none">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="formGenerateSpkl" method="GET" action="{{ route('admin.dokumen.generate.spkl') }}"
+                class="px-6 py-5 space-y-5">
+
+                <input type="hidden" name="bulan" id="inputBulanSpkl">
+
+                <!-- Input -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Nomor Surat
+                    </label>
+                    <input type="text" name="nomor_surat" required
+                        placeholder="558.1/00001/RT.512/2026"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
+                               focus:outline-none focus:ring-1 focus:ring-gray-800">
+                    <p class="text-xs text-gray-400 mt-1">
+                        Contoh: 558.1/00001/RT.512/2026
+                    </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModalNomor()"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938]
+                               rounded-lg hover:bg-[#fd9a10] hover:text-white transition">
+                        Generate
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -402,6 +470,18 @@
             }
         });
     });
+
+    // =====================
+    // Modal Nomor Surat
+    // =====================cf
+    function openModalNomor() {
+        document.getElementById('inputBulanSpkl').value = "{{ $bulan ?? now()->format('Y-m') }}";
+        document.getElementById('modalNomor').classList.remove('hidden');
+    }
+
+    function closeModalNomor() {
+        document.getElementById('modalNomor').classList.add('hidden');
+    }
 </script>
 
 @endsection

@@ -192,7 +192,7 @@
                     <small>{{ $p->nip }}</small>
                 </td>
                 <td class="text-center">{{ $p->tanggal_lembur }}</td>
-                <td>{{ $p->uraian }}</td>
+                <td style="white-space: pre-line;">{{ $p->uraian }}</td>
             </tr>
             @endforeach
         </tbody>

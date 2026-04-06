@@ -57,7 +57,7 @@ class DokumenGenerateController extends Controller
             $tanggal = $rows->pluck('date')
                 ->map(fn($d) => (int) date('j', strtotime($d)))
                 ->sort()->values()->implode(', ');
-            $uraian  = $rows->pluck('uraian')->unique()->implode('; ');
+            $uraian = $rows->pluck('uraian')->unique()->filter()->map(fn($u) => '- ' . $u)->implode("\n");
             return (object) [
                 'nama'           => $first->nama,
                 'nip'            => $first->nip,
@@ -118,7 +118,7 @@ class DokumenGenerateController extends Controller
             $tanggal = $rows->pluck('date')
                 ->map(fn($d) => (int) date('j', strtotime($d)))
                 ->sort()->values()->implode(', ');
-            $uraian  = $rows->pluck('uraian')->unique()->filter()->implode('; ');
+            $uraian = $rows->pluck('uraian')->unique()->filter()->map(fn($u) => '- ' . $u)->implode("\n");
             return (object) [
                 'nama'    => $first->nama,
                 'nip'     => $first->nip,
@@ -141,5 +141,24 @@ class DokumenGenerateController extends Controller
         ]);
 
         return redirect()->route('admin.dokumen')->with('success', 'Laporan berhasil digenerate.');
+    }
+
+    public function download(Request $request, string $type)
+    {
+        $bulan = $request->get('bulan', now()->format('Y-m'));
+
+        $dokumen = DB::table('t_dokumen')
+            ->where('periode', $bulan)
+            ->where('type', $type)
+            ->first();
+
+        if (!$dokumen) {
+            return back()->with('error', 'Dokumen belum digenerate.');
+        }
+
+        return response($dokumen->file_blob, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $type . '_' . $bulan . '.pdf"',
+        ]);
     }
 }

@@ -77,4 +77,13 @@ class AkumulasiController extends Controller
 
         return view('admin.akumulasi', compact('akumulasi', 'bulan', 'tim'));
     }
+
+    public function download(Request $request)
+    {
+        $bulan = $request->get('bulan', now()->format('Y-m'));
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\AkumulasiExport($request->all()),
+            'akumulasi_' . $bulan . '.xlsx'
+        );
+    }
 }

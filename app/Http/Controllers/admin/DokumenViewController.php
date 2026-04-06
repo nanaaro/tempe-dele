@@ -14,7 +14,6 @@ class DokumenViewController extends Controller
 
         $dokumenList = DB::table('t_dokumen')->orderBy('periode', 'desc')->get();
 
-        // Ambil semua periode unik dari transaksi approved + dari dokumen yang sudah ada
         $periodeTransaksi = DB::table('t_transaksi')
             ->where('status', 'approved')
             ->selectRaw("DATE_FORMAT(date, '%Y-%m') as periode")
@@ -22,13 +21,34 @@ class DokumenViewController extends Controller
             ->pluck('periode');
 
         $periodeDokumen = $dokumenList->pluck('periode');
-        $periodeList = $periodeTransaksi->merge($periodeDokumen)->unique()->sortDesc()->values();
+        $allPeriode = $periodeTransaksi->merge($periodeDokumen)
+        ->unique()
+        ->sortDesc()
+        ->values();
+
+    $isFiltered = $request->has('bulan'); // ← cek apakah user memang memilih bulan
+
+    $periodeList = $isFiltered
+        ? $allPeriode->filter(fn($p) => $p === $bulan)
+        : $allPeriode;
+
+        $perPage  = 12;
+        $page     = $request->get('page', 1);
+        $items    = $periodeList->forPage($page, $perPage);
+
+        $periodeList = new \Illuminate\Pagination\LengthAwarePaginator(
+            $items,
+            $periodeList->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         $pejabat = DB::table('m_pejabat')->where('status', 'aktif')->get();
         $ppk = $pejabat->firstWhere('jabatan', 'PPK');
         $kbu = $pejabat->firstWhere('jabatan', 'Kepala BPS');
 
-        return view('admin.dokumen', compact('periodeList', 'dokumenList', 'bulan', 'ppk', 'kbu'));
+        return view('admin.dokumen', compact('periodeList', 'dokumenList', 'ppk', 'kbu', 'bulan'));
     }
 
     public function hapus(Request $request)

@@ -60,60 +60,75 @@
 
     {{-- Spacer --}}
     <div class="flex-1"></div>
+    <div class="h-6 self-center border-l border-gray-200"></div>
 
-    {{-- Tombol Download + Panel --}}
-    <div class="relative shrink-0" id="downloadPicker">
-        <button type="button" id="downloadBtn" title="Download Laporan"
+    {{-- Generate Laporan --}}
+    <a href="javascript:void(0)" onclick="openModalLaporan()" title="Generate Laporan"
+        class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+        </svg>
+    </a>
+
+    {{-- Download Laporan --}}
+    <div class="relative" id="dropdownDownloadWrapper">
+        <button type="button" onclick="toggleDownloadDropdown()" title="Unduh Laporan"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
             </svg>
         </button>
-        <div id="downloadPanel" class="hidden absolute right-0 z-50 mt-2 w-72 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg">
-            <p class="mb-3 text-sm font-semibold text-gray-900">Download Laporan</p>
-
-            {{-- Toggle mode --}}
-            <div class="mb-4 grid grid-cols-2 gap-2">
-                <button type="button" id="btnModeHarian"
-                    class="rounded-full border border-[#faa938] bg-[#fff7ed] px-3 py-2 text-sm font-medium text-[#faa938]">
-                    Harian
-                </button>
-                <button type="button" id="btnModeBulanan"
-                    class="rounded-full border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">
-                    Bulanan
-                </button>
-            </div>
-
-            {{-- Label hasil pilih --}}
-            <p class="mb-2 text-xs text-gray-500">
-                Periode: <span id="downloadLabel" class="font-medium text-gray-800">—</span>
-            </p>
-
-            {{-- Grid picker (diisi JS) --}}
-            <div id="downloadPickerHeader" class="flex items-center justify-between mb-3">
-                <button type="button" id="downloadPrev" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
-                    </svg>
-                </button>
-                <span id="downloadNavLabel" class="text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none"></span>
-                <button type="button" id="downloadNext" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                        <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
-                    </svg>
-                </button>
-            </div>
-            <div id="downloadGrid"></div>
-
-            <div class="border-t border-gray-100 my-3"></div>
-
-            <button type="button" id="downloadBtn2"
-                class="w-full rounded-full bg-[#faa938] px-4 py-2 text-sm font-semibold text-white hover:brightness-95">
-                Download
-            </button>
+        <div id="dropdownDownload" class="hidden absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+            <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pns', 'bulan' => $bulan]) }}"
+                class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl">
+                Laporan PNS
+            </a>
+            <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pppk', 'bulan' => $bulan]) }}"
+                class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl">
+                Laporan PPPK
+            </a>
         </div>
     </div>
+</div>
 
+<div id="modalLaporan" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/30" onclick="closeModalLaporan()"></div>
+    <div class="relative flex min-h-screen items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-lg font-semibold text-gray-900">Generate Laporan</h2>
+                <button onclick="closeModalLaporan()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+            </div>
+            <form id="formGenerateLaporan" method="GET" class="px-6 py-5 space-y-5">
+                <input type="hidden" name="bulan" id="inputBulanLaporan">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pegawai</label>
+                    <div class="flex gap-3">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="jenis" value="pns" checked
+                                class="accent-[#faa938]">
+                            <span class="text-sm text-gray-700">PNS</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="jenis" value="pppk"
+                                class="accent-[#faa938]">
+                            <span class="text-sm text-gray-700">PPPK</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModalLaporan()"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white transition">
+                        Generate
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {{-- Tabel --}}
@@ -523,6 +538,38 @@ document.addEventListener('DOMContentLoaded', function () {
         if (w && !w.contains(e.target))
             document.getElementById('dropdownPegawai').classList.add('hidden');
     });
+});
+
+//Modal Laporan
+function openModalLaporan() {
+    document.getElementById('inputBulanLaporan').value = "{{ $bulan ?? now()->format('Y-m') }}";
+    // set action dinamis berdasarkan radio yang dipilih
+    document.querySelectorAll('input[name="jenis"]').forEach(radio => {
+        radio.addEventListener('change', updateLaporanAction);
+    });
+    updateLaporanAction();
+    document.getElementById('modalLaporan').classList.remove('hidden');
+}
+
+function updateLaporanAction() {
+    const jenis = document.querySelector('input[name="jenis"]:checked')?.value ?? 'pns';
+    document.getElementById('formGenerateLaporan').action =
+        `/admin/dokumen/generate/laporan/${jenis}`;
+}
+
+function closeModalLaporan() {
+    document.getElementById('modalLaporan').classList.add('hidden');
+}
+
+function toggleDownloadDropdown() {
+    document.getElementById('dropdownDownload').classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(e) {
+    const wrapper = document.getElementById('dropdownDownloadWrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('dropdownDownload').classList.add('hidden');
+    }
 });
 </script>
 

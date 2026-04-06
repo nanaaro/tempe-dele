@@ -68,6 +68,7 @@
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Nama Pegawai</th>
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Tanggal Lembur</th>
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Jam Diajukan</th>
+                    <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Jam Disetujui</th>
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Uraian Kegiatan</th>
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900">Data Presensi</th>
                     <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 rounded-tr-xl">Keputusan</th>
@@ -91,13 +92,21 @@
                     <td class="px-2 py-2 text-xs text-gray-900 text-center">
                         {{ $p->jam_mulai ? substr($p->jam_mulai,0,5).' - '.substr($p->jam_selesai,0,5) : '-' }}
                     </td>
+                    <td class="px-2 py-2 text-xs text-gray-900 text-center" id="jam-disetujui-{{ $p->id_transaksi }}">
+                        @if($p->jam_mulai_disetujui && $p->jam_selesai_disetujui)
+                            {{ substr($p->jam_mulai_disetujui,0,5) }} - {{ substr($p->jam_selesai_disetujui,0,5) }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td class="px-2 py-2 text-xs text-gray-900">
                         {{ $p->uraian ?? '-' }}
                     </td>
                     <td class="px-2 py-2 text-center">
                         <button onclick="openModalPresensi({{ $p->id_transaksi }})"
-                            class="inline-flex items-center gap-1 text-xs font-medium text-gray-600 underline cursor-pointer">
-                            Informasi
+                            class="inline-flex items-center gap-1 text-xs font-medium cursor-pointer
+                            {{ $p->has_presensi ? 'text-green-600 underline' : 'text-gray-400' }}">
+                            {{ $p->has_presensi ? 'Informasi tersedia' : 'Tidak ada informasi' }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                             </svg>
@@ -777,6 +786,15 @@ window.simpanKeputusan = function() {
                             </svg>
                         </button>
                     </div>`;
+            }
+
+            const jamEl = document.getElementById(`jam-disetujui-${currentId}`);
+            if (jamEl) {
+                if (keputusan === 'approved') {
+                    jamEl.textContent = `${jamMulai} - ${jamSelesai}`;
+                } else {
+                    jamEl.textContent = '-';
+                }
             }
             closeModalKeputusan();
         }

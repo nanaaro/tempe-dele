@@ -104,8 +104,10 @@
                             {{ \Carbon\Carbon::parse($t->date)->translatedFormat('d F Y') }}
                         </td>
                         <td class="px-2 py-2 text-xs text-gray-900 text-center">
-                            @if($t->jam_mulai && $t->jam_selesai)
+                             @if($t->jam_mulai && $t->jam_selesai)
                                 {{ substr($t->jam_mulai,0,5) }} - {{ substr($t->jam_selesai,0,5) }}
+                            @elseif($t->jam_mulai)
+                                {{ substr($t->jam_mulai,0,5) }} - <span class="text-gray-400 italic">menunggu</span>
                             @else
                                 -
                             @endif
@@ -206,6 +208,15 @@
 
             <form action="{{ route('lembur.store') }}" method="POST" class="px-6 py-5 space-y-5">
                 @csrf
+                @if($errors->any())
+                    <div class="px-4 py-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 {{-- Hidden kode_tim — diisi JS saat pilih ketua --}}
                 <input type="hidden" name="kode_tim" id="kode_tim">
@@ -242,10 +253,13 @@
                             class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
                         <p id="infoJamMulai" class="mt-1 text-xs text-black hidden">Default hari kerja: 16:01</p>
                     </div>
-                    <div>
+                    <div id="wrapperJamSelesai">
                         <label for="jam_selesai" class="block text-sm font-medium text-gray-700 mb-2">Jam Selesai</label>
-                        <input type="time" id="jam_selesai" name="jam_selesai" required
+                        <input type="time" id="jam_selesai" name="jam_selesai"
                             class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
+                        <p id="infoJamSelesai" class="hidden mt-1 text-xs text-gray-400">
+                            Jam selesai ditentukan otomatis oleh sistem sesuai jam pulang kantor.
+                        </p>
                     </div>
                 </div>
 
@@ -286,8 +300,26 @@
     const btnCancel = document.getElementById('btnCancel');
     const overlay   = document.getElementById('modalOverlay');
 
-    function openModal()  { modal.classList.remove('hidden'); document.body.classList.add('overflow-hidden'); }
-    function closeModal() { modal.classList.add('hidden');    document.body.classList.remove('overflow-hidden'); }
+    function openModal() {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        // Reset form saat buka modal
+        document.getElementById('wrapperJamSelesai').classList.remove('hidden');
+        document.getElementById('jam_selesai').value = '';
+        document.getElementById('jam_mulai').value = '';
+        document.getElementById('tanggal').value = '';
+        document.getElementById('infoHari').classList.add('hidden');
+        document.getElementById('infoJamMulai').classList.add('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    @if($errors->any())
+        document.addEventListener('DOMContentLoaded', () => openModal());
+    @endif
 
     btnAjukan.addEventListener('click', openModal);
     btnClose.addEventListener('click', closeModal);
@@ -302,41 +334,52 @@
 
     // Saat pilih tanggal → auto set jam mulai & info hari
     document.getElementById('tanggal').addEventListener('change', function () {
-        const date      = new Date(this.value);
-        const dayOfWeek = date.getUTCDay(); // 0=Minggu, 1=Sen, ..., 5=Jum, 6=Sab
+    const date      = new Date(this.value);
+    const dayOfWeek = date.getUTCDay();
+    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+    const isFriday  = (dayOfWeek === 5);
 
-        const isWeekend  = (dayOfWeek === 0 || dayOfWeek === 6);
-        const isFriday   = (dayOfWeek === 5);
-        const infoHari   = document.getElementById('infoHari');
-        const infoMulai  = document.getElementById('infoJamMulai');
-        const jamMulai   = document.getElementById('jam_mulai');
+    const infoHari  = document.getElementById('infoHari');
+    const infoMulai = document.getElementById('infoJamMulai');
+    const jamMulai  = document.getElementById('jam_mulai');
+    const wrapper   = document.getElementById('wrapperJamSelesai');
+    const jamSelesaiInput = document.getElementById('jam_selesai');
 
-        infoHari.classList.remove('hidden');
+    infoHari.classList.remove('hidden');
 
-        if (isWeekend) {
-            infoHari.textContent  = '📅 Hari libur — jam mulai bebas';
-            infoHari.className    = 'mt-1 text-xs text-black';
-            infoMulai.classList.add('hidden');
-            jamMulai.value        = '';
-            jamMulai.removeAttribute('min');
-        } else if (isFriday) {
-            infoHari.textContent  = '📅 Hari Jumat — jam mulai default 16:31';
-            infoHari.className    = 'mt-1 text-xs text-black';
-            infoMulai.textContent = 'Default hari Jumat: 16:31';
-            infoMulai.classList.remove('hidden');
-            jamMulai.value        = '16:31';
-            jamMulai.setAttribute('min', '16:31');
-        } else {
-            infoHari.textContent  = '📅 Hari kerja — jam mulai default 16:01';
-            infoHari.className    = 'mt-1 text-xs text-black';
-            infoMulai.textContent = 'Default hari kerja: 16:01';
-            infoMulai.classList.remove('hidden');
-            jamMulai.value        = '16:01';
-            jamMulai.setAttribute('min', '16:01');
-        }
+    // Rekomendasi jam mulai
+    if (isWeekend) {
+        infoHari.textContent = '📅 Hari libur — jam mulai bebas';
+        infoHari.className   = 'mt-1 text-xs text-black';
+        infoMulai.classList.add('hidden');
+        jamMulai.value = '';
+        jamMulai.removeAttribute('min');
+    } else if (isFriday) {
+        infoHari.textContent  = '📅 Hari Jumat — jam mulai default 16:31';
+        infoHari.className    = 'mt-1 text-xs text-black';
+        infoMulai.textContent = 'Default hari Jumat: 16:31';
+        infoMulai.classList.remove('hidden');
+        jamMulai.value = '16:31';
+        jamMulai.setAttribute('min', '16:31');
+    } else {
+        infoHari.textContent  = '📅 Hari kerja — jam mulai default 16:01';
+        infoHari.className    = 'mt-1 text-xs text-black';
+        infoMulai.textContent = 'Default hari kerja: 16:01';
+        infoMulai.classList.remove('hidden');
+        jamMulai.value = '16:01';
+        jamMulai.setAttribute('min', '16:01');
+    }
 
-        hitungDurasi();
-    });
+    // Show/hide jam selesai
+    // Tampilkan jam selesai kalau: hari libur ATAU tanggal masa depan
+    // Sembunyikan kalau: hari kerja + tanggal hari ini atau lampau
+    const tanggalDipilih = this.value;
+    const hariIni        = new Date().toISOString().split('T')[0];
+    wrapper.classList.remove('hidden');
+    jamSelesaiInput.value = '';
+
+    hitungDurasi();
+});
 
     // Preview durasi real-time
     function hitungDurasi() {
@@ -355,12 +398,48 @@
 
         const jam   = Math.floor(totalMenit / 60);
         const menit = totalMenit % 60;
-        label.textContent = `${jam} jam ${menit > 0 ? menit + ' menit' : ''} (dihitung ${jam} jam)`;
+
+        let info = `${jam} jam ${menit > 0 ? menit + ' menit' : ''} (dihitung ${jam} jam)`;
+        let warna = 'text-gray-500';
+
+        if (jam < 2) {
+            info += ' — ⚠️ Pengajuan jam lembur minimal 2 jam';
+            warna = 'text-amber-500';
+        } else if (jam >= 6) {
+            info += ' — ⚠️ Maksimal lembur 6 jam';
+            warna = 'text-amber-500';
+        }
+
+        label.textContent = info;
+        preview.className = `text-xs ${warna}`;
         preview.classList.remove('hidden');
     }
 
-    document.getElementById('jam_mulai').addEventListener('change', hitungDurasi);
-    document.getElementById('jam_selesai').addEventListener('change', hitungDurasi);
+    document.getElementById('jam_mulai').addEventListener('change', function () {
+        const tanggal    = document.getElementById('tanggal').value;
+        const jamSelesai = document.getElementById('jam_selesai');
+
+        if (jamSelesai.value && jamSelesai.value <= this.value) {
+            alert('Jam selesai harus setelah jam mulai');
+            jamSelesai.value = '';
+        }
+
+        if (this.value) {
+            jamSelesai.setAttribute('min', this.value);
+        }
+
+        hitungDurasi();
+    });
+
+document.getElementById('jam_selesai').addEventListener('change', function () {
+    const jamMulai = document.getElementById('jam_mulai').value;
+    if (jamMulai && this.value <= jamMulai) {
+        alert('Jam selesai harus setelah jam mulai');
+        this.value = '';
+        return;
+    }
+    hitungDurasi();
+});
 
     // =====================
     // HELPER

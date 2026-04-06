@@ -72,6 +72,17 @@ class PresensiUploadController extends Controller
                     );
 
                     $inserted++;
+
+                    \DB::statement("
+                        UPDATE t_transaksi t
+                        JOIN m_pegawai p ON t.submitted_by_NIP = p.nip
+                        JOIN t_presensi pr ON p.nip_lama = pr.niplama AND DATE(pr.tanggal) = t.date
+                        SET t.jam_selesai_disetujui = TIME(pr.jam_selesai)
+                        WHERE pr.jam_selesai IS NOT NULL
+                    ");
+
+                    // Simpan riwayat upload
+                    $adminNama = session('nama') ?? session('user.nama') ?? session('pegawai.nama') ?? 'Admin';
                 }
             }
 

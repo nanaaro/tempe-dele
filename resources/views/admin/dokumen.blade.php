@@ -4,7 +4,7 @@
 
 <div class="flex items-center gap-3 max-w-7xl mx-auto px-8 my-5">
 
-{{-- Filter Periode --}}
+    {{-- Filter Periode --}}
         <div class="relative shrink-0" id="periodPicker">
             <button type="button" id="periodBtn"
                 class="inline-flex items-center h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
@@ -43,58 +43,12 @@
     <div class="flex-1"></div>
 
     {{-- Tombol Download + Panel --}}
-    <div class="relative shrink-0" id="downloadPicker">
-        <button type="button" id="downloadBtn" title="Download Laporan"
+    <button type="button" title="Upload Presensi"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
             </svg>
         </button>
-        <div id="downloadPanel" class="hidden absolute right-0 z-50 mt-2 w-72 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg">
-            <p class="mb-3 text-sm font-semibold text-gray-900">Download Laporan</p>
-
-            {{-- Toggle mode --}}
-            <div class="mb-4 grid grid-cols-2 gap-2">
-                <button type="button" id="btnModeHarian"
-                    class="rounded-full border border-[#faa938] bg-[#fff7ed] px-3 py-2 text-sm font-medium text-[#faa938]">
-                    Harian
-                </button>
-                <button type="button" id="btnModeBulanan"
-                    class="rounded-full border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">
-                    Bulanan
-                </button>
-            </div>
-
-            {{-- Label hasil pilih --}}
-            <p class="mb-2 text-xs text-gray-500">
-                Periode: <span id="downloadLabel" class="font-medium text-gray-800">—</span>
-            </p>
-
-            {{-- Grid picker (diisi JS) --}}
-            <div id="downloadPickerHeader" class="flex items-center justify-between mb-3">
-                <button type="button" id="downloadPrev" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                        <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
-                    </svg>
-                </button>
-                <span id="downloadNavLabel" class="text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none"></span>
-                <button type="button" id="downloadNext" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                        <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
-                    </svg>
-                </button>
-            </div>
-            <div id="downloadGrid"></div>
-
-            <div class="border-t border-gray-100 my-3"></div>
-
-            <button type="button" id="downloadBtn2"
-                class="w-full rounded-full bg-[#faa938] px-4 py-2 text-sm font-semibold text-white hover:brightness-95">
-                Download
-            </button>
-        </div>
-    </div>
-
 </div>
 
     <div class="overflow-x-auto max-w-7xl mx-auto px-8 my-5">
@@ -228,8 +182,46 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
+
+{{-- Pagination --}}
+@if($periodeList->hasPages())
+<div class="flex justify-center mt-6">
+    <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
+        @if($periodeList->onFirstPage())
+            <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </span>
+        @else
+            <a href="{{ $periodeList->previousPageUrl() }}" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </a>
+        @endif
+
+        <p class="text-gray-500">Page {{ $periodeList->currentPage() }} of {{ $periodeList->lastPage() }}</p>
+
+        @if($periodeList->hasMorePages())
+            <a href="{{ $periodeList->nextPageUrl() }}" class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]">
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </a>
+        @else
+            <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </span>
+        @endif
+    </nav>
+</div>
+@endif
 
 <script>
 
@@ -436,5 +428,18 @@
         updateDisplayOnly(selYear, selMonth);
     })();
 
+    // =====================
+    // INIT
+    // =====================
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchPegawai();
+
+        document.addEventListener('click', function (e) {
+            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+            if (wrapperPegawai && !wrapperPegawai.contains(e.target)) {
+                document.getElementById('dropdownPegawai').classList.add('hidden');
+            }
+        });
+    });
 </script>
 @endsection

@@ -13,12 +13,14 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
                     <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
                 </svg>
-                <span id="dateLabel" class="leading-none">17 Mar 2026</span>
+                <span id="dateLabel" class="leading-none">
+                    {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('d M Y') }}
+                </span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-50">
                     <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L160 301.5l119.1-119.1c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"/>
                 </svg>
             </button>
-            <input type="hidden" id="dateValue" name="date" value="">
+            <input type="hidden" id="dateValue" name="date" value="{{ $tanggal }}">
 
             <div id="datePanel" class="hidden absolute z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
 
@@ -52,7 +54,7 @@
         <div class="relative shrink-0">
             <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
                 onclick="toggleDropdown()" oninput="filterDropdown()" autocomplete="off"
-                class="w-120 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
+                class="w-90 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
             <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
                     <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
@@ -63,16 +65,33 @@
             </div>
         </div>
 
+        {{-- Filter Tim --}}
+        <div class="relative shrink-0">
+            <input type="text" id="searchTim" placeholder="Cari nama tim..."
+                onclick="toggleDropdownTim()" oninput="filterDropdownTim()" autocomplete="off"
+                value="{{ request('search') }}"
+                class="w-60 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
+                    <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
+                </svg>
+            </div>
+            <div id="dropdownTim" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+                <ul id="listTim"></ul>
+            </div>
+        </div>
+
     {{-- Spacer atau devider --}}
     <div class="flex-1"></div>
 
     {{-- tombol upload --}}
-        <button type="button" title="Upload Presensi"
+        <a href="{{ route('admin.daftar_hadir.download', ['tanggal' => $tanggal, 'tim' => request('tim'), 'nip' => request('nip')]) }}"
+            title="Unduh Daftar Hadir"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
             </svg>
-        </button>
+        </a>
 
     </div>
 
@@ -88,8 +107,8 @@
                     <th rowspan="2" class="px-2 py-1 text-center text-sm font-semibold text-gray-900 border border-gray-100 rounded-tr-xl">Tanda Tangan</th>
                 </tr>
                 <tr class="bg-gray-50">
-                    <th class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-100">Datang</th>
-                    <th class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-100">Pulang</th>
+                    <th class="p-2 text-center text-sm font-semibold text-gray-900 border border-gray-100">Datang</th>
+                    <th class="p-2 text-center text-sm font-semibold text-gray-900 border border-gray-100">Pulang</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -131,15 +150,24 @@
     // GLOBAL STATE
     // =====================
     const now = new Date();
-    let current = new Date(now.getFullYear(), now.getMonth(), 1);
     let selectedEmployeeId = null;
-    let selectedTeamId = null;
-    let cachedTim = [];
-    let cachedPegawai = [];
-    let pickerYear = now.getFullYear();
-    let pickerMonth = now.getMonth();
+    let selectedTeamId     = null;
+    let selectedNip        = null;
+    let cachedTim          = [];
+    let cachedPegawai      = [];
     const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    const gridEl = document.getElementById('presensiGrid');
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    // =====================
+    // APPLY FILTER
+    // =====================
+    function applyFilter() {
+        const tanggal = document.getElementById('dateValue').value;
+        const tim     = selectedTeamId ?? '';
+        const nip     = selectedNip    ?? '';
+        window.location.href = `?tanggal=${tanggal}&tim=${tim}&nip=${nip}`;
+    }
 
     // =====================
     // FETCH DATA
@@ -151,9 +179,7 @@
     }
 
     async function fetchPegawai(kodeTim = '') {
-        const url = kodeTim
-            ? `/admin/presensi/pegawai?kode_tim=${kodeTim}`
-            : '/admin/presensi/pegawai';
+        const url = kodeTim ? `/admin/presensi/pegawai?kode_tim=${kodeTim}` : '/admin/presensi/pegawai';
         const res = await fetch(url);
         cachedPegawai = await res.json();
         populateDropdown('', cachedPegawai);
@@ -165,8 +191,7 @@
     function populateDropdownTim(filter = '', data = []) {
         const list = document.getElementById('listTim');
         list.innerHTML = '';
-        data
-            .filter(t => t.nama_tim.toLowerCase().includes(filter.toLowerCase()))
+        data.filter(t => t.nama_tim.toLowerCase().includes(filter.toLowerCase()))
             .forEach(tim => {
                 const li = document.createElement('li');
                 li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
@@ -176,25 +201,25 @@
             });
     }
 
-    window.toggleDropdownTim = function() {
+    window.toggleDropdownTim = function () {
         document.getElementById('dropdownTim').classList.toggle('hidden');
         populateDropdownTim('', cachedTim);
     };
 
-    window.filterDropdownTim = function() {
-        const search = document.getElementById('searchTim').value;
-        populateDropdownTim(search, cachedTim);
+    window.filterDropdownTim = function () {
+        populateDropdownTim(document.getElementById('searchTim').value, cachedTim);
         document.getElementById('dropdownTim').classList.remove('hidden');
     };
 
-    window.pilihTim = function(tim) {
+    window.pilihTim = function (tim) {
         selectedTeamId = tim.kode_tim;
         document.getElementById('searchTim').value = tim.nama_tim;
         document.getElementById('dropdownTim').classList.add('hidden');
-        // Reset pegawai
+        selectedNip = null;
         selectedEmployeeId = null;
         document.getElementById('searchPegawai').value = '';
         fetchPegawai(tim.kode_tim);
+        applyFilter();
     };
 
     // =====================
@@ -203,8 +228,7 @@
     function populateDropdown(filter = '', data = []) {
         const list = document.getElementById('listPegawai');
         list.innerHTML = '';
-        data
-            .filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
+        data.filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
             .forEach(emp => {
                 const li = document.createElement('li');
                 li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
@@ -220,36 +244,17 @@
     };
 
     window.filterDropdown = function () {
-        const search = document.getElementById('searchPegawai').value;
-        populateDropdown(search, cachedPegawai);
+        populateDropdown(document.getElementById('searchPegawai').value, cachedPegawai);
         document.getElementById('dropdownPegawai').classList.remove('hidden');
     };
 
     window.pilihPegawai = function (emp) {
+        selectedNip        = emp.nip;
         selectedEmployeeId = emp.id_pegawai;
         document.getElementById('searchPegawai').value = `${emp.nama} - ${emp.nip}`;
         document.getElementById('dropdownPegawai').classList.add('hidden');
+        applyFilter();
     };
-
-    document.addEventListener('DOMContentLoaded', function () {
-    fetchTim();
-    fetchPegawai();
-});
-
-    document.addEventListener('DOMContentLoaded', function () {
-        fetchTim();
-        fetchPegawai();
-
-    document.addEventListener('click', function (e) {
-        const wrapperTim = document.getElementById('searchTim')?.closest('.relative');
-        if (wrapperTim && !wrapperTim.contains(e.target))
-            document.getElementById('dropdownTim').classList.add('hidden');
-
-        const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
-        if (wrapperPegawai && !wrapperPegawai.contains(e.target))
-            document.getElementById('dropdownPegawai').classList.add('hidden');
-    });
-});
 
     // =====================
     // DATE PICKER
@@ -275,24 +280,36 @@
         const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
         const dayNames   = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 
-        const now = new Date();
-        let view = 'day'; // 'day' | 'month' | 'year'
-        let viewYear  = now.getFullYear();
-        let viewMonth = now.getMonth();
-        let selYear   = now.getFullYear();
-        let selMonth  = now.getMonth();
-        let selDay    = now.getDate();
+        // Ambil nilai awal dari hidden input (diisi blade)
+        let initVal   = dateValue.value || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`;
+        let [iy, im, id] = initVal.split('-').map(Number);
 
-        function pad2(n) { return String(n).padStart(2, '0'); }
+        let view      = 'day';
+        let viewYear  = iy;
+        let viewMonth = im - 1;
+        let selYear   = iy;
+        let selMonth  = im - 1;
+        let selDay    = id;
 
-        function setDate(y, m, d) {
+        // Update label tanpa trigger redirect
+        dateLabel.textContent = `${selDay} ${monthShort[selMonth]} ${selYear}`;
+
+        function setDate(y, m, d, triggerFilter = true) {
             selYear = y; selMonth = m; selDay = d;
             dateLabel.textContent = `${d} ${monthShort[m]} ${y}`;
             dateValue.value = `${y}-${pad2(m + 1)}-${pad2(d)}`;
-            // TODO: trigger fetch/filter pakai dateValue.value
+            if (triggerFilter) applyFilter();
         }
 
-        // ---- RENDER DAY ----
+        function makeBtn(text, cls, onClick) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = text;
+            b.className = cls;
+            b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
+            return b;
+        }
+
         function renderDay() {
             view = 'day';
             navLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
@@ -311,130 +328,86 @@
 
             const dayGrid = document.createElement('div');
             dayGrid.className = 'grid grid-cols-7 gap-y-1';
+            const base = 'text-sm rounded-lg py-1 transition border ';
 
             const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
             const firstDay    = new Date(viewYear, viewMonth, 1).getDay();
             const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
 
-            const base = 'text-sm rounded-lg py-1 transition border ';
-
-            // Tanggal bulan sebelumnya
             for (let i = firstDay - 1; i >= 0; i--) {
                 const d = daysInPrev - i;
-                dayGrid.appendChild(makeBtn(d, base + 'border-transparent text-gray-300 hover:border-gray-200', () => {
+                dayGrid.appendChild(makeBtn(d, base + 'border-transparent text-gray-300', () => {
                     let m = viewMonth - 1, y = viewYear;
                     if (m < 0) { m = 11; y--; }
-                    setDate(y, m, d);
                     viewYear = y; viewMonth = m;
-                    renderDay();
+                    setDate(y, m, d); closePanel();
                 }));
             }
 
-            // Tanggal bulan ini
             for (let d = 1; d <= daysInMonth; d++) {
                 const isSelected = (d === selDay && viewMonth === selMonth && viewYear === selYear);
                 const isToday    = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
-                const cls = isSelected
-                    ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isToday
-                        ? 'border-[#faa938] text-[#faa938] bg-white'
-                        : 'border-transparent text-gray-700 hover:border-[#faa938] hover:text-[#faa938]';
+                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isToday ? 'border-[#faa938] text-[#faa938] bg-white'
+                    : 'border-transparent text-gray-700 hover:border-[#faa938] hover:text-[#faa938]';
                 const _d = d;
-                dayGrid.appendChild(makeBtn(_d, base + cls, () => {
-                    setDate(viewYear, viewMonth, _d);
-                    closePanel();
-                }));
+                dayGrid.appendChild(makeBtn(_d, base + cls, () => { setDate(viewYear, viewMonth, _d); closePanel(); }));
             }
 
-            // Tanggal bulan berikutnya
             const total     = firstDay + daysInMonth;
             const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
             for (let d = 1; d <= remaining; d++) {
                 const _d = d;
-                dayGrid.appendChild(makeBtn(_d, base + 'border-transparent text-gray-300 hover:border-gray-200', () => {
+                dayGrid.appendChild(makeBtn(_d, base + 'border-transparent text-gray-300', () => {
                     let m = viewMonth + 1, y = viewYear;
                     if (m > 11) { m = 0; y++; }
-                    setDate(y, m, _d);
                     viewYear = y; viewMonth = m;
-                    renderDay();
+                    setDate(y, m, _d); closePanel();
                 }));
             }
-
             grid.appendChild(dayGrid);
         }
 
-        // ---- RENDER MONTH ----
         function renderMonth() {
             view = 'month';
             navLabel.textContent = String(viewYear);
             navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
             grid.innerHTML = '';
-
             const g = document.createElement('div');
             g.className = 'grid grid-cols-3 gap-2';
-
             monthNames.forEach((name, m) => {
                 const isSelected = (m === selMonth && viewYear === selYear);
                 const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
-                const cls = isSelected
-                    ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isNow
-                        ? 'border-[#faa938] text-[#faa938] bg-white'
-                        : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
-                const b = makeBtn(name.slice(0, 3), 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
-                    viewMonth = m;
-                    renderDay();
-                }, false);
-                g.appendChild(b);
+                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow ? 'border-[#faa938] text-[#faa938] bg-white'
+                    : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
+                g.appendChild(makeBtn(name.slice(0, 3), 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
+                    viewMonth = m; renderDay();
+                }));
             });
-
             grid.appendChild(g);
         }
 
-        // ---- RENDER YEAR ----
         function renderYear() {
             view = 'year';
-            // Tampilkan range 12 tahun
             const startYear = Math.floor(viewYear / 12) * 12;
             navLabel.textContent = `${startYear} - ${startYear + 11}`;
             navLabel.className = 'text-sm font-medium text-gray-400 select-none cursor-default';
             grid.innerHTML = '';
-
             const g = document.createElement('div');
             g.className = 'grid grid-cols-3 gap-2';
-
             for (let y = startYear; y < startYear + 12; y++) {
                 const isSelected = (y === selYear);
                 const isNow      = (y === now.getFullYear());
-                const cls = isSelected
-                    ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isNow
-                        ? 'border-[#faa938] text-[#faa938] bg-white'
-                        : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
-                const b = makeBtn(y, 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
-                    viewYear = y;
-                    renderMonth();
-                }, false);
-                g.appendChild(b);
+                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow ? 'border-[#faa938] text-[#faa938] bg-white'
+                    : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
+                const _y = y;
+                g.appendChild(makeBtn(_y, 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => { viewYear = _y; renderMonth(); }));
             }
-
             grid.appendChild(g);
         }
 
-        // ---- HELPER ----
-        function makeBtn(text, cls, onClick) {
-            const b = document.createElement('button');
-            b.type = 'button';
-            b.textContent = text;
-            b.className = cls;
-            b.addEventListener('click', (e) => {
-                e.stopPropagation();
-                onClick();
-            });
-            return b;
-        }
-
-        // ---- NAV PREV/NEXT ----
         function navigate(dir) {
             if (view === 'day') {
                 viewMonth += dir;
@@ -442,55 +415,71 @@
                 if (viewMonth > 11) { viewMonth = 0;  viewYear++; }
                 renderDay();
             } else if (view === 'month') {
-                viewYear += dir;
-                renderMonth();
-            } else if (view === 'year') {
-                const startYear = Math.floor(viewYear / 12) * 12;
-                viewYear = startYear + (dir * 12);
-                renderYear();
+                viewYear += dir; renderMonth();
+            } else {
+                viewYear += dir * 12; renderYear();
             }
         }
 
-        function openPanel() {
-            viewYear = selYear; viewMonth = selMonth;
-            renderDay();
-            panel.classList.remove('hidden');
-        }
-
+        function openPanel()  { viewYear = selYear; viewMonth = selMonth; renderDay(); panel.classList.remove('hidden'); }
         function closePanel() { panel.classList.add('hidden'); }
 
-        // ---- EVENT LISTENERS ----
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            panel.classList.contains('hidden') ? openPanel() : closePanel();
-        });
-
-        navLabel.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (view === 'day')   renderMonth();
-            else if (view === 'month') renderYear();
-            // view === 'year' -> tidak naik lagi
-        });
-
+        btn.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.contains('hidden') ? openPanel() : closePanel(); });
+        navLabel.addEventListener('click', (e) => { e.stopPropagation(); if (view === 'day') renderMonth(); else if (view === 'month') renderYear(); });
         btnPrev?.addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
         btnNext?.addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
-
         btnToday?.addEventListener('click', (e) => {
             e.stopPropagation();
             viewYear = now.getFullYear(); viewMonth = now.getMonth();
             setDate(now.getFullYear(), now.getMonth(), now.getDate());
             closePanel();
         });
-
         btnClose?.addEventListener('click', (e) => { e.stopPropagation(); closePanel(); });
-
-        document.addEventListener('click', (e) => {
-            if (!picker.contains(e.target)) closePanel();
-        });
-
-        // Init
-        setDate(selYear, selMonth, selDay);
+        document.addEventListener('click', (e) => { if (!picker.contains(e.target)) closePanel(); });
     })();
-    </script>
+
+    // =====================
+    // INIT
+    // =====================
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchTim();
+        fetchPegawai();
+
+        // Restore state dari URL
+        const params   = new URLSearchParams(window.location.search);
+        const timParam = params.get('tim') ?? '';
+        const nipParam = params.get('nip') ?? '';
+
+        if (timParam) {
+            selectedTeamId = timParam;
+            fetch('/admin/presensi/tim')
+                .then(r => r.json())
+                .then(data => {
+                    const found = data.find(t => t.kode_tim == timParam);
+                    if (found) document.getElementById('searchTim').value = found.nama_tim;
+                });
+        }
+
+        if (nipParam) {
+            selectedNip = nipParam;
+            fetch('/admin/presensi/pegawai')
+                .then(r => r.json())
+                .then(data => {
+                    const found = data.find(e => e.nip == nipParam);
+                    if (found) document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
+                });
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapperTim = document.getElementById('searchTim')?.closest('.relative');
+            if (wrapperTim && !wrapperTim.contains(e.target))
+                document.getElementById('dropdownTim').classList.add('hidden');
+
+            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+            if (wrapperPegawai && !wrapperPegawai.contains(e.target))
+                document.getElementById('dropdownPegawai').classList.add('hidden');
+        });
+    });
+</script>
 
 @endsection

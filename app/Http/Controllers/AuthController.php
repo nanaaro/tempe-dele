@@ -89,7 +89,7 @@ class AuthController extends Controller
             // Simpan ke session
             Session::put('user', $data);
             Session::put('logged_in', true);
-            // Session::put('jenis_user', 'ketua_tim');
+            Session::put('jenis_user', 'ketua_tim');
             Session::put('id_pegawai', $pegawaiData->id_pegawai);
 
             return redirect()->route('dashboard');

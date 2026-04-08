@@ -62,7 +62,7 @@ class DaftarHadirController extends Controller
         $namaTim      = $request->filled('tim')
             ? DB::table('m_tim')->where('kode_tim', $request->tim)->value('nama_tim') ?? ''
             : '';
-        $kbu = DB::table('m_pejabat')->where('jabatan', 'Kepala BPS')->where('status', 'aktif')->first();
+        $kbu = DB::table('m_pejabat')->where('jabatan', 'Kepala Bagian Umum')->where('status', 'aktif')->first();
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
             'dokumen.daftar_hadir',

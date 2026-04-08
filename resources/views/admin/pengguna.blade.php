@@ -414,15 +414,34 @@ async function fetchPegawai() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    fetchPegawai();
+// =====================
+// INIT
+// =====================
+    document.addEventListener('DOMContentLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        const searchParam = params.get('search') ?? '';
 
-    document.addEventListener('click', function (e) {
-        const wrapper = document.getElementById('searchPegawai')?.closest('.relative');
-        if (wrapper && !wrapper.contains(e.target))
-            document.getElementById('dropdownPegawai').classList.add('hidden');
+        fetch('/admin/presensi/pegawai')
+            .then(r => r.json())
+            .then(data => {
+                cachedPegawai = data;
+                populateDropdown('', cachedPegawai);
+                if (searchParam) {
+                    const found = data.find(e =>
+                        e.nama.toLowerCase() === searchParam.toLowerCase()
+                    );
+                    if (found) {
+                        document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
+                    }
+                }
+            });
+
+        document.addEventListener('click', function (e) {
+            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+            if (wrapperPegawai && !wrapperPegawai.contains(e.target))
+                document.getElementById('dropdownPegawai').classList.add('hidden');
+        });
     });
-});
 
 // =====================
 // DROPDOWN PEGAWAI
@@ -679,6 +698,7 @@ function exitEdit(row, btnEdit, btnSave, btnCancel, btnDelete) {
     btnSave.classList.add('hidden');
     btnCancel.classList.add('hidden');
 }
+
 </script>
 
 @endsection

@@ -7,15 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\LaporanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DokumenGenerateController extends Controller
 {
     private function getPejabat()
     {
         $pejabat = DB::table('m_pejabat')->where('status', 'aktif')->get();
-        $ppk = $pejabat->firstWhere('jabatan', 'PPK');
-        $kbu = $pejabat->firstWhere('jabatan', 'Kepala BPS');
-        return [$ppk, $kbu];
+        $ppk  = $pejabat->firstWhere('jabatan', 'PPK');
+        $kbps = $pejabat->firstWhere('jabatan', 'Kepala BPS');
+        $kbu  = $pejabat->firstWhere('jabatan', 'Kepala Bagian Umum');
+        return [$ppk, $kbps, $kbu];
     }
 
     private function getNomorSurat(string $bulan): string
@@ -66,13 +69,13 @@ class DokumenGenerateController extends Controller
             ];
         })->values();
 
-        [$ppk, $kbu] = $this->getPejabat();
+        [$ppk, $kbps, $kbu] = $this->getPejabat();
         $nomorSurat  = $request->get('nomor_surat', $this->getNomorSurat($bulan));
         $bulanLabel  = $dt->translatedFormat('F');
         $tahun       = $dt->year;
         $tanggalTtd  = $dt->translatedFormat('d F Y');
 
-        $pdf = Pdf::loadView('dokumen.spkl', compact('pegawai', 'ppk', 'kbu', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dokumen.spkl', compact('pegawai', 'ppk', 'kbps', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'spkl',
@@ -127,11 +130,11 @@ class DokumenGenerateController extends Controller
             ];
         })->values();
 
-        [$ppk, $kbu] = $this->getPejabat();
+        [$ppk, $kbps, $kbu] = $this->getPejabat();
         $bulanLabel  = $dt->translatedFormat('F');
         $tahun       = $dt->year;
 
-        $pdf = Pdf::loadView('dokumen.laporan', compact('pegawai', 'kbu', 'bulanLabel', 'tahun', 'jenis'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dokumen.laporan', compact('pegawai', 'kbps', 'bulanLabel', 'tahun', 'jenis'))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'laporan_' . $jenis,
@@ -160,5 +163,17 @@ class DokumenGenerateController extends Controller
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $type . '_' . $bulan . '.pdf"',
         ]);
+    }
+
+    public function downloadExcel(Request $request, string $jenis)
+    {
+        $bulan = $request->get('bulan', now()->format('Y-m'));
+
+        $filename = "Laporan_Lembur_" . strtoupper($jenis) . "_" . $bulan . ".xlsx";
+
+        return Excel::download(
+            new LaporanExport(['bulan' => $bulan, 'jenis' => $jenis]),
+            $filename
+        );
     }
 }

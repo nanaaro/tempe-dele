@@ -44,50 +44,58 @@
 
 <div class="overflow-hidden max-w-6xl mx-auto px-8 my-5">
     {{-- Tabel --}}
-    <table class="min-w-full rounded-xl border border-gray-200">
-    <thead>
-        <tr class="bg-gray-50">
-            <th rowspan="2" class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Tanggal</th>
-            <th rowspan="2" class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">No</th>
-            <th rowspan="2" class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Nama / NIP</th>
-            <th colspan="2" class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Jam</th>
-            <th rowspan="2" class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Tanda Tangan</th>
-        </tr>
-        <tr class="bg-gray-50">
-            <th class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Datang</th>
-            <th class="p-4 text-center text-sm font-semibold text-gray-900 border border-gray-200">Pulang</th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-        @forelse($daftarHadir as $i => $d)
-        <tr class="bg-white hover:bg-gray-50">
-            <td class="p-4 text-sm text-gray-900 text-center border border-gray-200">
-                @if($i == 0 || $d->date != $daftarHadir[$i-1]->date)
-                    {{ \Carbon\Carbon::parse($d->date)->translatedFormat('d/m/Y') }}
-                @endif
-            </td>
-            <td class="p-4 text-sm text-gray-900 text-center border border-gray-200">{{ $i + 1 }}</td>
-            <td class="p-4 text-sm text-gray-900 border border-gray-200">
-                {{ $d->nama }}<br>
-                <span class="text-xs text-gray-400">{{ $d->nip }}</span>
-            </td>
-            <td class="p-4 text-sm text-gray-900 text-center border border-gray-200">
-                {{ $d->jam_mulai_disetujui ? substr($d->jam_mulai_disetujui, 0, 5) : '-' }}
-            </td>
-            <td class="p-4 text-sm text-gray-900 text-center border border-gray-200">
-                {{ $d->jam_selesai_disetujui ? substr($d->jam_selesai_disetujui, 0, 5) : '-' }}
-            </td>
-            <td class="p-4 border border-gray-200 h-16"></td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="6" class="p-8 text-center text-sm text-gray-400">
-                Tidak ada data untuk periode ini.
-            </td>
-        </tr>
-        @endforelse
-    </tbody>
-</table>
+    <table class="min-w-full rounded-xl border-separate border-spacing-0">
+        <thead>
+            <tr class="bg-gray-50">
+                <th class="p-3 text-center text-sm font-semibold text-gray-900 rounded-tl-xl">
+                    Periode
+                </th>
+                <th class="p-3 text-center text-sm font-semibold text-gray-900">
+                    Nama File
+                </th>
+                <th class="p-3 text-center text-sm font-semibold text-gray-900">
+                    User Upload
+                </th>
+                <th class="p-3 text-center text-sm font-semibold text-gray-900 rounded-tr-xl">
+                    Tanggal Upload
+                </th>
+            </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+            @forelse($daftarHadir as $d)
+            <tr class="bg-white hover:bg-gray-50">
+
+                <!-- Periode -->
+                <td class="p-2 text-sm text-gray-900 text-center">
+                    {{ \Carbon\Carbon::createFromFormat('Y-m', $d->periode)->translatedFormat('F Y') }}
+                </td>
+
+                <!-- Nama File -->
+                <td class="p-2 text-sm text-gray-900">
+                    {{ $d->nama_file ?? '-' }}
+                </td>
+
+                <!-- User Upload -->
+                <td class="p-2 text-sm text-gray-900 text-center">
+                    {{ $d->uploaded_by ?? '-' }}
+                </td>
+
+                <!-- Tanggal Upload -->
+                <td class="p-2 text-sm text-gray-900 text-center">
+                    {{ \Carbon\Carbon::parse($d->uploaded_at)->translatedFormat('d M Y H:i') }}
+                </td>
+
+            </tr>
+            @empty
+            <tr>
+                <td colspan="4" class="p-8 text-center text-sm text-gray-400">
+                    Tidak ada data riwayat upload.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
 
 <!-- Pagination -->
     <div class="flex justify-center mt-6">

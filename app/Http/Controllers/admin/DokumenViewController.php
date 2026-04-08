@@ -26,7 +26,7 @@ class DokumenViewController extends Controller
         ->sortDesc()
         ->values();
 
-    $isFiltered = $request->has('bulan'); // ← cek apakah user memang memilih bulan
+    $isFiltered = $request->has('bulan');
 
     $periodeList = $isFiltered
         ? $allPeriode->filter(fn($p) => $p === $bulan)
@@ -46,9 +46,10 @@ class DokumenViewController extends Controller
 
         $pejabat = DB::table('m_pejabat')->where('status', 'aktif')->get();
         $ppk = $pejabat->firstWhere('jabatan', 'PPK');
-        $kbu = $pejabat->firstWhere('jabatan', 'Kepala BPS');
+        $kbps = $pejabat->firstWhere('jabatan', 'Kepala BPS');
+        $kbu = $pejabat->firstWhere('jabatan', 'Kepala Bagian Umum');
 
-        return view('admin.dokumen', compact('periodeList', 'dokumenList', 'ppk', 'kbu', 'bulan'));
+        return view('admin.dokumen', compact('periodeList', 'dokumenList', 'ppk', 'kbps', 'kbu', 'bulan'));
     }
 
     public function hapus(Request $request)

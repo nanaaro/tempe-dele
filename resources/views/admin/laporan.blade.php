@@ -64,31 +64,57 @@
 
     {{-- Generate Laporan --}}
     <a href="javascript:void(0)" onclick="openModalLaporan()" title="Generate Laporan"
-        class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
+        class="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 bg-white text-gray-500 hover:border-gray-600 hover:text-gray-600 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
         </svg>
+        Generate Laporan
     </a>
 
     {{-- Download Laporan --}}
-    <div class="relative" id="dropdownDownloadWrapper">
-        <button type="button" onclick="toggleDownloadDropdown()" title="Unduh Laporan"
-            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+<div class="relative" id="dropdownDownloadWrapper">
+    <button type="button" onclick="toggleDownloadDropdown()" title="Unduh Laporan"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        </svg>
+    </button>
+    <div id="dropdownDownload" class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+        <p class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">PNS</p>
+        <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pns', 'bulan' => $bulan]) }}"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/>
             </svg>
-        </button>
-        <div id="dropdownDownload" class="hidden absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-            <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pns', 'bulan' => $bulan]) }}"
-                class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl">
-                Laporan PNS
-            </a>
-            <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pppk', 'bulan' => $bulan]) }}"
-                class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl">
-                Laporan PPPK
-            </a>
-        </div>
+            PDF
+        </a>
+        <a href="{{ route('admin.dokumen.download.excel', ['jenis' => 'pns', 'bulan' => $bulan]) }}"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-5l2-3-2-3h1.5l1.25 2 1.25-2H13l-2 3 2 3h-1.5L10.25 16 9 18H7.5z"/>
+            </svg>
+            Excel
+        </a>
+        <div class="border-t border-gray-100 mx-3 my-1"></div>
+        <p class="px-4 pt-2 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">PPPK</p>
+        <a href="{{ route('admin.dokumen.download', ['type' => 'laporan_pppk', 'bulan' => $bulan]) }}"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/>
+            </svg>
+            PDF
+        </a>
+        <a href="{{ route('admin.dokumen.download.excel', ['jenis' => 'pppk', 'bulan' => $bulan]) }}"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-5l2-3-2-3h1.5l1.25 2 1.25-2H13l-2 3 2 3h-1.5L10.25 16 9 18H7.5z"/>
+            </svg>
+            Excel
+        </a>
     </div>
+</div>
+
 </div>
 
 <div id="modalLaporan" class="fixed inset-0 z-50 hidden">
@@ -138,7 +164,7 @@
             <tr class="bg-gray-50">
                 <th class="p-5 text-center text-sm font-semibold text-gray-900 rounded-tl-xl">Nama Pegawai</th>
                 <th class="p-5 text-center text-sm font-semibold text-gray-900">NIP</th>
-                <th class="p-5 text-center text-sm font-semibold text-gray-900">Kode</th>
+                <th class="p-5 text-center text-sm font-semibold text-gray-900">Tanggal</th>
                 <th class="p-5 text-center text-sm font-semibold text-gray-900 rounded-tr-xl">Uraian Kegiatan</th>
             </tr>
         </thead>
@@ -526,16 +552,27 @@ function updateURL() {
 // INIT
 // =====================
 document.addEventListener('DOMContentLoaded', function () {
+    const params   = new URLSearchParams(window.location.search);
+    const nipParam = params.get('pegawai') ?? '';
+
     fetch('/admin/presensi/pegawai')
         .then(r => r.json())
         .then(data => {
             cachedPegawai = data;
             populateDropdown('', cachedPegawai);
+            if (nipParam) {
+                selectedNip = nipParam;
+                const found = data.find(e => e.nip == nipParam);
+                if (found) {
+                    selectedEmployeeId = found.nip;  
+                    document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
+                }
+            }
         });
 
     document.addEventListener('click', function (e) {
-        const w = document.getElementById('searchPegawai')?.closest('.relative');
-        if (w && !w.contains(e.target))
+        const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+        if (wrapperPegawai && !wrapperPegawai.contains(e.target))
             document.getElementById('dropdownPegawai').classList.add('hidden');
     });
 });

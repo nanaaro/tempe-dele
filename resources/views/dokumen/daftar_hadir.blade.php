@@ -60,8 +60,8 @@
             Mengetahui,<br>
             Kepala Bagian Umum<br>
             <div class="ttd-space"></div>
-            <strong>{{ $kbu->nama ?? '' }}</strong><br>
-            NIP {{ $kbu->nip_lama ?? '' }}
+            <strong>{{ $kbu->nama ?? '' }}<br>
+            {{-- NIP {{ $kbu->nip_lama ?? '' }} --}}
         </div>
     </div>
 </body>

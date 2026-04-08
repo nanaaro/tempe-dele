@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SPKL')
+@section('title', 'Rekapitulasi Lembur')
 
 @section('content')
 
@@ -58,19 +58,18 @@
 
     {{-- Spacer atau devider --}}
     <div class="flex-1"></div>
-    <div class="h-6 self-center border-l border-gray-200"></div>
 
-        {{-- Input Nomer Surat --}}
+        {{-- Input Nomer Surat
         <a href="javascript:void(0)" onclick="openModalNomor()" title="Input Nomer Surat"
             class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
             </svg>
-        </a>
+        </a> --}}
 
-    {{-- tombol upload --}}
-        <a href="{{ route('admin.dokumen.download', ['type' => 'spkl', 'bulan' => $bulan]) }}"
-            title="Unduh SPKL"
+    {{-- tombol download --}}
+        <a href="{{ route('admin.rekapitulasi.export', ['bulan' => $bulan]) }}"
+            title="Unduh Rekapitulasi"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
@@ -86,10 +85,10 @@
                 <tr class="bg-gray-50">
                     <th class="sticky left-0 z-5 bg-gray-50 p-4 text-left text-xs font-semibold text-gray-900">Nama</th>
                     <th class="sticky left-16 z-5 bg-gray-50 p-4 text-left text-xs font-semibold text-gray-900">NIP</th>
-                    @for ($i = 1; $i <= 13; $i++)
+                    @for ($i = 1; $i <= 12; $i++)
                     <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">HB {{ $i }}</th>
                     @endfor
-                    @for ($i = 1; $i <= 13; $i++)
+                    @for ($i = 1; $i <= 16; $i++)
                     <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">HL {{ $i }}</th>
                     @endfor
                     <th class="p-4 text-center text-xs font-semibold text-gray-900 whitespace-nowrap">Jumlah HB</th>
@@ -102,10 +101,10 @@
                 <tr class="bg-white hover:bg-gray-50 transition-all duration-300">
                     <td class="sticky left-0 z-5 bg-white p-4 text-xs text-gray-900 min-w-[180px]">{{ $r['nama'] }}</td>
                     <td class="sticky left-[180px] z-5 bg-white p-4 text-xs text-gray-900 whitespace-nowrap">{{ $r['nip'] }}</td>
-                    @for ($i = 1; $i <= 13; $i++)
+                    @for ($i = 1; $i <= 12; $i++)
                     <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hb'.$i] ?? '-' }}</td>
                     @endfor
-                    @for ($i = 1; $i <= 13; $i++)
+                    @for ($i = 1; $i <= 16; $i++)
                     <td class="p-4 text-xs text-gray-900 text-center">{{ $r['hl'.$i] ?? '-' }}</td>
                     @endfor
                     <td class="p-4 text-xs text-gray-900 text-center font-semibold">{{ $r['jumlah_hb'] ?: '-' }}</td>
@@ -286,10 +285,20 @@
         document.getElementById('dropdownPegawai').classList.remove('hidden');
     };
 
+    function applyFilter() {
+        const bulan = document.getElementById('periodValue').value
+                    || '{{ $bulan }}';
+        const nip   = selectedNip ?? '';
+        window.location.href = `?bulan=${bulan}&nip=${nip}`;
+    }
+
     window.pilihPegawai = function (emp) {
+        selectedNip = emp.nip_lama;
+        console.log('emp object:', emp)
         selectedEmployeeId = emp.id_pegawai;
         document.getElementById('searchPegawai').value = `${emp.nama} - ${emp.nip}`;
         document.getElementById('dropdownPegawai').classList.add('hidden');
+        applyFilter();
     };
 
     // =====================
@@ -461,13 +470,27 @@
     // INIT
     // =====================
     document.addEventListener('DOMContentLoaded', function () {
-        fetchPegawai();
+        const params   = new URLSearchParams(window.location.search);
+        const nipParam = params.get('nip') ?? '';
+
+        fetch('/admin/presensi/pegawai')
+            .then(r => r.json())
+            .then(data => {
+                cachedPegawai = data;
+                populateDropdown('', cachedPegawai);
+                if (nipParam) {
+                    selectedNip = nipParam;
+                    const found = data.find(e => e.nip == nipParam);
+                    if (found) {
+                        document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
+                    }
+                }
+            });
 
         document.addEventListener('click', function (e) {
             const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
-            if (wrapperPegawai && !wrapperPegawai.contains(e.target)) {
+            if (wrapperPegawai && !wrapperPegawai.contains(e.target))
                 document.getElementById('dropdownPegawai').classList.add('hidden');
-            }
         });
     });
 

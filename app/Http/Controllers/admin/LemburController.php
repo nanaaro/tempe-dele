@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -49,7 +49,7 @@ class LemburController extends Controller
             }
         }
 
-        return view('lembur', compact('ketuaTim', 'transaksi'));
+        return view('admin.lembur.index', compact('ketuaTim', 'transaksi'));
     }
 
     public function store(Request $request)

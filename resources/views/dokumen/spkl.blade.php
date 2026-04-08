@@ -208,16 +208,16 @@
                 </div>
                 <div class="ttd-space"></div>
                 <span class="nama-pejabat">{{ $ppk->nama ?? '' }}</span><br>
-                <div class="nip-text">NIP. {{ $ppk->nip_lama ?? '' }}</div>
+                {{-- <div class="nip-text">NIP. {{ $ppk->nip_lama ?? '' }}</div> --}}
             </td>
             <td class="ttd-box">
                 Mengetahui, {{ $tanggalTtd }}<br>
-                a.n. Kepala BPS Provinsi Jawa Tengah<br>
-                Kepala Bagian Umum
+                Kepala Badan Pusat Statistik<br>
+                Provinsi Jawa Tengah
                 <br>
                 <div class="ttd-space"></div>
-                <span class="nama-pejabat">{{ $kbu->nama ?? '' }}</span><br>
-                <div class="nip-text">NIP {{ $kbu->nip_lama ?? '' }}</div>
+                <span class="nama-pejabat">{{ $kbps->nama ?? '' }}</span>
+                {{-- <div class="nip-text">NIP {{ $kbu->nip_lama ?? '' }}</div> --}}
             </td>
         </tr>
     </table>

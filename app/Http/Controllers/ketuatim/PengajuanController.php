@@ -39,10 +39,10 @@ class PengajuanController extends Controller
     public function approve(Request $request, $id)
     {
         $request->validate([
-            'jam_mulai_disetujui'  => 'required',
+            'jam_mulai_disetujui'   => 'required',
             'jam_selesai_disetujui' => 'required|after:jam_mulai_disetujui',
-            'status'               => 'required|in:approved,rejected',
-            'note'                 => 'nullable|string',
+            'status'                => 'required|in:approved,rejected',
+            'note'                  => 'nullable|string',
         ]);
 
         DB::table('t_transaksi')->where('id_transaksi', $id)->update([

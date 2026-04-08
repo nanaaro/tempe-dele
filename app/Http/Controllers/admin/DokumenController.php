@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Dokumen;  // ← ubah import
+use App\Models\Dokumen; 
 use Illuminate\Http\Request;
 
-class DokumenController extends Controller  // ← ubah nama class
+class DokumenController extends Controller
 {
     public function index()
     {
-        $pejabat = Dokumen::orderBy('jabatan')  // ← ubah model
+        $pejabat = Dokumen::orderBy('jabatan')
             ->orderByRaw("status = 'aktif' DESC")
             ->get();
         return view('admin.dokumen', compact('pejabat'));

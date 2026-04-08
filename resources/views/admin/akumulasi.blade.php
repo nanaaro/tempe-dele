@@ -332,13 +332,28 @@ window.filterDropdownTim = function() {
 
 // INIT
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('/admin/pegawai/all').then(r => r.json()).then(d => { cachedPegawai = d; });
+    const params   = new URLSearchParams(window.location.search);
+    const nipParam = params.get('pegawai') ?? '';
+
+    fetch('/admin/presensi/pegawai')
+        .then(r => r.json())
+        .then(data => {
+            cachedPegawai = data;
+            populateDropdown('', cachedPegawai);
+            if (nipParam) {
+                selectedNip = nipParam;
+                const found = data.find(e => e.nip == nipParam);
+                if (found) {
+                    selectedEmployeeId = found.nip;
+                    document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
+                }
+            }
+        });
 
     document.addEventListener('click', function (e) {
-        const wTim = document.getElementById('searchTim')?.closest('.relative');
-        if (wTim && !wTim.contains(e.target)) document.getElementById('dropdownTim').classList.add('hidden');
-        const wPeg = document.getElementById('searchPegawai')?.closest('.relative');
-        if (wPeg && !wPeg.contains(e.target)) document.getElementById('dropdownPegawai').classList.add('hidden');
+        const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
+        if (wrapperPegawai && !wrapperPegawai.contains(e.target))
+            document.getElementById('dropdownPegawai').classList.add('hidden');
     });
 });
 </script>

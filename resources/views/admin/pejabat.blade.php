@@ -36,6 +36,8 @@
                     <th class="px-3 py-2 text-xs font-semibold text-gray-900">Status</th>
                     <th class="px-3 py-2 text-xs font-semibold text-gray-900">Nama Kepala BPS</th>
                     <th class="px-3 py-2 text-xs font-semibold text-gray-900">Status</th>
+                    <th class="px-3 py-2 text-xs font-semibold text-gray-900">Nama Kepala Bagian Umum</th>
+                    <th class="px-3 py-2 text-xs font-semibold text-gray-900">Status</th>
                     <th class="px-3 py-2 text-xs font-semibold text-gray-900 rounded-tr-xl">Aksi</th>
                 </tr>
             </thead>
@@ -43,7 +45,8 @@
                 @forelse($pejabatPerTahun as $tahun => $group)
                 @php
                     $ppk = $group->firstWhere('jabatan', 'PPK');
-                    $kbu = $group->firstWhere('jabatan', 'Kepala BPS');
+                    $kbps = $group->firstWhere('jabatan', 'Kepala BPS');
+                    $kbu = $group->firstWhere('jabatan', 'Kepala Bagian Umum');
                 @endphp
                 <tr class="bg-white hover:bg-gray-50" data-tahun="{{ $tahun }}">
                     {{-- Tahun --}}
@@ -52,32 +55,68 @@
                     {{-- PPK --}}
                     <td class="px-3 py-3 text-xs text-gray-900" data-id-ppk="{{ $ppk?->id_pejabat }}">
                         <span class="cell-display-ppk">{{ $ppk?->nama ?? '-' }}</span>
-                        <input type="text" name="nama" value="{{ $ppk?->nama }}"
-                            class="cell-edit-ppk hidden w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-400">
-                        <div class="text-gray-400 text-xs mt-0.5">{{ $ppk?->nip_lama }}</div>
+                        <select name="nama" class="cell-edit-ppk hidden w-full rounded border border-gray-300 px-2 py-1 text-xs" onchange="fillNipInline(this, 'ppk')">
+                            @foreach($pejabatList['PPK'] ?? [] as $p)
+                                <option value="{{ $p->nama }}" data-nip-lama="{{ $p->nip_lama }}" {{ $ppk?->nama === $p->nama ? 'selected' : '' }}>{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                        <div class="text-gray-400 text-xs mt-0.5">
+                            <span class="cell-display-ppk-nip">{{ $ppk?->nip_lama }}</span>
+                            <input type="text" name="nip_lama" value="{{ $ppk?->nip_lama }}" class="cell-edit-ppk hidden w-full rounded border border-gray-300 px-2 py-1 text-xs mt-1">
+                        </div>
                     </td>
 
                     {{-- Status PPK --}}
                     <td class="px-3 py-3 text-xs text-gray-900">
                         <span class="cell-display-ppk-status">{{ $ppk ? ucfirst($ppk->status) : '-' }}</span>
-                        <select name="status" class="cell-edit-ppk hidden rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none">
+                        <select name="status" class="cell-edit-ppk hidden rounded border border-gray-300 px-2 py-1 text-xs">
                             <option value="aktif" {{ $ppk?->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="nonaktif" {{ $ppk?->status === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                    </td>
+
+
+                    {{-- Kepala KBPS --}}
+                    <td class="px-3 py-3 text-xs text-gray-900" data-id-kbps="{{ $kbps?->id_pejabat }}">
+                        <span class="cell-display-kbps">{{ $kbps?->nama ?? '-' }}</span>
+                        <select name="nama" class="cell-edit-kbps hidden w-full rounded border border-gray-300 px-2 py-1 text-xs" onchange="fillNipInline(this, 'kbps')">
+                            @foreach($pejabatList['Kepala BPS'] ?? [] as $p)
+                                <option value="{{ $p->nama }}" data-nip-lama="{{ $p->nip_lama }}" {{ $kbps?->nama === $p->nama ? 'selected' : '' }}>{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                        <div class="text-gray-400 text-xs mt-0.5">
+                            <span class="cell-display-kbps-nip">{{ $kbps?->nip_lama }}</span>
+                            <input type="text" name="nip_lama" value="{{ $kbps?->nip_lama }}" class="cell-edit-kbps hidden w-full rounded border border-gray-300 px-2 py-1 text-xs mt-1">
+                        </div>
+                    </td>
+
+                    {{-- Status KBPS --}}
+                    <td class="px-3 py-3 text-xs text-gray-900">
+                        <span class="cell-display-kbps-status">{{ $kbps ? ucfirst($kbps->status) : '-' }}</span>
+                        <select name="status" class="cell-edit-kbps hidden rounded border border-gray-300 px-2 py-1 text-xs">
+                            <option value="aktif" {{ $kbps?->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="nonaktif" {{ $kbps?->status === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                         </select>
                     </td>
 
                     {{-- KBU --}}
                     <td class="px-3 py-3 text-xs text-gray-900" data-id-kbu="{{ $kbu?->id_pejabat }}">
                         <span class="cell-display-kbu">{{ $kbu?->nama ?? '-' }}</span>
-                        <input type="text" name="nama" value="{{ $kbu?->nama }}"
-                            class="cell-edit-kbu hidden w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-400">
-                        <div class="text-gray-400 text-xs mt-0.5">{{ $kbu?->nip_lama }}</div>
+                        <select name="nama" class="cell-edit-kbu hidden w-full rounded border border-gray-300 px-2 py-1 text-xs" onchange="fillNipInline(this, 'kbu')">
+                            @foreach($pejabatList['Kepala Bagian Umum'] ?? [] as $p)
+                                <option value="{{ $p->nama }}" data-nip-lama="{{ $p->nip_lama }}" {{ $kbu?->nama === $p->nama ? 'selected' : '' }}>{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                        <div class="text-gray-400 text-xs mt-0.5">
+                            <span class="cell-display-kbu-nip">{{ $kbu?->nip_lama }}</span>
+                            <input type="text" name="nip_lama" value="{{ $kbu?->nip_lama }}" class="cell-edit-kbu hidden w-full rounded border border-gray-300 px-2 py-1 text-xs mt-1">
+                        </div>
                     </td>
 
                     {{-- Status KBU --}}
                     <td class="px-3 py-3 text-xs text-gray-900">
                         <span class="cell-display-kbu-status">{{ $kbu ? ucfirst($kbu->status) : '-' }}</span>
-                        <select name="status" class="cell-edit-kbu hidden rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none">
+                        <select name="status" class="cell-edit-kbu hidden rounded border border-gray-300 px-2 py-1 text-xs">
                             <option value="aktif" {{ $kbu?->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="nonaktif" {{ $kbu?->status === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                         </select>
@@ -144,6 +183,7 @@
                         <option value="">Pilih Jabatan</option>
                         <option value="PPK">PPK (Pejabat Pembuat Komitmen)</option>
                         <option value="Kepala BPS">Kepala BPS Provinsi Jawa Tengah</option>
+                        <option value="Kepala Bagian Umum">Kepala Bagian Umum </option>
                     </select>
                 </div>
                 <div>
@@ -195,16 +235,16 @@
                     <p class="text-sm font-semibold text-gray-700">PPK</p>
                     <form id="formEditPpk" method="POST" class="space-y-3">
                         @csrf @method('PUT')
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Nama</label>
-                            <input type="text" name="nama" id="ppkNama"
-                                class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
-                        </div>
+                        <select name="nama" class="cell-edit-ppk hidden w-full rounded border border-gray-300 px-2 py-1 text-xs" onchange="fillNipInline(this, 'ppk')">
+                            @foreach($pejabatList['PPK'] ?? [] as $p)
+                                <option value="{{ $p->nama }}" data-nip-lama="{{ $p->nip_lama }}" data-nip="{{ $p->nip }}">{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1">NIP Lama</label>
-                                <input type="text" name="nip_lama" id="ppkNipLama"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
+                                <input type="text" name="nip_lama" value="{{ $ppk?->nip_lama }}"
+                                class="cell-edit-ppk hidden w-full rounded border border-gray-300 px-2 py-1 text-xs mt-1">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
@@ -272,72 +312,34 @@ function closeModal() {
     document.getElementById('modalTambah').classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 }
-function openModalEdit(ppkId, kbuId, tahun) {
-    document.getElementById('editTahunLabel').textContent = tahun;
-    document.getElementById('formEditPpk').action = `/admin/pejabat/${ppkId}`;
-    document.getElementById('formEditKbu').action = `/admin/pejabat/${kbuId}`;
-
-    if (ppkId) {
-        fetch(`/admin/pejabat/${ppkId}/data`)
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById('ppkNama').value    = d.nama ?? '';
-                document.getElementById('ppkNipLama').value = d.nip_lama ?? '';
-                document.getElementById('ppkStatus').value  = d.status ?? 'aktif';
-            });
-    }
-    if (kbuId) {
-        fetch(`/admin/pejabat/${kbuId}/data`)
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById('kbuNama').value    = d.nama ?? '';
-                document.getElementById('kbuNipLama').value = d.nip_lama ?? '';
-                document.getElementById('kbuStatus').value  = d.status ?? 'aktif';
-            });
-    }
-
-    document.getElementById('modalEdit').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-}
 function closeModalEdit() {
     document.getElementById('modalEdit').classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 }
 
-// =====================
-// ALERT
-// =====================
+function fillNipInline(select, prefix) {
+    const opt = select.options[select.selectedIndex];
+    const row = select.closest('tr');
+    row.querySelector(`.cell-edit-${prefix}[name="nip_lama"]`).value = opt.dataset.nipLama ?? '';
+}
+
 function showInlineAlert(message, type = 'success') {
     const container = document.getElementById('alertContainer');
     if (!container) return;
-
     const alertClass = type === 'success'
         ? 'border-green-200 bg-green-100 text-green-700'
         : 'border-red-200 bg-red-100 text-red-700';
-
-    container.innerHTML = `
-        <div class="alert-inline px-4 py-3 rounded-lg border text-sm ${alertClass}">
-            ${message}
-        </div>
-    `;
-
-    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
+    container.innerHTML = `<div class="alert-inline px-4 py-3 rounded-lg border text-sm ${alertClass}">${message}</div>`;
     setTimeout(() => {
         const alertEl = container.querySelector('.alert-inline');
         if (alertEl) {
             alertEl.style.transition = 'opacity 0.3s ease';
             alertEl.style.opacity = '0';
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 300);
+            setTimeout(() => { container.innerHTML = ''; }, 300);
         }
     }, 3000);
 }
 
-// =====================
-// EXIT EDIT
-// =====================
 function exitEdit(row, btnEdit, btnSave, btnCancel, btnDelete) {
     row.querySelectorAll('[class*="cell-display"]').forEach(el => el.classList.remove('hidden'));
     row.querySelectorAll('[class*="cell-edit"]').forEach(el => el.classList.add('hidden'));
@@ -347,19 +349,18 @@ function exitEdit(row, btnEdit, btnSave, btnCancel, btnDelete) {
     btnCancel.classList.add('hidden');
 }
 
-// =====================
-// INLINE EDIT (data-tahun)
-// =====================
 document.querySelectorAll('tbody tr[data-tahun]').forEach(row => {
     const btnEdit   = row.querySelector('.btn-edit');
     const btnSave   = row.querySelector('.btn-save');
     const btnCancel = row.querySelector('.btn-cancel');
     const btnDelete = row.querySelector('.btn-delete');
 
-    const tdPpk = row.querySelector('[data-id-ppk]');
-    const tdKbu = row.querySelector('[data-id-kbu]');
-    const idPpk = tdPpk?.dataset.idPpk;
-    const idKbu = tdKbu?.dataset.idKbu;
+    const tdPpk  = row.querySelector('[data-id-ppk]');
+    const tdKbps = row.querySelector('[data-id-kbps]');
+    const tdKbu  = row.querySelector('[data-id-kbu]');
+    const idPpk  = tdPpk?.dataset.idPpk;
+    const idKbps = tdKbps?.dataset.idKbps;
+    const idKbu  = tdKbu?.dataset.idKbu;
 
     btnEdit?.addEventListener('click', () => {
         row.querySelectorAll('[class*="cell-display"]').forEach(el => el.classList.add('hidden'));
@@ -370,32 +371,48 @@ document.querySelectorAll('tbody tr[data-tahun]').forEach(row => {
         btnCancel.classList.remove('hidden');
     });
 
-    btnCancel?.addEventListener('click', () => {
-        exitEdit(row, btnEdit, btnSave, btnCancel, btnDelete);
-    });
+    btnCancel?.addEventListener('click', () => exitEdit(row, btnEdit, btnSave, btnCancel, btnDelete));
 
     btnSave?.addEventListener('click', async () => {
         if (idPpk) {
-            const nama   = tdPpk.querySelector('input[name="nama"]').value;
-            const status = row.querySelectorAll('.cell-edit-ppk')[1]?.value;
+            const nama    = tdPpk.querySelector('select[name="nama"]').value;
+            const nipLama = tdPpk.querySelector('input[name="nip_lama"]').value;
+            const status  = tdPpk.closest('tr').querySelector('td:nth-child(3) select[name="status"]').value;
             await fetch(`/admin/pejabat/${idPpk}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                body: JSON.stringify({ nama, status }),
+                body: JSON.stringify({ nama, nip_lama: nipLama, status }),
             });
             row.querySelector('.cell-display-ppk').textContent = nama;
+            row.querySelector('.cell-display-ppk-nip').textContent = nipLama;
             row.querySelector('.cell-display-ppk-status').textContent = status === 'aktif' ? 'Aktif' : 'Nonaktif';
         }
 
+        if (idKbps) {
+            const nama    = tdKbps.querySelector('select[name="nama"]').value;
+            const nipLama = tdKbps.querySelector('input[name="nip_lama"]').value;
+            const status  = tdKbps.closest('tr').querySelector('td:nth-child(5) select[name="status"]').value;
+            await fetch(`/admin/pejabat/${idKbps}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+                body: JSON.stringify({ nama, nip_lama: nipLama, status }),
+            });
+            row.querySelector('.cell-display-kbps').textContent = nama;
+            row.querySelector('.cell-display-kbps-nip').textContent = nipLama;
+            row.querySelector('.cell-display-kbps-status').textContent = status === 'aktif' ? 'Aktif' : 'Nonaktif';
+        }
+
         if (idKbu) {
-            const nama   = tdKbu.querySelector('input[name="nama"]').value;
-            const status = row.querySelectorAll('.cell-edit-kbu')[1]?.value;
+            const nama    = tdKbu.querySelector('select[name="nama"]').value;
+            const nipLama = tdKbu.querySelector('input[name="nip_lama"]').value;
+            const status  = tdKbu.closest('tr').querySelector('td:nth-child(7) select[name="status"]').value;
             await fetch(`/admin/pejabat/${idKbu}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
-                body: JSON.stringify({ nama, status }),
+                body: JSON.stringify({ nama, nip_lama: nipLama, status }),
             });
             row.querySelector('.cell-display-kbu').textContent = nama;
+            row.querySelector('.cell-display-kbu-nip').textContent = nipLama;
             row.querySelector('.cell-display-kbu-status').textContent = status === 'aktif' ? 'Aktif' : 'Nonaktif';
         }
 
@@ -406,8 +423,7 @@ document.querySelectorAll('tbody tr[data-tahun]').forEach(row => {
     btnDelete?.addEventListener('click', async () => {
         const tahun = row.dataset.tahun;
         if (!confirm(`Hapus data pejabat tahun ${tahun}?`)) return;
-
-        const ids = [idPpk, idKbu].filter(Boolean);
+        const ids = [idPpk, idKbps, idKbu].filter(Boolean);
         try {
             await Promise.all(ids.map(id =>
                 fetch(`/admin/pejabat/${id}`, {

@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\PresensiUploadController;
 
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\admin\DokumenGenerateController;
+use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
 
 // ─── Public ───────────────────────────────────────────────
 Route::get('/', fn() => view('welcome'));
@@ -53,35 +54,42 @@ Route::middleware('checksession')->group(function () {
     // ─── Admin ────────────────────────────────────────────
     Route::prefix('admin')->name('admin.')->group(function () {
 
-        Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/pegawai/all', [PresensiController::class, 'getAllPegawai'])->name('pegawai.all')->middleware('checksession');
 
-        //SPKL
+        //Rekapitulasi
         Route::get('/spkl', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('spkl');
         Route::get('/rekapitulasi', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('rekapitulasi');
         Route::get('/rekapitulasi', [\App\Http\Controllers\pegawai\RekapitulasiController::class, 'index'])->name('rekapitulasi')->middleware('checksession');
         Route::get('/dokumen/download/{type}', [\App\Http\Controllers\admin\DokumenGenerateController::class, 'download'])->name('dokumen.download')->middleware('checksession');
+        Route::get('/rekapitulasi/export', [\App\Http\Controllers\admin\RekapitulasiController::class, 'downloadExcel'])->name('rekapitulasi.export');
+        Route::get('admin/rekapitulasi', [RekapitulasiController::class, 'index']);
 
         //Laporan
         Route::get('/laporan', [\App\Http\Controllers\admin\LaporanController::class, 'index'])->name('laporan');
+        Route::get('/dokumen/download-excel/laporan/{jenis}', [DokumenGenerateController::class, 'downloadExcel'])->name('dokumen.download.excel')->middleware('checksession');
 
         //Akumulasi
         Route::get('/akumulasi', [\App\Http\Controllers\admin\AkumulasiController::class, 'index'])->name('akumulasi');
         Route::get('/akumulasi/download', [\App\Http\Controllers\admin\AkumulasiController::class, 'download'])->name('akumulasi.download')->middleware('checksession');
+
+        //Pengajuan Lembur
+        Route::get('/lembur', [LemburController::class, 'index'])->name('lembur');
+        Route::post('/lembur', [LemburController::class, 'store'])->name('lembur.store');
+        Route::get('/lembur/tim', [LemburController::class, 'timPegawai'])->name('lembur.tim');
 
         //Daftar Hadir
         Route::get('/daftar-hadir', [\App\Http\Controllers\admin\DaftarHadirController::class, 'index'])->name('daftar_hadir');
         Route::get('/daftar-hadir/download', [\App\Http\Controllers\admin\DaftarHadirController::class, 'download'])->name('daftar_hadir.download')->middleware('checksession');
 
         // Presensi
-        Route::get('/presensi', [\App\Http\Controllers\admin\PresensiController::class, 'index'])->name('presensi');
         Route::get('/presensi',           [PresensiUploadController::class, 'index'])->name('presensi');
         Route::post('/presensi/upload',   [PresensiUploadController::class, 'upload'])->name('presensi.upload');
         Route::get('/presensi/riwayat',   [PresensiUploadController::class, 'riwayat'])->name('presensi.riwayat');
         Route::get('/presensi/kalender',  [PresensiUploadController::class, 'getKalender'])->name('presensi.kalender');
         Route::get('/presensi/tim',       [PresensiController::class, 'getTim'])->name('presensi.tim');
         Route::get('/presensi/pegawai',   [PresensiController::class, 'getPegawai'])->name('presensi.pegawai');
-        Route::get('/riwayat_presensi', [\App\Http\Controllers\admin\PresensiUploadController::class, 'index'])->name('riwayat_presensi');
+        Route::get('/riwayat_presensi',   [PresensiUploadController::class, 'riwayat'])->name('riwayat_presensi');
 
         // Tim
         Route::get('/tim', [\App\Http\Controllers\admin\TimController::class, 'index'])->name('tim');

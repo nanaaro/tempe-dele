@@ -59,7 +59,7 @@
             <div class="flex flex-col leading-tight">
                 <span class="text-bs font-bold text-white tracking-wide">TEMPE DELE</span>
                 <span class="text-[12px] text-slate-300">
-                    Sistem Pengelolaan <br>Dokumen Lembur
+                    sisTEM PEngelolaan <br>DokumEn Lembur
                 </span>
             </div>
         </a>
@@ -136,7 +136,7 @@
 
                 $lainnyaItems = [
                     [
-                        'label' => 'SPKL',
+                        'label' => 'Rekapitulasi Lembur',
                         'path' => 'M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25',
                         'route' => 'admin.spkl',
                         'active' => request()->routeIs('admin.spkl'),
@@ -215,11 +215,17 @@
                                 'active' => request()->routeIs('admin.presensi'),
                             ],
                             [
-                                'label' => 'Dokumen',
+                                'label' => 'Generate Dokumen',
                                 'path' => 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
                                 'route' => 'admin.dokumen',
                                 'active' => request()->routeIs('admin.dokumen'),
                             ],
+                            [
+                                'label' => 'Lembur',
+                                    'path' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+                                    'route' => 'admin.lembur',
+                                    'active' => request()->routeIs('admin.lembur'),
+                                ],
                         ],
                     ],
                     [
@@ -242,7 +248,7 @@
                 @endif
 
                 <div class="px-3 flex flex-col">
-                    <p class="px-3 mb-1 text-[10px] font-semibold text-slate-600 uppercase tracking-widest">
+                    <p class="px-3 mb-1 text-[10px] font-bold text-white uppercase tracking-widest">
                         {{ $section['title'] }}
                     </p>
 

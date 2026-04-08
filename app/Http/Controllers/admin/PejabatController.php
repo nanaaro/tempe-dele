@@ -12,7 +12,13 @@ class PejabatController extends Controller
     {
         $pejabat = DB::table('m_pejabat')->orderBy('tahun', 'desc')->get();
         $pejabatPerTahun = $pejabat->groupBy('tahun');
-        return view('admin.pejabat', compact('pejabatPerTahun'));
+        $pejabatList = DB::table('m_pejabat')
+            ->select('nama', 'jabatan', 'nip_lama', 'nip')
+            ->distinct()
+            ->get()
+            ->groupBy('jabatan');
+
+        return view('admin.pejabat', compact('pejabatPerTahun', 'pejabatList'));
     }
 
     public function store(Request $request)
@@ -47,6 +53,7 @@ class PejabatController extends Controller
         DB::table('m_pejabat')->where('id_pejabat', $id)->update([
             'nama'   => $request->nama,
             'status' => $request->status,
+            'nip_lama' => $request->nip_lama
         ]);
         return response()->json(['message' => 'Berhasil diupdate']);
     }

@@ -44,10 +44,11 @@
 <div class="clearfix">
     <div class="ttd-box">
         Mengetahui,<br>
-        Kepala BPS Provinsi Jawa Tengah<br>
+        Kepala Badan Pusat Statistik<br>
+        Provinsi Jawa Tengah <br>
         <div class="ttd-space"></div>
-        <span class="nama-pejabat">{{ $kbu->nama ?? '' }}</span><br>
-        NIP {{ $kbu->nip_lama ?? '' }}
+        <span class="nama-pejabat">{{ $kbps->nama ?? '' }}</span>
+        {{-- NIP {{ $kbu->nip_lama ?? '' }} --}}
     </div>
 </div>
 

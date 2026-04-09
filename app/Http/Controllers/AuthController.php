@@ -92,7 +92,15 @@ class AuthController extends Controller
             Session::put('jenis_user', 'ketua_tim');
             Session::put('id_pegawai', $pegawaiData->id_pegawai);
 
-            return redirect()->route('dashboard');
+            $role = $pegawaiData->role;
+
+            if ($role === 'superadmin' || $role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($role === 'user' && $jenisUser === 'ketua_tim') {
+                return redirect()->route('ketua-tim.dashboard');
+            } else {
+                return redirect()->route('dashboard');
+            }
         }
 
         return back()->withErrors([

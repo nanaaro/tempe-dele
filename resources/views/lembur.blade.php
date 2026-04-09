@@ -92,7 +92,8 @@
                         <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize w-28">Ketua Tim</th>
                         <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize w-32">Nama Tim</th>
                         <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize w-20">Status</th>
-                        <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize rounded-tr-xl w-24">Catatan</th>
+                        <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize w-20">Catatan</th>
+                        <th class="px-2 py-2 text-center text-xs font-semibold text-gray-900 capitalize rounded-tr-xl w-24">Dokumentasi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300" id="tabelLembur">
@@ -142,6 +143,7 @@
                         <td class="px-2 py-2 text-xs text-gray-900 text-center">
                             {{ $t->note ?? '-' }}
                         </td>
+                        <td></td>
                     </tr>
                     @empty
                     <tr>

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\RiwayatPresensi;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PresensiUploadController extends Controller
 {
@@ -18,6 +19,7 @@ class PresensiUploadController extends Controller
 
     public function upload(Request $request)
     {
+
         $request->validate([
             'file' => 'required|mimes:xlsx,xls|max:10240',
         ]);
@@ -79,22 +81,32 @@ class PresensiUploadController extends Controller
                 }
             }
 
-            \DB::statement("
-                UPDATE t_transaksi t
-                JOIN m_pegawai p ON t.submitted_by_NIP = p.nip
-                JOIN t_presensi pr ON p.nip_lama = pr.niplama AND DATE(pr.tanggal) = t.date
-                SET t.jam_selesai_disetujui =
-                    CASE
-                        WHEN TIMESTAMPDIFF(HOUR,
-                            CONCAT(t.date, ' ', t.jam_mulai_disetujui),
-                            pr.jam_selesai
-                        ) > 6
-                        THEN ADDTIME(t.jam_mulai_disetujui, '06:00:00')
-                        ELSE TIME(pr.jam_selesai)
-                    END
-                WHERE pr.jam_selesai IS NOT NULL
-                AND t.status = 'approved'
-            ");
+    // Ambil semua transaksi approved yang punya presensi
+$transaksis = DB::table('t_transaksi as t')
+    ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
+    ->join('t_presensi as pr', function($join) {
+        $join->on('p.nip_lama', '=', 'pr.niplama')
+             ->whereRaw('DATE(pr.tanggal) = t.date');
+    })
+    ->where('t.status', 'approved')
+    ->whereNotNull('pr.jam_selesai')
+    ->whereNotNull('t.jam_mulai_disetujui')
+    ->select('t.id_transaksi', 't.date', 't.jam_mulai_disetujui', 'pr.jam_selesai')
+    ->get();
+
+foreach ($transaksis as $trx) {
+    $jamMulai   = Carbon::parse($trx->date . ' ' . $trx->jam_mulai_disetujui);
+    $jamSelesai = Carbon::parse($trx->jam_selesai);
+    $maxSelesai = $jamMulai->copy()->addHours(6);
+
+    $jamFinal = $jamSelesai->gt($maxSelesai) ? $maxSelesai : $jamSelesai;
+
+    DB::table('t_transaksi')
+        ->where('id_transaksi', $trx->id_transaksi)
+        ->update(['jam_selesai_disetujui' => $jamFinal->format('H:i')]);
+}
+
+\Log::info('Presensi sync selesai, total: ' . $transaksis->count());
 
             // Simpan riwayat upload
             $adminNama = session('nama') ?? session('user.nama') ?? session('pegawai.nama') ?? 'Admin';
@@ -162,6 +174,18 @@ class PresensiUploadController extends Controller
         $daftarHadir = DB::table('t_riwayat_presensi')
             ->orderBy('uploaded_at', 'desc')
             ->get();
+
+            try {
+            RiwayatPresensi::create([
+                'periode'     => sprintf('%04d-%02d', $tahun, $bulan),
+                'nama_file'   => $file->getClientOriginalName(),
+                'uploaded_by' => $adminNama,
+                'uploaded_at' => now(),
+            ]);
+            \Log::info('RiwayatPresensi berhasil disimpan');
+        } catch (\Exception $e) {
+            \Log::error('RiwayatPresensi error: ' . $e->getMessage());
+        }
 
         return view('admin.riwayat_presensi', compact('daftarHadir'));
     }

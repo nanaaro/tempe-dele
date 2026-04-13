@@ -15,7 +15,7 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" />
                 <div class="logo-text">
                     <span class="logo-title">TEMPE DELE</span>
-                    <span class="logo-subtitle">Sistem Pengelolaan Dokumen Lembur</span>
+                    <span class="logo-subtitle">sisTEM PEngelolaan DokumEn LEmbur</span>
                 </div>
             </div>
 

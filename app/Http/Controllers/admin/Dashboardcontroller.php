@@ -63,11 +63,12 @@ class DashboardController extends Controller
         $totalJam      = round($totalMenit / 60, 1);
         $rataRataJam   = $karyawanAktif > 0 ? round($totalJam / $karyawanAktif, 1) : 0;
 
+        $periodeIni = Carbon::now()->format('Y-m');
+
         // Cek presensi bulan ini (asumsi tabel t_presensi dengan kolom bulan & tahun)
-        $presensiLengkap = DB::table('t_presensi')
-            ->whereMonth('tanggal', $bulanIni)
-            ->whereYear('tanggal', $tahunIni)
-            ->exists();
+        $presensiLengkap = DB::table('t_riwayat_presensi')
+        ->where('periode', $periodeIni)
+        ->exists();
 
         // Cek SPKL & laporan bulan ini di tabel dokumen
         $spklGenerated = DB::table('t_dokumen')

@@ -17,6 +17,8 @@
     input[type="number"] { -moz-appearance: textfield; }
   </style>
 
+  <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+
   @stack('styles')
 </head>
 

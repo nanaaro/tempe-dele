@@ -189,7 +189,7 @@
                 <td class="text-center">{{ $i + 1 }}</td>
                 <td>
                     {{ $p->nama }}<br>
-                    <small>{{ $p->nip }}</small>
+                    <small>{{ $p->nip_lama }}</small>
                 </td>
                 <td class="text-center">{{ $p->tanggal_lembur }}</td>
                 <td style="white-space: pre-line;">{{ $p->uraian }}</td>
@@ -212,11 +212,11 @@
             </td>
             <td class="ttd-box">
                 Mengetahui, {{ $tanggalTtd }}<br>
-                Kepala Badan Pusat Statistik<br>
-                Provinsi Jawa Tengah
+                a.n.Kepala BPS Provinsi Jawa Tengah<br>
+                Kepala Bagian Umum
                 <br>
                 <div class="ttd-space"></div>
-                <span class="nama-pejabat">{{ $kbps->nama ?? '' }}</span>
+                <span class="nama-pejabat">{{ $kbu->nama ?? '' }}</span>
                 {{-- <div class="nip-text">NIP {{ $kbu->nip_lama ?? '' }}</div> --}}
             </td>
         </tr>

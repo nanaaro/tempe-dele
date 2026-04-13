@@ -44,7 +44,7 @@
       <p class="text-xs text-gray-500 mb-2">Disetujui</p>
       <p class="text-3xl font-semibold text-green-700">{{ $stats['disetujui'] }}</p>
       <p class="mt-1 text-xs text-gray-400">
-        {{ $stats['total'] > 0 ? round($stats['disetujui'] / $stats['total'] * 100) : 0 }}% dari total
+        Pengajuan bulan ini
       </p>
     </div>
     <div class="rounded-2xl bg-gray-50 p-5">
@@ -56,7 +56,7 @@
       <p class="text-xs text-gray-500 mb-2">Ditolak</p>
       <p class="text-3xl font-semibold text-red-700">{{ $stats['ditolak'] }}</p>
       <p class="mt-1 text-xs text-gray-400">
-        {{ $stats['total'] > 0 ? round($stats['ditolak'] / $stats['total'] * 100) : 0 }}% dari total
+        Pengajuan bulan ini
       </p>
     </div>
   </div>

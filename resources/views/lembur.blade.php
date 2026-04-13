@@ -140,10 +140,44 @@
                                 <span class="text-gray-400 text-xs">-</span>
                             @endif
                         </td>
-                        <td class="px-2 py-2 text-xs text-gray-900 text-center">
+                        <td class="px-2 py-2 text-xs text-gray-900 text-left">
                             {{ $t->note ?? '-' }}
                         </td>
-                        <td></td>
+                        <td class="px-2 py-2 text-xs text-center">
+                            @if($t->status === 'approved')
+                                @if($t->file_dokumentasi)
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="{{ $t->file_dokumentasi }}" target="_blank"
+                                            class="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 underline">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                            Lihat
+                                        </a>
+                                        <form action="{{ route('pegawai.lembur.destroyDoc', $t->id_transaksi) }}" method="POST"
+                                            onsubmit="return confirm('Hapus dokumentasi ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-400 hover:text-red-600 mt-1.5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <button type="button"
+                                        onclick="openModalDok({{ $t->id_transaksi }})"
+                                        class="text-[#faa938] hover:text-[#fd9a10] text-xs underline">
+                                        + Tambah
+                                    </button>
+                                @endif
+                            @else
+                                <span class="text-gray-300">-</span>
+                            @endif
+                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -154,6 +188,39 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    {{-- MODAL DOKUMENTASI --}}
+    <div id="modalDok" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" onclick="closeModalDok()"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between border-b px-6 py-4">
+                    <h2 class="text-base font-semibold text-gray-900">Tambah Dokumentasi</h2>
+                    <button onclick="closeModalDok()" class="text-gray-500 hover:text-gray-700 text-xl leading-none">&times;</button>
+                </div>
+                <form id="formDok" method="POST" class="px-6 py-5 space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Link Google Drive</label>
+                        <input type="url" name="file_path" required
+                            placeholder="https://drive.google.com/..."
+                            class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"/>
+                        <p class="mt-1 text-xs text-gray-400"></p>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-1">
+                        <button type="button" onclick="closeModalDok()"
+                            class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -372,9 +439,6 @@
         jamMulai.setAttribute('min', '16:01');
     }
 
-    // Show/hide jam selesai
-    // Tampilkan jam selesai kalau: hari libur ATAU tanggal masa depan
-    // Sembunyikan kalau: hari kerja + tanggal hari ini atau lampau
     const tanggalDipilih = this.value;
     const hariIni        = new Date().toISOString().split('T')[0];
     wrapper.classList.remove('hidden');
@@ -433,15 +497,15 @@
         hitungDurasi();
     });
 
-document.getElementById('jam_selesai').addEventListener('change', function () {
-    const jamMulai = document.getElementById('jam_mulai').value;
-    if (jamMulai && this.value <= jamMulai) {
-        alert('Jam selesai harus setelah jam mulai');
-        this.value = '';
-        return;
-    }
-    hitungDurasi();
-});
+    document.getElementById('jam_selesai').addEventListener('change', function () {
+        const jamMulai = document.getElementById('jam_mulai').value;
+        if (jamMulai && this.value <= jamMulai) {
+            alert('Jam selesai harus setelah jam mulai');
+            this.value = '';
+            return;
+        }
+        hitungDurasi();
+    });
 
     // =====================
     // HELPER
@@ -736,6 +800,21 @@ document.getElementById('jam_selesai').addEventListener('change', function () {
         filterTabel();
         updateResetBtn();
     });
+
+    // =====================
+    // Dokumentasi
+    // =====================
+    function openModalDok(idTransaksi) {
+        const base = "{{ url('pegawai/lembur') }}";
+        document.getElementById('formDok').action = `${base}/${idTransaksi}/dokumentasi`;
+        document.getElementById('modalDok').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeModalDok() {
+        document.getElementById('modalDok').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
 </script>
 @endpush
 

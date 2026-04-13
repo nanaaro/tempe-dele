@@ -50,6 +50,9 @@ class PenggunaController extends Controller
     {
         $pegawai = Pegawai::findOrFail($id);
 
+        $nip = session('user')['nip'];
+        $roleSaya = \DB::table('m_pegawai')->where('nip', $nip)->value('role');
+
         $validated = $request->validate([
             'nama'     => 'sometimes|string|max:255',
             'nip'      => 'nullable|string|max:30',
@@ -58,6 +61,10 @@ class PenggunaController extends Controller
             'golongan' => 'nullable|string|max:10',
             'role'     => 'sometimes|in:user,admin,ketua-tim',
         ]);
+
+        if ($roleSaya !== 'superadmin') {
+            unset($validated['role']);
+        }
 
         $pegawai->update($validated);
 

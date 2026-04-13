@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'kipapp' => [
+    'token'  => env('KIPAPP_BEARER_TOKEN'),
+    'origin' => env('KIPAPP_ORIGIN', 'https://jateng.web.bps.go.id'),
+    'url'    => env('KIPAPP_URL', 'https://kipapp.bps.go.id/api/v3'),
+    ],
 ];

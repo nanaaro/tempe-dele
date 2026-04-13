@@ -33,7 +33,7 @@
         @foreach($pegawai as $i => $p)
         <tr>
             <td style="text-align:center">{{ $i + 1 }}</td>
-            <td>{{ $p->nama }}<br><small>{{ $p->nip }}</small></td>
+            <td>{{ $p->nama }}<br><small>{{ $p->nip_lama }}</small></td>
             <td style="text-align:center">{{ $p->tanggal }}</td>
             <td style="white-space: pre-line;">{{ $p->uraian }}</td>
         </tr>
@@ -44,10 +44,9 @@
 <div class="clearfix">
     <div class="ttd-box">
         Mengetahui,<br>
-        Kepala Badan Pusat Statistik<br>
-        Provinsi Jawa Tengah <br>
+        Kepala Bagian Umum<br>
         <div class="ttd-space"></div>
-        <span class="nama-pejabat">{{ $kbps->nama ?? '' }}</span>
+        <span class="nama-pejabat">{{ $kbu->nama ?? '' }}</span>
         {{-- NIP {{ $kbu->nip_lama ?? '' }} --}}
     </div>
 </div>

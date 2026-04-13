@@ -2,46 +2,62 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Exports\LemburExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LemburController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $bulan = $request->query('bulan', now()->format('Y-m'));
+        $tim   = $request->query('tim');
+        $nip   = $request->query('nip');
         $nipUser = session('user')['nip'];
 
-        $transaksi = \DB::table('t_transaksi as t')
+        $periode      = Carbon::parse($bulan . '-01');
+        $startOfMonth = $periode->copy()->startOfMonth()->toDateString();
+        $endOfMonth   = $periode->copy()->endOfMonth()->toDateString();
+
+        $query = \DB::table('t_transaksi as t')
             ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
             ->leftJoin('m_pegawai as kp', 't.approver_employee_id', '=', 'kp.nip')
-            ->where('t.submitted_by_NIP', $nipUser)
-            ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua')
-            ->orderBy('t.date', 'desc')
-            ->paginate(10);
+            ->leftJoin('m_pegawai as pg', 't.submitted_by_NIP', '=', 'pg.nip')
+            ->leftJoin('m_dokumentasi as md', 't.dokumentasi_id_dokumentasi', '=', 'md.id_dokumentasi')
+            ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua', 'pg.nama as nama_pegawai', 'md.file_path as file_dokumentasi')
+            ->whereBetween('t.date', [$startOfMonth, $endOfMonth])
+            ->orderBy('t.date', 'desc');
 
+        if ($tim) $query->where('t.tim_kode_tim', $tim);
+        if ($nip) $query->where('t.submitted_by_NIP', $nip);
+
+        $transaksi = $query->paginate(10)->withQueryString();
+
+        // Ambil ketuaTim untuk form submit
+        $ketuaTim = [];
         $responseTim = Http::withHeaders([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd2ViYXBwcy5icHMuZ28uaWRcL2tpcGFwcCIsInN1YiI6IjMzMDB8OTIwMDAiLCJhenAiOiJKWW9iMXA3MDNFZGVLRDl2IiwiYXVkIjoicHVibGljIiwiaWF0IjoxNzU5NzMxOTA5LCJ3aWxheWFoIjoiMzMwMF8xMCIsImZsYWctd2lsYXlhaCI6MTAsIm5hbWEtd2lsYXlhaCI6Ikphd2EgVGVuZ2FoIiwidW5pdC1rZXJqYSI6IjkyMDAwIiwibmFtYS11bml0IjoiQlBTIFByb3ZpbnNpIn0.e5Wb6R4fnIlmPX03ZY7PcU_wtbEcWRYb0N-cjHtgwog',
+            'Authorization' => 'Bearer ' . config('services.kipapp.token'),
             'Origin'        => 'https://jateng.web.bps.go.id',
         ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
             'tahun' => '2025',
             'type'  => '1',
         ]);
 
-        $ketuaTim = [];
-
         if ($responseTim->successful()) {
             $semuaTim = $responseTim->json()['data'];
-            foreach ($semuaTim as $tim) {
-                foreach ($tim['anggota_tim'] as $anggota) {
+            foreach ($semuaTim as $tim_item) {
+                foreach ($tim_item['anggota_tim'] as $anggota) {
                     if ($anggota['nipbaru'] == $nipUser) {
                         $ketuaTim[] = [
-                            'nip'      => $tim['nipbaru_ketua'],
-                            'nama'     => $tim['nama_ketua'],
-                            'tim'      => $tim['nama_tim'],
-                            'kode_tim' => $tim['kode_tim'],
+                            'nip'      => $tim_item['nipbaru_ketua'],
+                            'nama'     => $tim_item['nama_ketua'],
+                            'tim'      => $tim_item['nama_tim'],
+                            'kode_tim' => $tim_item['kode_tim'],
                         ];
                         break;
                     }
@@ -49,11 +65,16 @@ class LemburController extends Controller
             }
         }
 
-        return view('admin.lembur.index', compact('ketuaTim', 'transaksi'));
+        return view('admin.lembur', compact('transaksi', 'ketuaTim', 'bulan'));
     }
 
     public function store(Request $request)
     {
+        $role = session('user')['role'];
+        if ($role === 'admin') {
+            return back()->with('error', 'Admin tidak dapat mengajukan lembur.');
+        }
+
         $validated = $request->validate([
             'approver_id' => 'required|string',
             'kode_tim'    => 'required|string',
@@ -122,5 +143,72 @@ class LemburController extends Controller
             ->get();
 
         return response()->json($tim);
+    }
+
+    public function allPegawai()
+    {
+        $pegawai = \DB::table('m_pegawai')
+            ->select('nip', 'nama')
+            ->orderBy('nama')
+            ->get();
+
+        return response()->json($pegawai);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $bulan = $request->query('bulan');
+        $tim   = $request->query('tim') ?: null;
+        $nip   = $request->query('nip') ?: null;
+
+        $namaBulan = Carbon::parse($bulan . '-01')->translatedFormat('F_Y');
+        $filename  = "Lembur_{$namaBulan}.xlsx";
+
+        return Excel::download(new LemburExport($bulan, $tim, $nip), $filename);
+    }
+
+    public function storeDoc(Request $request, $id_transaksi)
+    {
+        $request->validate([
+            'file_path' => 'required|url|max:255',
+        ]);
+
+        $transaksi = DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->where('submitted_by_NIP', session('user')['nip'])
+            ->where('status', 'approved')
+            ->firstOrFail();
+
+        $idDok = DB::table('m_dokumentasi')->insertGetId([
+            'transaksi_id' => $id_transaksi,
+            'date'         => $transaksi->date,
+            'file_path'    => $request->file_path,
+        ]);
+
+        DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->update(['dokumentasi_id_dokumentasi' => $idDok]);
+
+        return back()->with('success', 'Dokumentasi berhasil disimpan.');
+    }
+
+    public function destroyDoc($id_transaksi)
+    {
+        $transaksi = DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->where('submitted_by_NIP', session('user')['nip'])
+            ->firstOrFail();
+
+        if ($transaksi->dokumentasi_id_dokumentasi) {
+            DB::table('m_dokumentasi')
+                ->where('id_dokumentasi', $transaksi->dokumentasi_id_dokumentasi)
+                ->delete();
+
+            DB::table('t_transaksi')
+                ->where('id_transaksi', $id_transaksi)
+                ->update(['dokumentasi_id_dokumentasi' => null]);
+        }
+
+        return back()->with('success', 'Dokumentasi berhasil dihapus.');
     }
 }

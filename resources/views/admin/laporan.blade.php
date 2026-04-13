@@ -60,17 +60,6 @@
 
     {{-- Spacer --}}
     <div class="flex-1"></div>
-    <div class="h-6 self-center border-l border-gray-200"></div>
-
-    {{-- Generate Laporan --}}
-    <a href="javascript:void(0)" onclick="openModalLaporan()" title="Generate Laporan"
-        class="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 bg-white text-gray-500 hover:border-gray-600 hover:text-gray-600 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
-        </svg>
-        Generate Laporan
-    </a>
 
     {{-- Download Laporan --}}
 <div class="relative" id="dropdownDownloadWrapper">
@@ -115,46 +104,6 @@
     </div>
 </div>
 
-</div>
-
-<div id="modalLaporan" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/30" onclick="closeModalLaporan()"></div>
-    <div class="relative flex min-h-screen items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h2 class="text-lg font-semibold text-gray-900">Generate Laporan</h2>
-                <button onclick="closeModalLaporan()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
-            </div>
-            <form id="formGenerateLaporan" method="GET" class="px-6 py-5 space-y-5">
-                <input type="hidden" name="bulan" id="inputBulanLaporan">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pegawai</label>
-                    <div class="flex gap-3">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis" value="pns" checked
-                                class="accent-[#faa938]">
-                            <span class="text-sm text-gray-700">PNS</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis" value="pppk"
-                                class="accent-[#faa938]">
-                            <span class="text-sm text-gray-700">PPPK</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeModalLaporan()"
-                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white transition">
-                        Generate
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 {{-- Tabel --}}
@@ -564,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedNip = nipParam;
                 const found = data.find(e => e.nip == nipParam);
                 if (found) {
-                    selectedEmployeeId = found.nip;  
+                    selectedEmployeeId = found.nip;
                     document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
                 }
             }

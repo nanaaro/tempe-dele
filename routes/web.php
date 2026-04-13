@@ -13,6 +13,8 @@ use App\Http\Controllers\admin\PresensiUploadController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\admin\DokumenGenerateController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\LemburController as AdminLemburController;
+use App\Http\Controllers\pegawai\DashboardController as PegawaiDashboardController;
 
 // ─── Public ───────────────────────────────────────────────
 Route::get('/', fn() => view('welcome'));
@@ -29,13 +31,16 @@ Route::get('/lembur/tim', [LemburController::class, 'timPegawai'])->name('lembur
 // ─── Authenticated (semua role) ───────────────────────────
 Route::middleware('checksession')->group(function () {
 
-    Route::get('/dashboard',     fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
     Route::get('/akumulasi',     fn() => view('akumulasi'))->name('akumulasi');
     Route::get('/rekapitulasi', [\App\Http\Controllers\pegawai\RekapitulasiController::class, 'index'])->name('rekapitulasi')->middleware('checksession');
     Route::get('/profile', function () { $nip = session('user')['nip']; $user = \DB::table('m_pegawai')->where('nip', $nip)->first(); return view('profile', compact('user'));})->name('profile')->middleware('checksession');
 
     // ─── Pegawai ──────────────────────────────────────────
     Route::prefix('pegawai')->name('pegawai.')->group(function () {
+        Route::post('/lembur/{id_transaksi}/dokumentasi', [LemburController::class, 'storeDoc'])->name('lembur.storeDoc');
+        Route::delete('/lembur/{id_transaksi}/dokumentasi', [LemburController::class, 'destroyDoc'])->name('lembur.destroyDoc');
+        Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
 });
 
     // ─── Ketua Tim ────────────────────────────────────────
@@ -57,6 +62,9 @@ Route::middleware('checksession')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/pegawai/all', [PresensiController::class, 'getAllPegawai'])->name('pegawai.all')->middleware('checksession');
 
+        //Superadmin
+        Route::get('/master-pegawai', [\App\Http\Controllers\admin\MasterPegawaiController::class, 'index'])->name('master_pegawai');
+
         //Rekapitulasi
         Route::get('/spkl', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('spkl');
         Route::get('/rekapitulasi', [\App\Http\Controllers\admin\RekapitulasiController::class, 'index'])->name('rekapitulasi');
@@ -74,9 +82,14 @@ Route::middleware('checksession')->group(function () {
         Route::get('/akumulasi/download', [\App\Http\Controllers\admin\AkumulasiController::class, 'download'])->name('akumulasi.download')->middleware('checksession');
 
         //Pengajuan Lembur
-        Route::get('/lembur', [LemburController::class, 'index'])->name('lembur');
-        Route::post('/lembur', [LemburController::class, 'store'])->name('lembur.store');
-        Route::get('/lembur/tim', [LemburController::class, 'timPegawai'])->name('lembur.tim');
+        Route::get('/lembur', [AdminLemburController::class, 'index'])->name('lembur');
+        Route::post('/lembur', [AdminLemburController::class, 'store'])->name('lembur.store');
+        Route::get('/lembur/tim', [AdminLemburController::class, 'timPegawai'])->name('lembur.tim');
+        Route::get('/admin/lembur/pegawai', [AdminLemburController::class, 'allPegawai'])->name('admin.lembur.pegawai');
+        Route::get('/admin/lembur/export', [AdminLemburController::class, 'exportExcel'])->name('admin.lembur.export');
+        Route::get('/lembur/export', [AdminLemburController::class, 'exportExcel'])->name('lembur.export');
+        Route::post('/lembur/{id_transaksi}/dokumentasi', [AdminLemburController::class, 'storeDoc'])->name('lembur.storeDoc');
+        Route::delete('/lembur/{id_transaksi}/dokumentasi', [AdminLemburController::class, 'destroyDoc'])->name('lembur.destroyDoc');
 
         //Daftar Hadir
         Route::get('/daftar-hadir', [\App\Http\Controllers\admin\DaftarHadirController::class, 'index'])->name('daftar_hadir');

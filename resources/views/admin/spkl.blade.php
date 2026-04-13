@@ -223,83 +223,31 @@
     // GLOBAL STATE
     // =====================
     const now = new Date();
-    let current = new Date(now.getFullYear(), now.getMonth(), 1);
-    let selectedEmployeeId = null;
-    let selectedTeamId = null;
+    let selectedNip   = null;
     let cachedPegawai = [];
-    const gridEl = document.getElementById('presensiGrid');
+    let selYear       = {{ \Carbon\Carbon::parse($bulan . '-01')->year }};
+    let selMonth      = {{ \Carbon\Carbon::parse($bulan . '-01')->month - 1 }};
 
     function pad2(n) { return String(n).padStart(2, '0'); }
 
     function makeBtn(text, cls, onClick) {
         const b = document.createElement('button');
-        b.type = 'button';
+        b.type      = 'button';
         b.textContent = text;
         b.className = cls;
-        b.addEventListener('click', (e) => {
-            e.stopPropagation();
-            onClick();
-        });
+        b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
         return b;
     }
 
     // =====================
-    // FETCH DATA
+    // UPDATE URL (single source of truth)
     // =====================
-    async function fetchPegawai(kodeTim = '') {
-        const url = kodeTim
-            ? `/admin/presensi/pegawai?kode_tim=${kodeTim}`
-            : '/admin/presensi/pegawai';
-
-        const res = await fetch(url);
-        cachedPegawai = await res.json();
-        populateDropdown('', cachedPegawai);
+    function updateURL() {
+        const params = new URLSearchParams();
+        params.set('bulan', `${selYear}-${pad2(selMonth + 1)}`);
+        if (selectedNip) params.set('nip_lama', selectedNip);
+        window.location.href = '?' + params.toString();
     }
-
-    // =====================
-    // DROPDOWN PEGAWAI
-    // =====================
-    function populateDropdown(filter = '', data = []) {
-        const list = document.getElementById('listPegawai');
-        list.innerHTML = '';
-
-        data
-            .filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
-            .forEach(emp => {
-                const li = document.createElement('li');
-                li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
-                li.textContent = `${emp.nama} - ${emp.nip}`;
-                li.onclick = () => pilihPegawai(emp);
-                list.appendChild(li);
-            });
-    }
-
-    window.toggleDropdown = function () {
-        document.getElementById('dropdownPegawai').classList.toggle('hidden');
-        populateDropdown('', cachedPegawai);
-    };
-
-    window.filterDropdown = function () {
-        const search = document.getElementById('searchPegawai').value;
-        populateDropdown(search, cachedPegawai);
-        document.getElementById('dropdownPegawai').classList.remove('hidden');
-    };
-
-    function applyFilter() {
-        const bulan = document.getElementById('periodValue').value
-                    || '{{ $bulan }}';
-        const nip   = selectedNip ?? '';
-        window.location.href = `?bulan=${bulan}&nip=${nip}`;
-    }
-
-    window.pilihPegawai = function (emp) {
-        selectedNip = emp.nip_lama;
-        console.log('emp object:', emp)
-        selectedEmployeeId = emp.id_pegawai;
-        document.getElementById('searchPegawai').value = `${emp.nama} - ${emp.nip}`;
-        document.getElementById('dropdownPegawai').classList.add('hidden');
-        applyFilter();
-    };
 
     // =====================
     // PERIOD PICKER
@@ -307,67 +255,45 @@
     (function () {
         const el = (id) => document.getElementById(id);
 
-        const picker       = el('periodPicker');
-        const btn          = el('periodBtn');
-        const panel        = el('periodPanel');
-        const grid         = el('monthGrid');
-        const navLabel     = el('yearLabel');
-        const periodLabel  = el('periodLabel');
-        const periodValue  = el('periodValue');
-        const btnPrev      = el('yearPrev');
-        const btnNext      = el('yearNext');
-        const btnThisMonth = el('btnThisMonth');
-        const btnClose     = el('btnClosePanel');
+        const picker    = el('periodPicker');
+        const btn       = el('periodBtn');
+        const panel     = el('periodPanel');
+        const grid      = el('monthGrid');
+        const navLabel  = el('yearLabel');
+        const dateLabel = el('periodLabel');
+        const btnPrev   = el('yearPrev');
+        const btnNext   = el('yearNext');
+        const btnThis   = el('btnThisMonth');
+        const btnClose  = el('btnClosePanel');
 
-        if (!picker || !btn || !panel || !grid || !navLabel || !periodLabel || !periodValue) return;
+        if (!picker || !btn || !panel) return;
 
-        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        const monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-        let view = 'month';
-
-        // ambil nilai awal dari backend
-        let selYear = {{ \Carbon\Carbon::parse($bulan . '-01')->year }};
-        let selMonth = {{ \Carbon\Carbon::parse($bulan . '-01')->month - 1 }};
         let viewYear = selYear;
-
-        function updateDisplayOnly(y, m) {
-            periodLabel.textContent = `${monthShort[m]} ${y}`;
-            periodValue.value = `${y}-${pad2(m + 1)}`;
-        }
-
-        function setPeriod(y, m) {
-            selYear = y;
-            selMonth = m;
-            updateDisplayOnly(y, m);
-
-            window.location.href = `?bulan=${y}-${pad2(m + 1)}`;
-        }
+        let view     = 'month';
 
         function renderMonth() {
             view = 'month';
             navLabel.textContent = String(viewYear);
-            navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
             grid.innerHTML = '';
 
             monthNames.forEach((name, m) => {
                 const isSelected = (m === selMonth && viewYear === selYear);
-                const isNow = (m === now.getMonth() && viewYear === now.getFullYear());
-
+                const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
                 const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
-                    isSelected
-                        ? 'bg-[#faa938] text-white border-[#faa938]'
-                        : isNow
-                            ? 'border-[#faa938] text-[#faa938] bg-white'
-                            : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+                    isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                    :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
                 );
-
-                grid.appendChild(
-                    makeBtn(name.slice(0, 3), cls, () => {
-                        setPeriod(viewYear, m);
-                        closePanel();
-                    })
-                );
+                grid.appendChild(makeBtn(name.slice(0, 3), cls, () => {  // ✅ langsung ke grid
+                    selYear  = viewYear;
+                    selMonth = m;
+                    dateLabel.textContent = `${monthShort[m]} ${viewYear}`;
+                    closePanel();
+                    updateURL();
+                }));
             });
         }
 
@@ -375,136 +301,145 @@
             view = 'year';
             const startYear = Math.floor(viewYear / 12) * 12;
             navLabel.textContent = `${startYear} - ${startYear + 11}`;
-            navLabel.className = 'text-sm font-medium text-gray-400 select-none cursor-default';
             grid.innerHTML = '';
+
+            const g = document.createElement('div');
+            g.className = 'grid grid-cols-3 gap-2';
 
             for (let y = startYear; y < startYear + 12; y++) {
                 const isSelected = (y === selYear);
-                const isNow = (y === now.getFullYear());
-
+                const isNow      = (y === now.getFullYear());
                 const cls = 'px-2 py-2 text-sm rounded-lg border transition ' + (
-                    isSelected
-                        ? 'bg-[#faa938] text-white border-[#faa938]'
-                        : isNow
-                            ? 'border-[#faa938] text-[#faa938] bg-white'
-                            : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
+                    isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow    ? 'border-[#faa938] text-[#faa938] bg-white'
+                    :            'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]'
                 );
-
-                grid.appendChild(
-                    makeBtn(String(y), cls, () => {
-                        viewYear = y;
-                        renderMonth();
-                    })
-                );
+                const _y = y;
+                g.appendChild(makeBtn(String(_y), cls, () => { viewYear = _y; renderMonth(); }));
             }
+
+            grid.appendChild(g);
         }
 
         function navigate(dir) {
-            if (view === 'month') {
-                viewYear += dir;
-                renderMonth();
-            } else {
-                viewYear += dir * 12;
-                renderYear();
-            }
+            view === 'month' ? viewYear += dir : viewYear += dir * 12;
+            view === 'month' ? renderMonth() : renderYear();
         }
 
-        function openPanel() {
-            viewYear = selYear;
-            renderMonth();
-            panel.classList.remove('hidden');
-        }
+        function openPanel()  { viewYear = selYear; renderMonth(); panel.classList.remove('hidden'); }
+        function closePanel() { panel.classList.add('hidden'); }
 
-        function closePanel() {
-            panel.classList.add('hidden');
-        }
+        // Init label tanpa redirect
+        dateLabel.textContent = `${monthShort[selMonth]} ${selYear}`;
 
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (panel.classList.contains('hidden')) {
-                openPanel();
-            } else {
-                closePanel();
-            }
+            panel.classList.contains('hidden') ? openPanel() : closePanel();
         });
 
         navLabel.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (view === 'month') {
-                renderYear();
-            }
+            view === 'month' ? renderYear() : renderMonth();
         });
 
-        btnPrev?.addEventListener('click', (e) => {
+        btnPrev?.addEventListener('click',  (e) => { e.stopPropagation(); navigate(-1); });
+        btnNext?.addEventListener('click',  (e) => { e.stopPropagation(); navigate(1); });
+        btnThis?.addEventListener('click',  (e) => {
             e.stopPropagation();
-            navigate(-1);
-        });
-
-        btnNext?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navigate(1);
-        });
-
-        btnThisMonth?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setPeriod(now.getFullYear(), now.getMonth());
+            selYear  = now.getFullYear();
+            selMonth = now.getMonth();
             closePanel();
+            updateURL();
         });
-
-        btnClose?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closePanel();
-        });
+        btnClose?.addEventListener('click', (e) => { e.stopPropagation(); closePanel(); });
 
         document.addEventListener('click', (e) => {
-            if (!picker.contains(e.target)) {
-                closePanel();
-            }
+            if (!picker.contains(e.target)) closePanel();
         });
-
-        // tampilkan label awal tanpa redirect
-        updateDisplayOnly(selYear, selMonth);
     })();
+
+    // =====================
+    // DROPDOWN PEGAWAI
+    // =====================
+    function populateDropdown(filter = '') {
+        const list = document.getElementById('listPegawai');
+        list.innerHTML = '';
+
+        // Opsi reset
+        const liSemua = document.createElement('li');
+        liSemua.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
+        liSemua.textContent = 'Semua pegawai';
+        liSemua.addEventListener('click', () => pilihPegawai(null));
+        list.appendChild(liSemua);
+
+        const filtered = cachedPegawai.filter(e =>
+            `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        if (filtered.length === 0) {
+            const li = document.createElement('li');
+            li.className   = 'px-4 py-2 text-sm text-gray-400';
+            li.textContent = 'Tidak ditemukan';
+            list.appendChild(li);
+            return;
+        }
+
+        filtered.forEach(emp => {
+            const li = document.createElement('li');
+            li.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+            li.textContent = `${emp.nama} - ${emp.nip}`;
+            li.addEventListener('click', () => pilihPegawai(emp));
+            list.appendChild(li);
+        });
+    }
+
+    function pilihPegawai(emp) {
+        selectedNip = emp ? emp.nip_lama : null;
+        document.getElementById('searchPegawai').value = emp ? `${emp.nama} - ${emp.nip}` : '';
+        document.getElementById('dropdownPegawai').classList.add('hidden');
+        updateURL();
+    }
+
+    window.toggleDropdown = function () {
+        document.getElementById('dropdownPegawai').classList.toggle('hidden');
+        populateDropdown('');
+    };
+
+    window.filterDropdown = function () {
+        populateDropdown(document.getElementById('searchPegawai').value);
+        document.getElementById('dropdownPegawai').classList.remove('hidden');
+    };
 
     // =====================
     // INIT
     // =====================
     document.addEventListener('DOMContentLoaded', function () {
         const params   = new URLSearchParams(window.location.search);
-        const nipParam = params.get('nip') ?? '';
+        const nipParam = params.get('nip_lama') ?? '';
 
         fetch('/admin/presensi/pegawai')
             .then(r => r.json())
             .then(data => {
                 cachedPegawai = data;
-                populateDropdown('', cachedPegawai);
+                populateDropdown('');
+
                 if (nipParam) {
-                    selectedNip = nipParam;
-                    const found = data.find(e => e.nip == nipParam);
+                    selectedNip  = nipParam;
+                    const found  = data.find(e => e.nip_lama == nipParam);
                     if (found) {
                         document.getElementById('searchPegawai').value = `${found.nama} - ${found.nip}`;
                     }
                 }
             });
 
+        // Tutup dropdown saat klik di luar
         document.addEventListener('click', function (e) {
-            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
-            if (wrapperPegawai && !wrapperPegawai.contains(e.target))
+            const wrapper = document.getElementById('searchPegawai')?.closest('.relative');
+            if (wrapper && !wrapper.contains(e.target)) {
                 document.getElementById('dropdownPegawai').classList.add('hidden');
+            }
         });
     });
-
-    // =====================
-    // Modal Nomor Surat
-    // =====================cf
-    function openModalNomor() {
-        document.getElementById('inputBulanSpkl').value = "{{ $bulan ?? now()->format('Y-m') }}";
-        document.getElementById('modalNomor').classList.remove('hidden');
-    }
-
-    function closeModalNomor() {
-        document.getElementById('modalNomor').classList.add('hidden');
-    }
 </script>
 
 @endsection

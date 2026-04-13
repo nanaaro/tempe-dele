@@ -63,7 +63,7 @@ class DokumenGenerateController extends Controller
             $uraian = $rows->pluck('uraian')->unique()->filter()->map(fn($u) => '- ' . $u)->implode("\n");
             return (object) [
                 'nama'           => $first->nama,
-                'nip'            => $first->nip,
+                'nip_lama'       => $first->nip_lama,
                 'tanggal_lembur' => $tanggal,
                 'uraian'         => $uraian,
             ];
@@ -75,7 +75,7 @@ class DokumenGenerateController extends Controller
         $tahun       = $dt->year;
         $tanggalTtd  = $dt->translatedFormat('d F Y');
 
-        $pdf = Pdf::loadView('dokumen.spkl', compact('pegawai', 'ppk', 'kbps', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dokumen.spkl', compact('pegawai', 'ppk', 'kbu', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'spkl',
@@ -111,9 +111,9 @@ class DokumenGenerateController extends Controller
             ->orderBy('t.date');
 
         if ($jenis === 'pns') {
-            $query->whereRaw('LENGTH(p.nip_lama) = 9');
+            $query->where('p.email', 'not like', '%-pppk@bps.go.id');
         } else {
-            $query->whereRaw('LENGTH(p.nip_lama) != 9');
+            $query->where('p.email', 'like', '%-pppk@bps.go.id');
         }
 
         $pegawai = $query->get()->groupBy('nip')->map(function ($rows) {
@@ -124,7 +124,7 @@ class DokumenGenerateController extends Controller
             $uraian = $rows->pluck('uraian')->unique()->filter()->map(fn($u) => '- ' . $u)->implode("\n");
             return (object) [
                 'nama'    => $first->nama,
-                'nip'     => $first->nip,
+                'nip_lama'=> $first->nip_lama,
                 'tanggal' => $tanggal,
                 'uraian'  => $uraian,
             ];
@@ -134,7 +134,7 @@ class DokumenGenerateController extends Controller
         $bulanLabel  = $dt->translatedFormat('F');
         $tahun       = $dt->year;
 
-        $pdf = Pdf::loadView('dokumen.laporan', compact('pegawai', 'kbps', 'bulanLabel', 'tahun', 'jenis'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dokumen.laporan', compact('pegawai', 'kbu', 'bulanLabel', 'tahun', 'jenis'))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'laporan_' . $jenis,

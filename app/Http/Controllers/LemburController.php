@@ -14,16 +14,17 @@ class LemburController extends Controller
         $nipUser = session('user')['nip'];
 
         $transaksi = \DB::table('t_transaksi as t')
-            ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
-            ->leftJoin('m_pegawai as kp', 't.approver_employee_id', '=', 'kp.nip')
-            ->where('t.submitted_by_NIP', $nipUser)
-            ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua')
-            ->orderBy('t.date', 'desc')
-            ->paginate(10);
+        ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
+        ->leftJoin('m_pegawai as kp', 't.approver_employee_id', '=', 'kp.nip')
+        ->leftJoin('m_dokumentasi as md', 't.dokumentasi_id_dokumentasi', '=', 'md.id_dokumentasi') // tambah ini
+        ->where('t.submitted_by_NIP', $nipUser)
+        ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua', 'md.file_path as file_dokumentasi') // tambah file_dokumentasi
+        ->orderBy('t.date', 'desc')
+        ->paginate(10);
 
         $responseTim = Http::withHeaders([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd2ViYXBwcy5icHMuZ28uaWRcL2tpcGFwcCIsInN1YiI6IjMzMDB8OTIwMDAiLCJhenAiOiJKWW9iMXA3MDNFZGVLRDl2IiwiYXVkIjoicHVibGljIiwiaWF0IjoxNzU5NzMxOTA5LCJ3aWxheWFoIjoiMzMwMF8xMCIsImZsYWctd2lsYXlhaCI6MTAsIm5hbWEtd2lsYXlhaCI6Ikphd2EgVGVuZ2FoIiwidW5pdC1rZXJqYSI6IjkyMDAwIiwibmFtYS11bml0IjoiQlBTIFByb3ZpbnNpIn0.e5Wb6R4fnIlmPX03ZY7PcU_wtbEcWRYb0N-cjHtgwog',
+            'Authorization' => 'Bearer ' . config('services.kipapp.token'),
             'Origin'        => 'https://jateng.web.bps.go.id',
         ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
             'tahun' => '2025',
@@ -122,5 +123,53 @@ class LemburController extends Controller
             ->get();
 
         return response()->json($tim);
+    }
+
+    public function storeDoc(Request $request, $id_transaksi)
+    {
+        $request->validate([
+            'file_path' => 'required|url|max:255',
+        ]);
+
+        // Pastikan transaksi milik user & statusnya approved
+        $transaksi = DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->where('submitted_by_NIP', session('user')['nip'])
+            ->where('status', 'approved')
+            ->firstOrFail();
+
+        // Insert ke m_dokumentasi
+        $idDok = DB::table('m_dokumentasi')->insertGetId([
+            'transaksi_id' => $id_transaksi,
+            'date'         => $transaksi->date,
+            'file_path'    => $request->file_path,
+        ]);
+
+        // Update kolom dokumentasi_id_dokumentasi di t_transaksi
+        DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->update(['dokumentasi_id_dokumentasi' => $idDok]);
+
+        return back()->with('success', 'Dokumentasi berhasil disimpan.');
+    }
+
+    public function destroyDoc($id_transaksi)
+    {
+        $transaksi = DB::table('t_transaksi')
+            ->where('id_transaksi', $id_transaksi)
+            ->where('submitted_by_NIP', session('user')['nip'])
+            ->firstOrFail();
+
+        if ($transaksi->dokumentasi_id_dokumentasi) {
+            DB::table('m_dokumentasi')
+                ->where('id_dokumentasi', $transaksi->dokumentasi_id_dokumentasi)
+                ->delete();
+
+            DB::table('t_transaksi')
+                ->where('id_transaksi', $id_transaksi)
+                ->update(['dokumentasi_id_dokumentasi' => null]);
+        }
+
+        return back()->with('success', 'Dokumentasi berhasil dihapus.');
     }
 }

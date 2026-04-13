@@ -38,6 +38,18 @@
                 </div>
             </div>
         </div>
+
+        {{-- Spacer --}}
+        <div class="flex-1"></div>
+
+            {{-- Generate --}}
+        <a href="javascript:void(0)" onclick="openModalGenerate()" title="Generate Dokumen"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+            </svg>
+        </a>
 </div>
 
     <div class="overflow-x-auto max-w-7xl mx-auto px-8 my-5">
@@ -150,8 +162,11 @@
                         <h2 class="text-lg font-semibold text-gray-900">Generate SPKL</h2>
                         <button onclick="closeModalNomor()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
                     </div>
-                    <form id="formGenerateSpkl" method="GET" class="px-6 py-5 space-y-4">
+                    <form id="formGenerateSpkl" method="GET" class="px-6 py-5 space-y-4" action="{{ route('admin.dokumen.generate.spkl') }}">
                         <input type="hidden" name="bulan" id="inputBulanSpkl">
+                        <div class="text-sm text-gray-500 bg-gray-50 rounded-lg px-4 py-2">
+                            Periode: <span id="labelPeriodeSpkl" class="font-medium text-gray-800">—</span>
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Surat</label>
                             <input type="text" name="nomor_surat" required
@@ -170,6 +185,105 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        {{-- Modal Laporan --}}
+        <div id="modalLaporan" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/30" onclick="closeModalLaporan()"></div>
+            <div class="relative flex min-h-screen items-center justify-center p-4">
+                <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+                    <div class="flex items-center justify-between px-6 py-4 border-b">
+                        <h2 class="text-lg font-semibold text-gray-900">Generate Laporan</h2>
+                        <button onclick="closeModalLaporan()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+                    </div>
+                    <form id="formGenerateLaporan" method="GET" class="px-6 py-5 space-y-5" action="{{ route('admin.dokumen.generate.laporan', ['jenis' => 'pns']) }}">
+                        <input type="hidden" name="bulan" id="inputBulanLaporan">
+                        <div class="text-sm text-gray-500 bg-gray-50 rounded-lg px-4 py-2">
+                            Periode: <span id="labelPeriodeLaporan" class="font-medium text-gray-800">—</span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pegawai</label>
+                            <div class="flex gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="jenis" value="pns" checked
+                                        class="accent-[#faa938]">
+                                    <span class="text-sm text-gray-700">PNS</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="jenis" value="pppk"
+                                        class="accent-[#faa938]">
+                                    <span class="text-sm text-gray-700">PPPK</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="button" onclick="closeModalLaporan()"
+                                class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white transition">
+                                Generate
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- Modal Generate --}}
+        <div id="modalGenerate" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" onclick="closeModalGenerate()"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+            <div class="flex items-center justify-between border-b px-6 py-4">
+                <h2 class="text-lg font-semibold text-gray-900">Generate Dokumen</h2>
+                <button onclick="closeModalGenerate()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            </div>
+            <div class="px-6 py-5 space-y-4">
+
+                <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
+                <div class="flex gap-2">
+                    <select id="selectBulan" class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
+                    <option value="">Bulan</option>
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                    </select>
+                    <input type="number" id="inputTahun"
+                    placeholder="2024"
+                    min="2000" max="2099"
+                    class="w-28 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
+                </div>
+                </div>
+
+                <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Dokumen</label>
+                <select id="selectDok" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900">
+                    <option value="">Pilih jenis dokumen...</option>
+                    <option value="spkl">SPKL — Surat Pernyataan Kerja Lembur</option>
+                    <option value="laporan">Laporan — Rekap pegawai</option>
+                </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeModalGenerate()" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Batal</button>
+                <button onclick="nextStep()" class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white">Lanjut</button>
+                </div>
+
+            </div>
+            </div>
+        </div>
         </div>
 
     </div>
@@ -418,17 +532,64 @@
     })();
 
     // =====================
-    // INIT
+    // MODAL
     // =====================
-    document.addEventListener('DOMContentLoaded', function () {
-        fetchPegawai();
+    const bulanNama = [
+    '', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
 
-        document.addEventListener('click', function (e) {
-            const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
-            if (wrapperPegawai && !wrapperPegawai.contains(e.target)) {
-                document.getElementById('dropdownPegawai').classList.add('hidden');
-            }
-        });
+    function openModalGenerate() {
+    document.getElementById('modalGenerate').classList.remove('hidden');
+    }
+
+    function closeModalGenerate() {
+    document.getElementById('modalGenerate').classList.add('hidden');
+    }
+
+    function nextStep() {
+    const bulan = document.getElementById('selectBulan').value;
+    const tahun = document.getElementById('inputTahun').value;
+    const dok   = document.getElementById('selectDok').value;
+
+    if (!bulan || !tahun) { alert('Pilih bulan dan isi tahun dulu!'); return; }
+    if (!dok)             { alert('Pilih jenis dokumen!'); return; }
+
+    const periodeLabel = bulanNama[+bulan] + ' ' + tahun;
+    const periodeValue = tahun + '-' + String(bulan).padStart(2, '0');
+
+    closeModalGenerate();
+
+    if (dok === 'spkl') {
+        document.getElementById('inputBulanSpkl').value          = periodeValue;
+        document.getElementById('labelPeriodeSpkl').textContent  = periodeLabel;
+        document.getElementById('modalNomor').classList.remove('hidden');
+    } else {
+        document.getElementById('inputBulanLaporan').value           = periodeValue;
+        document.getElementById('labelPeriodeLaporan').textContent   = periodeLabel;
+        document.getElementById('modalLaporan').classList.remove('hidden');
+    }
+    }
+
+    document.getElementById('formGenerateLaporan').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const jenis = this.querySelector('input[name="jenis"]:checked').value;
+    this.action = '/admin/dokumen/generate/laporan/' + jenis;
+    this.submit();
     });
+
+    function backToGenerate() {
+    document.getElementById('modalNomor').classList.add('hidden');
+    document.getElementById('modalLaporan').classList.add('hidden');
+    document.getElementById('modalGenerate').classList.remove('hidden');
+    }
+
+    function closeModalNomor() {
+    document.getElementById('modalNomor').classList.add('hidden');
+    }
+
+    function closeModalLaporan() {
+    document.getElementById('modalLaporan').classList.add('hidden');
+    }
 </script>
 @endsection

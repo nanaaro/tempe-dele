@@ -39,6 +39,11 @@
 
 {{-- Tabel --}}
 <div class="overflow-hidden max-w-7xl mx-auto px-8 my-5">
+    @php
+        $roleSaya = \DB::table('m_pegawai')->where('nip', session('user')['nip'])->value('role');
+    @endphp
+
+<table class="min-w-full rounded-xl">
     <table class="min-w-full rounded-xl">
         <thead>
             <tr class="bg-gray-50">
@@ -108,12 +113,14 @@
                 {{-- Role --}}
                 <td class="p-5 text-sm text-gray-900">
                     <span class="cell-display">{{ ucfirst($p->role ?? '—') }}</span>
-                    <select name="role"
-                        class="cell-edit hidden w-full border border-gray-200 rounded-lg px-2 py-1 text-sm focus:border-[#faa938] focus:outline-none">
-                        <option value="user" {{ $p->role === 'user' ? 'selected' : '' }}>User</option>
-                        <option value="admin" {{ $p->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="ketua-tim" {{ $p->role === 'ketua-tim' ? 'selected' : '' }}>Ketua Tim</option>
-                    </select>
+                    @if($roleSaya === 'superadmin')
+                        <select name="role" class="cell-edit hidden w-full border border-gray-200 rounded-lg px-2 py-1 text-sm focus:border-[#faa938] focus:outline-none">
+                            <option value="user"  {{ $p->role === 'user'  ? 'selected' : '' }}>User</option>
+                            <option value="admin" {{ $p->role === 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                    @else
+                        <input type="hidden" name="role" value="{{ $p->role }}" class="cell-edit hidden">
+                    @endif
                 </td>
 
                 {{-- Aksi --}}

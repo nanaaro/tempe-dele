@@ -16,7 +16,7 @@ class AuthController extends Controller
     {
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'x-api-key'    => 'fa6e2d9ee8d5d376660b4da209761dd183292313406877ef67cd8632197c469b',
+            'x-api-key'    => env('KIPAPP_API_KEY'),
             'Origin'       => 'https://jateng.web.bps.go.id',
         ])->post('https://jateng.web.bps.go.id/apiconnect/login', [
             'username' => $request->username,
@@ -25,6 +25,12 @@ class AuthController extends Controller
 
         if ($response->successful()) {
             $data = $response->json()['data'];
+
+            if ($data['kd_satker'] !== '3300') {
+                return back()->withErrors([
+                    'login' => 'Akses ditolak. Hanya pegawai BPS Jawa Tengah yang dapat login.'
+                ]);
+            }
 
             $existing = \DB::table('m_pegawai')->where('nip', $data['nip'])->first();
 
@@ -55,7 +61,7 @@ class AuthController extends Controller
             // Hit API tim
             $responseTim = Http::withHeaders([
                 'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd2ViYXBwcy5icHMuZ28uaWRcL2tpcGFwcCIsInN1YiI6IjMzMDB8OTIwMDAiLCJhenAiOiJKWW9iMXA3MDNFZGVLRDl2IiwiYXVkIjoicHVibGljIiwiaWF0IjoxNzU5NzMxOTA5LCJ3aWxheWFoIjoiMzMwMF8xMCIsImZsYWctd2lsYXlhaCI6MTAsIm5hbWEtd2lsYXlhaCI6Ikphd2EgVGVuZ2FoIiwidW5pdC1rZXJqYSI6IjkyMDAwIiwibmFtYS11bml0IjoiQlBTIFByb3ZpbnNpIn0.e5Wb6R4fnIlmPX03ZY7PcU_wtbEcWRYb0N-cjHtgwog',
+                'Authorization' => 'Bearer ' . config('services.kipapp.token'),
                 'Origin'        => 'https://jateng.web.bps.go.id',
             ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
                 'tahun' => '2025',
@@ -89,7 +95,7 @@ class AuthController extends Controller
             // Simpan ke session
             Session::put('user', $data);
             Session::put('logged_in', true);
-            Session::put('jenis_user', 'ketua_tim');
+            // Session::put('jenis_user', 'ketua_tim');
             Session::put('id_pegawai', $pegawaiData->id_pegawai);
 
             $role = $pegawaiData->role;
@@ -99,12 +105,18 @@ class AuthController extends Controller
             } elseif ($role === 'user' && $jenisUser === 'ketua_tim') {
                 return redirect()->route('ketua-tim.dashboard');
             } else {
-                return redirect()->route('dashboard');
+                return redirect()->route('pegawai.dashboard');
             }
         }
 
         return back()->withErrors([
             'login' => 'Username atau password salah.'
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Session::flush();
+        return redirect()->route('login');
     }
 }

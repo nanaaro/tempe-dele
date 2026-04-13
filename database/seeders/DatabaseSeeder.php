@@ -1,8 +1,6 @@
 <?php
-
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -10,16 +8,22 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            MPegawaiTableSeeder::class,
         ]);
+        $this->call(MDokumentasiTableSeeder::class);
+        $this->call(MPejabatTableSeeder::class);
+        $this->call(MTimTableSeeder::class);
+        $this->call(TAkumulasiTableSeeder::class);
+        $this->call(TAnggotaTimTableSeeder::class);
+        $this->call(TDokumenTableSeeder::class);
+        $this->call(TDokumenPejabatTableSeeder::class);
+        $this->call(TLaporanTableSeeder::class);
+        $this->call(TPresensiTableSeeder::class);
+        $this->call(TRekapitulasiTableSeeder::class);
+        $this->call(TRiwayatPresensiTableSeeder::class);
+        $this->call(TTransaksiTableSeeder::class);
     }
 }

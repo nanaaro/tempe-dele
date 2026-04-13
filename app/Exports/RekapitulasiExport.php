@@ -59,10 +59,10 @@ class RekapitulasiExport implements FromCollection, WithHeadings, WithTitle, Wit
             for ($i = 1; $i <= 16; $i++) $jumlahHl += $hl[$i] * $i;
 
             $row = ['Nama' => $nama, 'NIP' => "\t" . $nip];
-            for ($i = 1; $i <= 12; $i++) $row['HB '.$i] = $hb[$i] ?: '-';
-            for ($i = 1; $i <= 16; $i++) $row['HL '.$i] = $hl[$i] ?: '-';
-            $row['Jumlah HB'] = $jumlahHb ?: '-';
-            $row['Jumlah HL'] = $jumlahHl ?: '-';
+            for ($i = 1; $i <= 12; $i++) $row['HB '.$i] = $hb[$i] ?: '';
+            for ($i = 1; $i <= 16; $i++) $row['HL '.$i] = $hl[$i] ?: '';
+            $row['Jumlah HB'] = $jumlahHb ?: '';
+            $row['Jumlah HL'] = $jumlahHl ?: '';
             $row['Tanggal']   = implode(', ', array_unique($tanggal));
             return $row;
         })->values();

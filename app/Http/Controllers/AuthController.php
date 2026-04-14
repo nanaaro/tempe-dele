@@ -30,9 +30,6 @@ class AuthController extends Controller
 
             $body = $response->json();
 
-            // =============================
-            // HANDLE JIKA LOGIN BERHASIL
-            // =============================
             if ($response->successful() && isset($body['data'])) {
                 $data = $body['data'];
 
@@ -70,9 +67,6 @@ class AuthController extends Controller
 
                 $pegawaiData = DB::table('m_pegawai')->where('nip', $data['nip'])->first();
 
-                // =============================
-                // CEK TIM KERJA
-                // =============================
                 $responseTim = Http::withHeaders([
                     'Content-Type'  => 'application/json',
                     'Authorization' => 'Bearer ' . config('services.kipapp.token'),
@@ -109,9 +103,6 @@ class AuthController extends Controller
                     }
                 }
 
-                // =============================
-                // SET SESSION
-                // =============================
                 Session::put('user', $data);
                 Session::put('logged_in', true);
                 Session::put('jenis_user', $jenisUser);
@@ -119,9 +110,6 @@ class AuthController extends Controller
 
                 $role = $pegawaiData->role ?? 'user';
 
-                // =============================
-                // REDIRECT BERDASARKAN ROLE
-                // =============================
                 if ($role === 'superadmin' || $role === 'admin') {
                     return redirect()->route('admin.dashboard');
                 } elseif ($role === 'user' && $jenisUser === 'ketua_tim') {
@@ -131,9 +119,6 @@ class AuthController extends Controller
                 }
             }
 
-            // =============================
-            // HANDLE ERROR LOGIN
-            // =============================
             Log::error('Login gagal', [
                 'status' => $response->status(),
                 'body'   => $response->body(),

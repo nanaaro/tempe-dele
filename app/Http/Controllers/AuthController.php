@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\ConnectionException;
 
 class AuthController extends Controller
 {
@@ -96,7 +97,7 @@ class AuthController extends Controller
                                 break;
                             }
 
-                            if (isset($tim['anggota_tim'])) {
+                            if (!empty($tim['anggota_tim'])) {
                                 foreach ($tim['anggota_tim'] as $anggota) {
                                     if (($anggota['nipbaru'] ?? null) == $nipUser) {
                                         $jenisUser = 'anggota';
@@ -138,7 +139,6 @@ class AuthController extends Controller
                 'body'   => $response->body(),
             ]);
 
-            // API kadang kirim 500 tapi isi pesan tetap "incorrect username or password"
             if (isset($body['detail']) && str_contains(strtolower($body['detail']), 'incorrect username or password')) {
                 return back()->withErrors(['login' => 'Username atau password salah.']);
             }
@@ -155,13 +155,22 @@ class AuthController extends Controller
                 'login' => '[Error ' . $response->status() . '] ' . ($body['detail'] ?? $body['message'] ?? $response->body())
             ]);
 
+        } catch (ConnectionException $e) {
+            Log::error('Connection error saat login', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'login' => 'Tidak dapat terhubung ke server. Periksa koneksi internet kamu.'
+            ]);
+
         } catch (\Exception $e) {
             Log::error('Exception login', [
                 'message' => $e->getMessage(),
             ]);
 
             return back()->withErrors([
-                'login' => 'Terjadi kesalahan sistem. Silakan coba lagi.'
+                'login' => '[Error tidak terduga] ' . $e->getMessage()
             ]);
         }
     }

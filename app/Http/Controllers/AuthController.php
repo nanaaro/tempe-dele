@@ -152,8 +152,7 @@ class AuthController extends Controller
             }
 
             return back()->withErrors([
-                'login' => 'Gagal login. Status: ' . $response->status() .
-                    ' | Pesan: ' . ($body['detail'] ?? $body['message'] ?? $response->body())
+                'login' => '[Error ' . $response->status() . '] ' . ($body['detail'] ?? $body['message'] ?? $response->body())
             ]);
 
         } catch (\Exception $e) {

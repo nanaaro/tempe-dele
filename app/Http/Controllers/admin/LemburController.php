@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -70,7 +70,7 @@ class LemburController extends Controller
 
     public function store(Request $request)
     {
-        $role = session('user')['role'];
+        $role = session('role');
         if ($role === 'admin') {
             return back()->with('error', 'Admin tidak dapat mengajukan lembur.');
         }

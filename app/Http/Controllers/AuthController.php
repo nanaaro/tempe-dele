@@ -61,7 +61,7 @@ class AuthController extends Controller
                         'foto_url'  => $data['foto_url'] ?? null,
                         'satker'    => $data['satker'] ?? null,
                         'kd_satker' => $data['kd_satker'] ?? null,
-                        'role'      => 'user',
+                        'role'      => $data['role'],
                     ]);
                 }
 
@@ -107,6 +107,7 @@ class AuthController extends Controller
                 Session::put('logged_in', true);
                 Session::put('jenis_user', $jenisUser);
                 Session::put('id_pegawai', $pegawaiData->id_pegawai ?? null);
+                Session::put('role', $pegawaiData->role ?? 'user');
 
                 $role = $pegawaiData->role ?? 'user';
 
@@ -146,7 +147,7 @@ class AuthController extends Controller
             ]);
 
             return back()->withErrors([
-                'login' => 'Tidak dapat terhubung ke server. Periksa koneksi internet kamu.'
+                'login' => 'Tidak dapat terhubung ke server.'
             ]);
 
         } catch (\Exception $e) {

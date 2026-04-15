@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\PresensiController;
+use App\Http\Controllers\admin\PresensiController;
 use App\Http\Controllers\admin\TimController;
 use App\Http\Controllers\admin\AnggotaTimController;
 use App\Http\Controllers\admin\PenggunaController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\admin\PresensiUploadController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\admin\DokumenGenerateController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\LemburController as AdminLemburController;
+use App\Http\Controllers\admin\LemburController as AdminLemburController;
 use App\Http\Controllers\pegawai\DashboardController as PegawaiDashboardController;
 
 // ─── Public ───────────────────────────────────────────────

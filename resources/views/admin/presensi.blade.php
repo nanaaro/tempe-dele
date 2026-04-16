@@ -4,7 +4,6 @@
 
 @section('content')
 
-{{-- Alpine scope: HANYA untuk modal detail --}}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
      x-data="{ open: false, detail: null }"
      x-on:presensi-detail.window="
@@ -434,7 +433,7 @@
 
         try {
             showUploadAlert('Sedang memproses...');
-            const res = await fetch('{{ route("admin.presensi.upload") }}', {
+            const res = await fetch('/admin/presensi/upload', {
                 method: 'POST',
                 body: formData,
             });
@@ -467,7 +466,7 @@
 
         if (!niplama) return;
 
-        const url = `{{ route('admin.presensi.kalender') }}?niplama=${niplama}&periode=${year}-${month}`;
+        const url = `/admin/presensi/kalender?niplama=${niplama}&periode=${year}-${month}`;
         const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
         presensiData = await res.json();
         render();

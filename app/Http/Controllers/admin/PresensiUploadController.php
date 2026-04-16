@@ -61,7 +61,7 @@ class PresensiUploadController extends Controller
 
                     if (empty($status)) continue;
 
-                    $tanggalStr   = sprintf('%04d-%02d-%02d', $tahun, $bulan, $tanggal);
+                    $tanggalStr = sprintf('%04d-%02d-%02d', $tahun, $bulan, $tanggal);
                     $jamMulaiDt   = ($jamMulai && $isValidJam($jamMulai))     ? $tanggalStr . ' ' . $jamMulai   : null;
                     $jamSelesaiDt = ($jamSelesai && $isValidJam($jamSelesai)) ? $tanggalStr . ' ' . $jamSelesai : null;
 
@@ -140,7 +140,7 @@ foreach ($transaksis as $trx) {
     public function getKalender(Request $request)
     {
         $niplama = $request->niplama;
-        $periode = $request->periode; // format: 2025-09
+        $periode = $request->periode;
 
         if (!$niplama || !$periode) {
             return response()->json([]);
@@ -152,7 +152,9 @@ foreach ($transaksis as $trx) {
             ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', $bulan)
             ->get(['tanggal', 'jam_mulai', 'jam_selesai', 'status'])
-            ->keyBy(fn($p) => \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d'));
+            ->keyBy(fn($p) => \Carbon\Carbon::parse($p->tanggal)
+                ->setTimezone(config('app.timezone'))  // <-- tambah ini
+                ->format('Y-m-d'));
 
         return response()->json($data);
     }

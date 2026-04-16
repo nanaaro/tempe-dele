@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Pesensi Pegawai')
+@section('title', 'Presensi Pegawai')
 
 @section('content')
+
+{{-- Alpine scope: HANYA untuk modal detail --}}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
      x-data="{ open: false, detail: null }"
      x-on:presensi-detail.window="
@@ -67,7 +69,7 @@
         <div class="h-6 self-center border-l border-gray-200"></div>
 
         {{-- Riwayat Upload --}}
-        <a href="{{route ("admin.riwayat_presensi")}}" title="Riwayat Upload"
+        <a href="{{ route('admin.riwayat_presensi') }}" title="Riwayat Upload"
             class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -84,14 +86,7 @@
 
     </div>
 
-    <!-- Calendar card -->
-    <div class="mt-4 bg-white rounded-2xl shadow-sm ring-1 ring-gray-200 p-3 sm:p-4">
-        <div class="mt-4 bg-white rounded-2xl shadow-sm ring-1 ring-gray-200 p-3 sm:p-4">
-            <div id="presensiGrid"></div>
-        </div>
-    </div>
-
-    <!-- Modal detail -->
+    {{-- Modal detail presensi (butuh Alpine, tetap di dalam scope) --}}
     <div x-show="open" x-transition.opacity
          class="fixed inset-0 z-50 flex items-center justify-center p-4"
          style="display:none;">
@@ -136,42 +131,51 @@
         </div>
     </div>
 
-    {{-- Modal Upload --}}
-    <div id="modalUpload" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-base font-semibold text-gray-800">Upload Presensi</h2>
-                <button onclick="closeUploadModal()" class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
+</div>
+{{-- ↑ Alpine scope BERAKHIR di sini ↑ --}}
 
-            <div id="uploadDropzone"
-                class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#faa938] transition-colors"
-                onclick="document.getElementById('fileInput').click()"
-                ondragover="event.preventDefault(); this.classList.add('border-[#faa938]')"
-                ondragleave="this.classList.remove('border-[#faa938]')"
-                ondrop="handleDrop(event)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+{{-- Calendar card DI LUAR Alpine supaya tidak di-reset Alpine --}}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mt-4 bg-white rounded-2xl shadow-sm ring-1 ring-gray-200 p-3 sm:p-4">
+        <div id="presensiGrid"></div>
+    </div>
+</div>
+
+{{-- Modal Upload DI LUAR Alpine --}}
+<div id="modalUpload" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-semibold text-gray-800">Upload Presensi</h2>
+            <button onclick="closeUploadModal()" class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                <p class="text-sm text-gray-500">Drag & drop file xlsx atau <span class="text-[#faa938] font-medium">browse</span></p>
-                <p id="fileName" class="text-xs text-gray-400 mt-1">Belum ada file dipilih</p>
-                <input type="file" id="fileInput" accept=".xlsx,.xls" class="hidden" onchange="handleFileSelect(this)"/>
-            </div>
+            </button>
+        </div>
 
-            <div id="uploadAlert" class="hidden mt-3 rounded-xl px-4 py-3 text-sm font-medium"></div>
+        <div id="uploadDropzone"
+            class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#faa938] transition-colors"
+            onclick="document.getElementById('fileInput').click()"
+            ondragover="event.preventDefault(); this.classList.add('border-[#faa938]')"
+            ondragleave="this.classList.remove('border-[#faa938]')"
+            ondrop="handleDrop(event)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            <p class="text-sm text-gray-500">Drag & drop file xlsx atau <span class="text-[#faa938] font-medium">browse</span></p>
+            <p id="fileName" class="text-xs text-gray-400 mt-1">Belum ada file dipilih</p>
+            <input type="file" id="fileInput" accept=".xlsx,.xls" class="hidden" onchange="handleFileSelect(this)"/>
+        </div>
 
-            <div class="flex justify-end gap-2 mt-5">
-                <button onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm text-gray-600 border border-gray-200 hover:bg-gray-50">Batal</button>
-                <button onclick="submitUpload()" class="px-4 py-2 rounded-lg text-sm text-white bg-[#faa938] hover:brightness-95">Upload</button>
-            </div>
+        <div id="uploadAlert" class="hidden mt-3 rounded-xl px-4 py-3 text-sm font-medium"></div>
+
+        <div class="flex justify-end gap-2 mt-5">
+            <button onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm text-gray-600 border border-gray-200 hover:bg-gray-50">Batal</button>
+            <button onclick="submitUpload()" class="px-4 py-2 rounded-lg text-sm text-white bg-[#faa938] hover:brightness-95">Upload</button>
         </div>
     </div>
-
 </div>
+
 @endsection
 
 @push('scripts')
@@ -184,7 +188,6 @@
     const now = new Date();
     let current = new Date(now.getFullYear(), now.getMonth(), 1);
     let selectedEmployeeId = null;
-    let selectedTeamId = null;
     let cachedTim = [];
     let cachedPegawai = [];
     let selYear  = now.getFullYear();
@@ -209,7 +212,6 @@
     async function fetchTim() {
         const res = await fetch('/admin/presensi/tim');
         cachedTim = await res.json();
-        populateDropdownTim('', cachedTim);
     }
 
     async function fetchPegawai(kodeTim = '') {
@@ -456,27 +458,18 @@
     // FETCH PRESENSI
     // =====================
     async function fetchPresensi() {
-        console.log('fetchPresensi dipanggil');
-        console.log('selectedEmployeeId:', selectedEmployeeId);
-
-        if (!selectedEmployeeId) { console.log('stop: tidak ada pegawai'); return; }
+        if (!selectedEmployeeId) return;
 
         const year  = current.getFullYear();
         const month = String(current.getMonth() + 1).padStart(2, '0');
         const pegawai = cachedPegawai.find(p => p.id_pegawai === selectedEmployeeId);
-        console.log('pegawai ditemukan:', pegawai);
-
         const niplama = pegawai?.nip_lama ?? '';
-        console.log('niplama:', niplama);
 
-        if (!niplama) { console.log('stop: niplama kosong'); return; }
+        if (!niplama) return;
 
         const url = `{{ route('admin.presensi.kalender') }}?niplama=${niplama}&periode=${year}-${month}`;
-        console.log('fetch url:', url);
-
         const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
         presensiData = await res.json();
-        console.log('presensiData:', presensiData);
         render();
     }
 
@@ -485,18 +478,18 @@
     // =====================
     function statusColor(st) {
         return {
-            WFO: 'text-green-600',
-            WFA: 'text-blue-600',
+            WFO:  'text-green-600',
+            WFA:  'text-blue-600',
             WFOL: 'text-sky-600',
-            DL: 'text-amber-600',
+            DL:   'text-amber-600',
             CUTI: 'text-rose-600',
-            KN: 'text-gray-500',
+            KN:   'text-gray-500',
         }[st] || 'text-gray-700';
     }
 
     function fmt(d) {
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const y   = d.getFullYear();
+        const m   = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         return `${y}-${m}-${day}`;
     }
@@ -530,15 +523,15 @@
                     </div>
                 `).join('')}
                 ${days.map(d => {
-                    const key = fmt(d);
+                    const key     = fmt(d);
                     const inMonth = d.getMonth() === month;
-                    const isSun = ((d.getDay() + 6) % 7) === 6;
-                    const p = presensiData[key];
+                    const isSun   = ((d.getDay() + 6) % 7) === 6;
+                    const p       = presensiData[key];
 
                     const statusHtml = p
                         ? `<div class="mt-1 text-xs font-medium text-center ${statusColor(p.status)}">${p.status}</div>
-                        <div class="text-xs text-gray-400 text-center">${p.jam_mulai ? p.jam_mulai.split(' ')[1].slice(0,8) : '—'}</div>
-                        <div class="text-xs text-gray-400 text-center">${p.jam_selesai ? p.jam_selesai.split(' ')[1].slice(0,8) : '—'}</div>`
+                           <div class="text-xs text-gray-400 text-center">${p.jam_mulai   ? p.jam_mulai.split(' ')[1].slice(0,8)   : '—'}</div>
+                           <div class="text-xs text-gray-400 text-center">${p.jam_selesai ? p.jam_selesai.split(' ')[1].slice(0,8) : '—'}</div>`
                         : `<div class="flex-1 flex items-center justify-center text-xs text-gray-300 select-none">—</div>`;
 
                     return `
@@ -564,7 +557,7 @@
             detail: {
                 date,
                 status:   p.status,
-                checkIn:  p.jam_mulai  ? p.jam_mulai.split(' ')[1].slice(0,5)  : '—',
+                checkIn:  p.jam_mulai   ? p.jam_mulai.split(' ')[1].slice(0,5)   : '—',
                 checkOut: p.jam_selesai ? p.jam_selesai.split(' ')[1].slice(0,5) : '—',
             }
         }));
@@ -578,19 +571,15 @@
         fetchPegawai();
         render();
 
-        document.getElementById('presensiGrid').addEventListener('click', function(e) {
+        document.getElementById('presensiGrid').addEventListener('click', function (e) {
             const btn = e.target.closest('button[data-presensi]');
             if (!btn || !btn.dataset.presensi) return;
-            const p = JSON.parse(btn.dataset.presensi);
+            const p    = JSON.parse(btn.dataset.presensi);
             const date = btn.dataset.date;
             if (p && date) dispatchDetail(date, p);
         });
 
         document.addEventListener('click', function (e) {
-            const wrapperTim = document.getElementById('searchTim')?.closest('.relative');
-            if (wrapperTim && !wrapperTim.contains(e.target))
-                document.getElementById('dropdownTim').classList.add('hidden');
-
             const wrapperPegawai = document.getElementById('searchPegawai')?.closest('.relative');
             if (wrapperPegawai && !wrapperPegawai.contains(e.target))
                 document.getElementById('dropdownPegawai').classList.add('hidden');

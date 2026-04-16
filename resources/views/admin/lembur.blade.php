@@ -425,7 +425,7 @@
 
 <script>
     // =====================
-    // MODAL
+    // MODAL AJUKAN
     // =====================
     const modal     = document.getElementById('modalAjukan');
     const btnAjukan = document.getElementById('btnAjukan');
@@ -576,6 +576,7 @@
     // =====================
     let selectedNip   = null;
     let selectedTimId = null;
+    let selectedTanggal = null; // BARU: simpan tanggal yang dipilih
     let cachedTim     = [];
     let cachedPegawai = [];
 
@@ -583,9 +584,44 @@
     // APPLY FILTER (redirect ke URL)
     // =====================
     function applyFilter() {
+        const params = new URLSearchParams();
+        if (selectedTimId)  params.set('tim',     selectedTimId);
+        if (selectedNip)    params.set('nip',     selectedNip);
+        if (selectedTanggal) params.set('tanggal', selectedTanggal); // BARU
+        window.location.href = '?' + params.toString();
+    }
+
+    // =====================
+    // UPDATE EXPORT LINK
+    // =====================
+    function updateExportLink() {
         const tim = selectedTimId ?? '';
         const nip = selectedNip   ?? '';
-        window.location.href = `?tim=${tim}&nip=${nip}`;
+
+        // Gunakan tanggal terpilih untuk bulan, fallback ke bulan sekarang
+        let bulan;
+        if (selectedTanggal) {
+            bulan = selectedTanggal.slice(0, 7); // ambil YYYY-MM dari YYYY-MM-DD
+        } else {
+            bulan = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}`;
+        }
+
+        document.getElementById('btnExport').href =
+            `/admin/lembur/export?bulan=${bulan}&tim=${tim}&nip=${nip}`;
+    }
+
+    // =====================
+    // FILTER TABEL (dipanggil oleh date picker)
+    // =====================
+    function filterTabel() {
+        applyFilter();
+    }
+
+    // =====================
+    // RESET BTN (placeholder, bisa dikembangkan)
+    // =====================
+    function updateResetBtn() {
+        // kosong — bisa diisi logika tombol reset filter nanti
     }
 
     // =====================
@@ -708,17 +744,17 @@
     (function () {
         const el = (id) => document.getElementById(id);
 
-        const picker   = el('datePicker');
-        const btn      = el('dateBtn');
-        const panel    = el('datePanel');
-        const grid     = el('dateGrid');
-        const navLabel = el('dateNavLabel');
+        const picker    = el('datePicker');
+        const btn       = el('dateBtn');
+        const panel     = el('datePanel');
+        const grid      = el('dateGrid');
+        const navLabel  = el('dateNavLabel');
         const dateLabel = el('dateLabel');
         const dateValue = el('dateValue');
-        const btnPrev  = el('datePrev');
-        const btnNext  = el('dateNext');
-        const btnToday = el('btnToday');
-        const btnClose = el('btnDateClose');
+        const btnPrev   = el('datePrev');
+        const btnNext   = el('dateNext');
+        const btnToday  = el('btnToday');
+        const btnClose  = el('btnDateClose');
 
         if (!picker || !btn || !panel) return;
 
@@ -736,14 +772,17 @@
         function setDate(y, m, d) {
             selYear = y; selMonth = m; selDay = d;
             dateLabel.textContent = `${d} ${monthShort[m]} ${y}`;
-            dateValue.value = `${y}-${pad2(m + 1)}-${pad2(d)}`;
 
-            const bulan = `${y}-${pad2(m + 1)}`;
-            const tim   = selectedTimId ?? '';
-            const nip   = selectedNip   ?? '';
-            document.getElementById('btnExport').href =
-                `/admin/lembur/export?bulan=${bulan}&tim=${tim}&nip=${nip}`;
+            const tanggalStr = `${y}-${pad2(m + 1)}-${pad2(d)}`;
+            dateValue.value  = tanggalStr;
 
+            // Update state filter tanggal
+            selectedTanggal = tanggalStr;
+
+            // Update export link pakai bulan dari tanggal terpilih
+            updateExportLink();
+
+            // Redirect dengan filter tanggal
             filterTabel();
             updateResetBtn();
         }
@@ -791,9 +830,11 @@
             for (let d = 1; d <= daysInMonth; d++) {
                 const isSelected = (selDay === d && selMonth === viewMonth && selYear === viewYear);
                 const isToday    = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
-                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isToday ? 'bg-[#faa938]/20 text-[#faa938] border-transparent'
-                    : 'border-transparent text-gray-700 hover:border-[#faa938] hover:text-[#faa938]';
+                const cls = isSelected
+                    ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isToday
+                        ? 'bg-[#faa938]/20 text-[#faa938] border-transparent'
+                        : 'border-transparent text-gray-700 hover:border-[#faa938] hover:text-[#faa938]';
                 const _d = d;
                 dayGrid.appendChild(makeBtn(_d, base + cls, () => { setDate(viewYear, viewMonth, _d); closePanel(); }));
             }
@@ -821,10 +862,12 @@
             monthNames.forEach((name, m) => {
                 const isSelected = (m === selMonth && viewYear === selYear);
                 const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
-                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isNow ? 'border-[#faa938] text-[#faa938] bg-white'
-                    : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
-                g.appendChild(makeBtn(name.slice(0,3), 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
+                const cls = isSelected
+                    ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow
+                        ? 'border-[#faa938] text-[#faa938] bg-white'
+                        : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
+                g.appendChild(makeBtn(name.slice(0, 3), 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
                     viewMonth = m; renderDay();
                 }));
             });
@@ -842,9 +885,11 @@
             for (let y = startYear; y < startYear + 12; y++) {
                 const isSelected = (y === selYear);
                 const isNow      = (y === now.getFullYear());
-                const cls = isSelected ? 'bg-[#faa938] text-white border-[#faa938]'
-                    : isNow ? 'border-[#faa938] text-[#faa938] bg-white'
-                    : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
+                const cls = isSelected
+                    ? 'bg-[#faa938] text-white border-[#faa938]'
+                    : isNow
+                        ? 'border-[#faa938] text-[#faa938] bg-white'
+                        : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
                 const _y = y;
                 g.appendChild(makeBtn(_y, 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
                     viewYear = _y; renderMonth();
@@ -853,19 +898,26 @@
             grid.appendChild(g);
         }
 
-        btn.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.contains('hidden') ? openPanel() : closePanel(); });
-        navLabel.addEventListener('click', (e) => { e.stopPropagation(); if (view === 'day') renderMonth(); else if (view === 'month') renderYear(); });
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.contains('hidden') ? openPanel() : closePanel();
+        });
+        navLabel.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (view === 'day') renderMonth();
+            else if (view === 'month') renderYear();
+        });
         btnPrev?.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (view === 'day') { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderDay(); }
-            else if (view === 'month') { viewYear--; renderMonth(); }
-            else if (view === 'year') { viewYear -= 12; renderYear(); }
+            if (view === 'day')        { viewMonth--; if (viewMonth < 0)  { viewMonth = 11; viewYear--; } renderDay(); }
+            else if (view === 'month') { viewYear--;  renderMonth(); }
+            else if (view === 'year')  { viewYear -= 12; renderYear(); }
         });
         btnNext?.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (view === 'day') { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderDay(); }
-            else if (view === 'month') { viewYear++; renderMonth(); }
-            else if (view === 'year') { viewYear += 12; renderYear(); }
+            if (view === 'day')        { viewMonth++; if (viewMonth > 11) { viewMonth = 0;  viewYear++; } renderDay(); }
+            else if (view === 'month') { viewYear++;  renderMonth(); }
+            else if (view === 'year')  { viewYear += 12; renderYear(); }
         });
         btnToday?.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -886,9 +938,10 @@
         updateExportLink();
 
         // Restore state dari URL
-        const params   = new URLSearchParams(window.location.search);
-        const timParam = params.get('tim') ?? '';
-        const nipParam = params.get('nip') ?? '';
+        const params        = new URLSearchParams(window.location.search);
+        const timParam      = params.get('tim')     ?? '';
+        const nipParam      = params.get('nip')     ?? '';
+        const tanggalParam  = params.get('tanggal') ?? '';
 
         if (timParam) {
             selectedTimId = timParam;
@@ -910,7 +963,22 @@
                 });
         }
 
-        // Tutup dropdown klik luar
+        if (tanggalParam) {
+            selectedTanggal = tanggalParam;
+            // Tampilkan label tanggal terpilih di button date picker
+            const parts = tanggalParam.split('-');
+            if (parts.length === 3) {
+                const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                const y = parseInt(parts[0]);
+                const m = parseInt(parts[1]) - 1;
+                const d = parseInt(parts[2]);
+                const dateLabel = document.getElementById('dateLabel');
+                if (dateLabel) dateLabel.textContent = `${d} ${monthShort[m]} ${y}`;
+            }
+            updateExportLink();
+        }
+
+        // Tutup dropdown saat klik di luar
         document.addEventListener('click', function (e) {
             const wrapperTim = document.getElementById('searchTim')?.closest('.relative');
             if (wrapperTim && !wrapperTim.contains(e.target))
@@ -922,18 +990,8 @@
         });
     });
 
-    function updateExportLink() {
-        const bulan = document.getElementById('inputBulan').value;
-        const tim   = selectedTimId ?? '';
-        const nip   = selectedNip   ?? '';
-        document.getElementById('btnExport').href =
-            `/admin/lembur/export?bulan=${bulan}&tim=${tim}&nip=${nip}`;
-    }
-
-    document.getElementById('inputBulan').addEventListener('change', updateExportLink);
-
-     // =====================
-    // Dokumentasi
+    // =====================
+    // DOKUMENTASI
     // =====================
     function openModalDok(idTransaksi) {
         const base = "{{ url('admin/lembur') }}";
@@ -946,7 +1004,7 @@
         document.getElementById('modalDok').classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
     }
-    </script>
+</script>
 
 @endpush
 

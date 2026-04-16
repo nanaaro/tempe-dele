@@ -14,30 +14,51 @@ class LemburController extends Controller
 {
     public function index(Request $request)
     {
-        $bulan = $request->query('bulan', now()->format('Y-m'));
-        $tim   = $request->query('tim');
-        $nip   = $request->query('nip');
-        $nipUser = session('user')['nip'];
+        $bulan    = $request->query('bulan', now()->format('Y-m'));
+        $tanggal  = $request->query('tanggal');
+        $tim      = $request->query('tim');
+        $nip      = $request->query('nip');
+        $nipUser  = session('user')['nip'];
 
         $periode      = Carbon::parse($bulan . '-01');
         $startOfMonth = $periode->copy()->startOfMonth()->toDateString();
         $endOfMonth   = $periode->copy()->endOfMonth()->toDateString();
 
-        $query = \DB::table('t_transaksi as t')
+        $query = DB::table('t_transaksi as t')
             ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
             ->leftJoin('m_pegawai as kp', 't.approver_employee_id', '=', 'kp.nip')
             ->leftJoin('m_pegawai as pg', 't.submitted_by_NIP', '=', 'pg.nip')
             ->leftJoin('m_dokumentasi as md', 't.dokumentasi_id_dokumentasi', '=', 'md.id_dokumentasi')
-            ->select('t.*', 'mt.nama_tim', 'kp.nama as nama_ketua', 'pg.nama as nama_pegawai', 'md.file_path as file_dokumentasi')
-            ->whereBetween('t.date', [$startOfMonth, $endOfMonth])
-            ->orderBy('t.date', 'desc');
+            ->select(
+                't.*',
+                'mt.nama_tim',
+                'kp.nama as nama_ketua',
+                'pg.nama as nama_pegawai',
+                'md.file_path as file_dokumentasi'
+            );
 
-        if ($tim) $query->where('t.tim_kode_tim', $tim);
-        if ($nip) $query->where('t.submitted_by_NIP', $nip);
+        // 🔥 LOGIC FILTER (AMAN)
+        if ($tanggal) {
+            $query->whereDate('t.date', $tanggal);
+        } else {
+            $query->whereBetween('t.date', [$startOfMonth, $endOfMonth]);
+        }
+
+        if ($tim) {
+            $query->where('t.tim_kode_tim', $tim);
+        }
+
+        if ($nip) {
+            $query->where('t.submitted_by_NIP', $nip);
+        }
+
+        $query->orderBy('t.date', 'desc');
 
         $transaksi = $query->paginate(10)->withQueryString();
 
-        // Ambil ketuaTim untuk form submit
+        // =====================
+        // KETUA TIM
+        // =====================
         $ketuaTim = [];
         $responseTim = Http::withHeaders([
             'Content-Type'  => 'application/json',
@@ -66,14 +87,10 @@ class LemburController extends Controller
         }
 
         return view('admin.lembur', compact('transaksi', 'ketuaTim', 'bulan'));
-    }
+    }   
 
     public function store(Request $request)
     {
-        $role = session('role');
-        if ($role === 'admin') {
-            return back()->with('error', 'Admin tidak dapat mengajukan lembur.');
-        }
 
         $validated = $request->validate([
             'approver_id' => 'required|string',

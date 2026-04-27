@@ -4,6 +4,7 @@
 
 @section('content')
 
+    {{-- Filter Bar --}}
     <div class="flex items-center gap-3 max-w-7xl mx-auto px-8 my-5">
 
         {{-- Filter Periode --}}
@@ -47,8 +48,9 @@
                     <button type="button" id="btnToday" class="text-sm font-medium text-gray-500 hover:text-[#faa938]">Hari ini</button>
                     <button type="button" id="btnDateClose" class="px-3 py-1 text-sm font-medium rounded-full border border-gray-200 text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">Tutup</button>
                 </div>
-            </div>
-        </div>
+
+            </div>{{-- /datePanel --}}
+        </div>{{-- /datePicker --}}
 
         {{-- Filter Pegawai --}}
         <div class="relative shrink-0">
@@ -63,7 +65,7 @@
             <div id="dropdownPegawai" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
                 <ul id="listPegawai"></ul>
             </div>
-        </div>
+        </div>{{-- /Filter Pegawai --}}
 
         {{-- Filter Tim --}}
         <div class="relative shrink-0">
@@ -79,12 +81,12 @@
             <div id="dropdownTim" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
                 <ul id="listTim"></ul>
             </div>
-        </div>
+        </div>{{-- /Filter Tim --}}
 
-    {{-- Spacer atau devider --}}
-    <div class="flex-1"></div>
+        {{-- Spacer --}}
+        <div class="flex-1"></div>
 
-    {{-- tombol upload --}}
+        {{-- Tombol Download --}}
         <a href="{{ route('admin.daftar_hadir.download', ['tanggal' => $tanggal, 'tim' => request('tim'), 'nip' => request('nip')]) }}"
             title="Unduh Daftar Hadir"
             class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
@@ -93,9 +95,9 @@
             </svg>
         </a>
 
-    </div>
+    </div>{{-- /Filter Bar --}}
 
-    <!-- Tabel -->
+    {{-- Tabel --}}
     <div class="overflow-x-auto max-w-7xl mx-auto px-8 my-5">
         <table class="min-w-full rounded-xl border-separate border-spacing-0">
             <thead>
@@ -141,10 +143,11 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-            <!-- /Tabel -->
-</div>
+    </div>{{-- /Tabel --}}
 
+@endsection
+
+@push('scripts')
 <script>
     // =====================
     // GLOBAL STATE
@@ -280,8 +283,7 @@
         const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
         const dayNames   = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 
-        // Ambil nilai awal dari hidden input (diisi blade)
-        let initVal   = dateValue.value || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`;
+        let initVal      = dateValue.value || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`;
         let [iy, im, id] = initVal.split('-').map(Number);
 
         let view      = 'day';
@@ -291,7 +293,6 @@
         let selMonth  = im - 1;
         let selDay    = id;
 
-        // Update label tanpa trigger redirect
         dateLabel.textContent = `${selDay} ${monthShort[selMonth]} ${selYear}`;
 
         function setDate(y, m, d, triggerFilter = true) {
@@ -445,7 +446,6 @@
         fetchTim();
         fetchPegawai();
 
-        // Restore state dari URL
         const params   = new URLSearchParams(window.location.search);
         const timParam = params.get('tim') ?? '';
         const nipParam = params.get('nip') ?? '';
@@ -481,5 +481,4 @@
         });
     });
 </script>
-
-@endsection
+@endpush

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\LaporanExport;
@@ -30,6 +31,56 @@ class DokumenGenerateController extends Controller
             ->count() + 1;
         $nomorUrut = str_pad($urutan, 5, '0', STR_PAD_LEFT);
         return "558.1/{$nomorUrut}/RT.512/{$dt->year}";
+    }
+
+    private function getLiburNasional(int $tahun): array
+    {
+        $fallback = [
+            "$tahun-01-01",
+            "$tahun-05-01",
+            "$tahun-06-01",
+            "$tahun-08-17",
+            "$tahun-12-25",
+        ];
+
+        try {
+            $response = Http::timeout(5)->get('https://api-harilibur.vercel.app/api', [
+                'year' => $tahun,
+            ]);
+
+            if (!$response->ok()) {
+                return $fallback;
+            }
+
+            $result = collect($response->json())
+                ->where('is_national_holiday', true)
+                ->pluck('holiday_date')
+                ->toArray();
+
+            return !empty($result) ? $result : $fallback;
+
+        } catch (\Throwable $e) {
+            return $fallback;
+        }
+    }
+
+    private function hariKerjaPertama(int $bulan, int $tahun): Carbon
+    {
+        $liburNasional = $this->getLiburNasional($tahun);
+        $tanggal       = Carbon::create($tahun, $bulan, 1);
+
+        while (true) {
+            $isWeekend = $tanggal->isWeekend();
+            $isHoliday = in_array($tanggal->format('Y-m-d'), $liburNasional);
+
+            if (!$isWeekend && !$isHoliday) {
+                break;
+            }
+
+            $tanggal->addDay();
+        }
+
+        return $tanggal;
     }
 
     public function spkl(Request $request)
@@ -70,12 +121,16 @@ class DokumenGenerateController extends Controller
         })->values();
 
         [$ppk, $kbps, $kbu] = $this->getPejabat();
-        $nomorSurat  = $request->get('nomor_surat', $this->getNomorSurat($bulan));
-        $bulanLabel  = $dt->translatedFormat('F');
-        $tahun       = $dt->year;
-        $tanggalTtd  = $dt->translatedFormat('d F Y');
+        $nomorSurat = $request->get('nomor_surat', $this->getNomorSurat($bulan));
+        $bulanLabel = $dt->translatedFormat('F');
+        $tahun      = $dt->year;
 
-        $pdf = Pdf::loadView('dokumen.spkl', compact('pegawai', 'ppk', 'kbu', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'))->setPaper('a4', 'portrait');
+        $tanggalTtd = $this->hariKerjaPertama((int) $bln, (int) $tahun)
+                           ->translatedFormat('d F Y');
+
+        $pdf = Pdf::loadView('dokumen.spkl', compact(
+            'pegawai', 'ppk', 'kbu', 'nomorSurat', 'bulanLabel', 'tahun', 'tanggalTtd'
+        ))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'spkl',
@@ -131,10 +186,12 @@ class DokumenGenerateController extends Controller
         })->values();
 
         [$ppk, $kbps, $kbu] = $this->getPejabat();
-        $bulanLabel  = $dt->translatedFormat('F');
-        $tahun       = $dt->year;
+        $bulanLabel = $dt->translatedFormat('F');
+        $tahun      = $dt->year;
 
-        $pdf = Pdf::loadView('dokumen.laporan', compact('pegawai', 'kbu', 'bulanLabel', 'tahun', 'jenis'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dokumen.laporan', compact(
+            'pegawai', 'kbu', 'bulanLabel', 'tahun', 'jenis'
+        ))->setPaper('a4', 'portrait');
 
         DB::table('t_dokumen')->insert([
             'type'         => 'laporan_' . $jenis,

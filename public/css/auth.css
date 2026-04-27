@@ -3,7 +3,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url('../images/background.svg') no-repeat center center;
+    background: #fff;
     background-size: cover;
     font-family: Arial, sans-serif;
     margin: 0;

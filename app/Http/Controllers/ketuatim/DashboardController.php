@@ -22,13 +22,14 @@ class DashboardController extends Controller
             'ditolak'   => DB::table('t_transaksi')->where('approver_employee_id', $nipKetua)->whereMonth('date', $bulanIni)->whereYear('date', $tahunIni)->where('status', 'rejected')->count(),
         ];
 
-        // --- 5 pengajuan terbaru dari anggota tim ---
+        // --- pengajuan terbaru dari anggota tim ---
         $pengajuan = DB::table('t_transaksi as t')
             ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
             ->where('t.approver_employee_id', $nipKetua)
+            ->whereMonth('t.date', $bulanIni)
+            ->whereYear('t.date', $tahunIni)
             ->select('t.*', 'p.nama as nama_pegawai')
             ->orderBy('t.submitted_at', 'desc')
-            ->limit(3)
             ->get();
 
         // --- Lembur hari ini yang approved ---

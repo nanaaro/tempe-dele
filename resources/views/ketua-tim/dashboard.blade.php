@@ -41,14 +41,14 @@
       <p class="mt-1 text-xs text-gray-400">Bulan ini</p>
     </div>
     <div class="rounded-2xl bg-gray-50 p-5">
-      <p class="text-xs text-gray-500 mb-2">Disetujui</p>
-      <p class="text-3xl font-semibold text-green-700">{{ $stats['disetujui'] }}</p>
-      <p class="mt-1 text-xs text-gray-400">Pengajuan bulan ini</p>
-    </div>
-    <div class="rounded-2xl bg-gray-50 p-5">
       <p class="text-xs text-gray-500 mb-2">Diproses</p>
       <p class="text-3xl font-semibold text-yellow-700">{{ $stats['diproses'] }}</p>
       <p class="mt-1 text-xs text-gray-400">Menunggu review</p>
+    </div>
+    <div class="rounded-2xl bg-gray-50 p-5">
+      <p class="text-xs text-gray-500 mb-2">Disetujui</p>
+      <p class="text-3xl font-semibold text-green-700">{{ $stats['disetujui'] }}</p>
+      <p class="mt-1 text-xs text-gray-400">Pengajuan bulan ini</p>
     </div>
     <div class="rounded-2xl bg-gray-50 p-5">
       <p class="text-xs text-gray-500 mb-2">Ditolak</p>

@@ -25,10 +25,11 @@ class DashboardController extends Controller
         // --- Lembur hari ini (semua karyawan) ---
         $lemburHariIni = DB::table('t_transaksi as t')
             ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
+            ->leftJoin('m_tim as tim', 't.tim_kode_tim', '=', 'tim.kode_tim')
             ->whereDate('t.date', $hariIni)
             ->select(
                 'p.nama as nama_pegawai',
-                'p.satker',
+                'tim.nama_tim',
                 't.jam_mulai',
                 't.jam_selesai',
                 't.jam_mulai_disetujui',
@@ -38,7 +39,7 @@ class DashboardController extends Controller
             ->orderBy('t.submitted_at', 'desc')
             ->get();
 
-        $bulanPeriode = now()->format('Y-m'); // "2026-04"
+        $bulanPeriode = now()->format('Y-m'); 
 
         $dokumen = DB::table('t_dokumen')
             ->where('periode', $bulanPeriode)

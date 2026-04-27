@@ -47,14 +47,14 @@
       <p class="mt-1 text-xs text-gray-400">Bulan ini</p>
     </div>
     <div class="rounded-2xl bg-gray-50 p-5">
-      <p class="text-xs text-gray-500 mb-2">Disetujui</p>
-      <p class="text-3xl font-semibold text-green-700">{{ $stats['disetujui'] }}</p>
-      <p class="mt-1 text-xs text-gray-400">Pengajuan bulan ini</p>
-    </div>
-    <div class="rounded-2xl bg-gray-50 p-5">
       <p class="text-xs text-gray-500 mb-2">Diproses</p>
       <p class="text-3xl font-semibold text-yellow-700">{{ $stats['diproses'] }}</p>
       <p class="mt-1 text-xs text-gray-400">Menunggu review</p>
+    </div>
+    <div class="rounded-2xl bg-gray-50 p-5">
+      <p class="text-xs text-gray-500 mb-2">Disetujui</p>
+      <p class="text-3xl font-semibold text-green-700">{{ $stats['disetujui'] }}</p>
+      <p class="mt-1 text-xs text-gray-400">Pengajuan bulan ini</p>
     </div>
     <div class="rounded-2xl bg-gray-50 p-5">
       <p class="text-xs text-gray-500 mb-2">Ditolak</p>
@@ -71,7 +71,7 @@
       <div class="flex flex-col gap-3 border-b border-black/10 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 class="text-lg font-semibold">Pengajuan terbaru</h2>
-          <p class="mt-1 text-sm text-gray-600">5 pengajuan lembur terakhir kamu.</p>
+          <p class="mt-1 text-sm text-gray-600">3 pengajuan lembur terakhir kamu.</p>
         </div>
         <a href="{{ route('lembur') }}"
            class="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold border border-black/15 hover:bg-gray-50">

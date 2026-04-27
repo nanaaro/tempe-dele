@@ -59,13 +59,6 @@
     {{-- Spacer atau devider --}}
     <div class="flex-1"></div>
 
-        {{-- Input Nomer Surat
-        <a href="javascript:void(0)" onclick="openModalNomor()" title="Input Nomer Surat"
-            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-[#faa938] hover:text-[#faa938] transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
-            </svg>
-        </a> --}}
 
     {{-- tombol download --}}
         <a href="{{ route('admin.rekapitulasi.export', ['bulan' => $bulan]) }}"
@@ -158,65 +151,6 @@
     </nav>
 </div>
 
-{{-- Modal Nomor Surat --}}
-<div id="modalNomor" class="fixed inset-0 z-50 hidden">
-
-    <!-- Overlay (lebih ringan) -->
-    <div class="absolute inset-0 bg-black/30" onclick="closeModalNomor()"></div>
-
-    <!-- Modal -->
-    <div class="relative flex min-h-screen items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
-
-            <!-- Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h2 class="text-lg font-semibold text-gray-900">
-                    Generate SPKL
-                </h2>
-                <button onclick="closeModalNomor()"
-                    class="text-gray-400 hover:text-gray-700 text-xl leading-none">
-                    &times;
-                </button>
-            </div>
-
-            <!-- Form -->
-            <form id="formGenerateSpkl" method="GET" action="{{ route('admin.dokumen.generate.spkl') }}"
-                class="px-6 py-5 space-y-5">
-
-                <input type="hidden" name="bulan" id="inputBulanSpkl">
-
-                <!-- Input -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nomor Surat
-                    </label>
-                    <input type="text" name="nomor_surat" required
-                        placeholder="558.1/00001/RT.512/2026"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                               focus:outline-none focus:ring-1 focus:ring-gray-800">
-                    <p class="text-xs text-gray-400 mt-1">
-                        Contoh: 558.1/00001/RT.512/2026
-                    </p>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeModalNomor()"
-                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Batal
-                    </button>
-
-                    <button type="submit"
-                        class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938]
-                               rounded-lg hover:bg-[#fd9a10] hover:text-white transition">
-                        Generate
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-</div>
 
 <script>
     // =====================

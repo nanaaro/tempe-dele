@@ -8,66 +8,76 @@
 
     {{-- Flash success --}}
     @if(session('success'))
-    <div class="mt-4 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm">
-        {{ session('success') }}
-    </div>
+        <div class="mt-4 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm">
+            {{ session('success') }}
+        </div>
     @endif
-
 
     <div class="overflow-visible">
 
+        {{-- Toolbar --}}
         <div class="flex items-center gap-3 max-w-7xl mx-auto my-5">
 
             {{-- Filter Periode --}}
-                <div class="relative shrink-0" id="datePicker">
-                    <button type="button" id="dateBtn"
-                        class="inline-flex items-center h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
-                            <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
-                        </svg>
-                        <span id="dateLabel" class="leading-none">Semua Tanggal</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-50">
-                            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L160 301.5l119.1-119.1c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"/>
-                        </svg>
-                    </button>
-                    <input type="hidden" id="dateValue" value="">
+            <div class="relative shrink-0" id="datePicker">
+                <button type="button" id="dateBtn"
+                    class="inline-flex items-center h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current">
+                        <path d="M208 64c17.7 0 32 14.3 32 32v32h160V96c0-17.7 14.3-32 32-32s32 14.3 32 32v32h32c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h32V96c0-17.7 14.3-32 32-32zm336 160H96v288c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V224z"/>
+                    </svg>
+                    <span id="dateLabel" class="leading-none">Semua Tanggal</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current opacity-50">
+                        <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L160 301.5l119.1-119.1c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"/>
+                    </svg>
+                </button>
+                <input type="hidden" id="dateValue" value="">
 
-                    <div id="datePanel" class="hidden absolute z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
-                        <div class="flex items-center justify-between mb-3">
-                            <button type="button" id="datePrev" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                                    <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
-                                </svg>
-                            </button>
-                            <span id="dateNavLabel" class="text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none"></span>
-                            <button type="button" id="dateNext" class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
-                                    <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="dateGrid"></div>
-                        <div class="flex items-center justify-between mt-3">
-                            <button type="button" id="btnToday" class="text-sm font-medium text-gray-500 hover:text-[#faa938]">Hari ini</button>
-                            <button type="button" id="btnDateClose" class="px-3 py-1 text-sm font-medium rounded-full border border-gray-200 text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">Tutup</button>
-                        </div>
+                <div id="datePanel" class="hidden absolute z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-lg p-3">
+                    <div class="flex items-center justify-between mb-3">
+                        <button type="button" id="datePrev"
+                            class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
+                                <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
+                            </svg>
+                        </button>
+                        <span id="dateNavLabel"
+                            class="text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none">
+                        </span>
+                        <button type="button" id="dateNext"
+                            class="p-2 rounded-lg border border-gray-200 hover:border-[#faa938] hover:text-[#faa938]">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-3 h-3 fill-current">
+                                <path d="M278.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c12.5 12.5 12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="dateGrid"></div>
+                    <div class="flex items-center justify-between mt-3">
+                        <button type="button" id="btnToday"
+                            class="text-sm font-medium text-gray-500 hover:text-[#faa938]">
+                            Hari ini
+                        </button>
+                        <button type="button" id="btnDateClose"
+                            class="px-3 py-1 text-sm font-medium rounded-full border border-gray-200 text-gray-600 hover:border-[#faa938] hover:text-[#faa938]">
+                            Tutup
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                {{-- Filter Pegawai --}}
-                <div class="relative shrink-0">
-                    <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
-                        onclick="toggleDropdown()" oninput="filterDropdown()" autocomplete="off"
-                        class="w-90 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
-                    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
-                            <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
-                        </svg>
-                    </div>
-                    <div id="dropdownPegawai" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
-                        <ul id="listPegawai"></ul>
-                    </div>
+            {{-- Filter Pegawai --}}
+            <div class="relative shrink-0">
+                <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
+                    onclick="toggleDropdown()" oninput="filterDropdown()" autocomplete="off"
+                    class="w-90 h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
+                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">
+                        <path fill="currentColor" d="M300.3 440.8C312.9 451 331.4 450.3 343.1 438.6L471.1 310.6C480.3 301.4 483 287.7 478 275.7C473 263.7 461.4 256 448.5 256L192.5 256C179.6 256 167.9 263.8 162.9 275.8C157.9 287.8 160.7 301.5 169.9 310.6L297.9 438.6L300.3 440.8z"/>
+                    </svg>
                 </div>
+                <div id="dropdownPegawai" class="hidden absolute z-10 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+                    <ul id="listPegawai"></ul>
+                </div>
+            </div>
 
             {{-- Filter Tim --}}
             <div class="relative shrink-0">
@@ -85,29 +95,31 @@
                 </div>
             </div>
 
-            {{-- Spacer atau devider --}}
+            {{-- Spacer --}}
             <div class="flex-1"></div>
             <div class="h-6 self-center border-l border-gray-200"></div>
 
-            {{-- Unduh Pengajuan lembur --}}
+            {{-- Unduh Rekapitulasi --}}
             <a id="btnExport"
                 href="{{ route('admin.lembur.export', ['bulan' => now()->format('Y-m'), 'tim' => request('tim'), 'nip' => request('nip')]) }}"
                 title="Unduh Rekapitulasi"
                 class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                 </svg>
             </a>
 
-            {{-- tombol ajukan--}}
-                <a href="javascript:void(0)" id="btnAjukan"
-                    class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/>
-                    </svg>
-                </a>
+            {{-- Tombol Ajukan --}}
+            <a href="javascript:void(0)" id="btnAjukan"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-[#faa938] text-white hover:brightness-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+            </a>
         </div>
 
+        {{-- Tabel --}}
         <div class="overflow-x-auto">
             <table class="min-w-full rounded-xl table-auto">
                 <thead>
@@ -126,218 +138,214 @@
                 </thead>
                 <tbody class="divide-y divide-gray-300" id="tabelLembur">
                     @forelse($transaksi as $t)
-                    <tr class="bg-white transition-all duration-500 hover:bg-gray-50"
-                        data-tanggal="{{ $t->date }}"
-                        data-tim="{{ $t->tim_kode_tim }}"
-                        data-nip="{{ $t->submitted_by_NIP }}">
+                        <tr class="bg-white transition-all duration-500 hover:bg-gray-50"
+                            data-tanggal="{{ $t->date }}"
+                            data-tim="{{ $t->tim_kode_tim }}"
+                            data-nip="{{ $t->submitted_by_NIP }}">
 
-                        {{-- Tanggal --}}
-                        <td class="px-2 py-2 text-xs text-gray-900">
-                            {{ \Carbon\Carbon::parse($t->date)->translatedFormat('d F Y') }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900">
+                                {{ \Carbon\Carbon::parse($t->date)->translatedFormat('d F Y') }}
+                            </td>
 
-                        {{-- Nama Pegawai --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-left">
-                            {{ $t->nama_pegawai ?? '-' }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-left">
+                                {{ $t->nama_pegawai ?? '-' }}
+                            </td>
 
-                        {{-- Jam Diajukan --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-center">
-                            @if($t->jam_mulai && $t->jam_selesai)
-                                {{ substr($t->jam_mulai,0,5) }} - {{ substr($t->jam_selesai,0,5) }}
-                            @elseif($t->jam_mulai)
-                                {{ substr($t->jam_mulai,0,5) }} - <span class="text-gray-400 italic">menunggu</span>
-                            @else
-                                -
-                            @endif
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-center">
+                                @if($t->jam_mulai && $t->jam_selesai)
+                                    {{ substr($t->jam_mulai, 0, 5) }} - {{ substr($t->jam_selesai, 0, 5) }}
+                                @elseif($t->jam_mulai)
+                                    {{ substr($t->jam_mulai, 0, 5) }} - <span class="text-gray-400 italic">menunggu</span>
+                                @else
+                                    -
+                                @endif
+                            </td>
 
-                        {{-- Jam Disetujui --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-center">
-                            @if($t->jam_mulai_disetujui && $t->jam_selesai_disetujui)
-                                {{ substr($t->jam_mulai_disetujui,0,5) }} - {{ substr($t->jam_selesai_disetujui,0,5) }}
-                            @else
-                                -
-                            @endif
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-center">
+                                @if($t->jam_mulai_disetujui && $t->jam_selesai_disetujui)
+                                    {{ substr($t->jam_mulai_disetujui, 0, 5) }} - {{ substr($t->jam_selesai_disetujui, 0, 5) }}
+                                @else
+                                    -
+                                @endif
+                            </td>
 
-                        {{-- Uraian --}}
-                        <td class="px-2 py-2 text-xs text-gray-900">
-                            {{ $t->uraian ?? '-' }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900">
+                                {{ $t->uraian ?? '-' }}
+                            </td>
 
-                        {{-- Ketua Tim --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-left">
-                            {{ $t->nama_ketua ?? '-' }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-left">
+                                {{ $t->nama_ketua ?? '-' }}
+                            </td>
 
-                        {{-- Nama Tim --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-left">
-                            {{ $t->nama_tim ?? '-' }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-left">
+                                {{ $t->nama_tim ?? '-' }}
+                            </td>
 
-                        {{-- Status --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-center">
-                            @if($t->status === 'pending')
-                                <span class="bg-amber-100 rounded-full px-2 text-xs text-amber-700 py-0.5">Diproses</span>
-                            @elseif($t->status === 'approved')
-                                <span class="bg-green-100 rounded-full px-2 text-xs text-green-700 py-0.5">Disetujui</span>
-                            @elseif($t->status === 'rejected')
-                                <span class="bg-red-100 rounded-full px-2 text-xs text-red-600 py-0.5">Ditolak</span>
-                            @else
-                                <span class="text-gray-400 text-xs">-</span>
-                            @endif
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-center">
+                                @if($t->status === 'pending')
+                                    <span class="bg-amber-100 rounded-full px-2 text-xs text-amber-700 py-0.5">Diproses</span>
+                                @elseif($t->status === 'approved')
+                                    <span class="bg-green-100 rounded-full px-2 text-xs text-green-700 py-0.5">Disetujui</span>
+                                @elseif($t->status === 'rejected')
+                                    <span class="bg-red-100 rounded-full px-2 text-xs text-red-600 py-0.5">Ditolak</span>
+                                @else
+                                    <span class="text-gray-400 text-xs">-</span>
+                                @endif
+                            </td>
 
-                        {{-- Catatan --}}
-                        <td class="px-2 py-2 text-xs text-gray-900 text-left">
-                            {{ $t->note ?? '-' }}
-                        </td>
+                            <td class="px-2 py-2 text-xs text-gray-900 text-left">
+                                {{ $t->note ?? '-' }}
+                            </td>
 
-                        {{-- Dokumentasi --}}
-                        <td class="px-2 py-2 text-xs text-center">
-                            @if($t->status === 'approved')
-                                @if($t->file_dokumentasi)
-                                    <div class="flex items-center justify-center gap-2">
-                                        <a href="{{ $t->file_dokumentasi }}" target="_blank"
-                                            class="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 underline">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                            </svg>
-                                            Lihat
-                                        </a>
-                                        {{-- Tombol hapus hanya muncul kalau transaksi milik admin yang login --}}
-                                        @if($t->submitted_by_NIP === session('user')['nip'])
-                                        <form action="{{ route('admin.lembur.destroyDoc', $t->id_transaksi) }}" method="POST"
-                                            onsubmit="return confirm('Hapus dokumentasi ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-400 hover:text-red-600">
+                            <td class="px-2 py-2 text-xs text-center">
+                                @if($t->status === 'approved')
+                                    @if($t->file_dokumentasi)
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ $t->file_dokumentasi }}" target="_blank"
+                                                class="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 underline">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M6 18L18 6M6 6l12 12"/>
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                                                 </svg>
-                                            </button>
-                                        </form>
-                                        @endif
-                                    </div>
-                                @else
-                                    {{-- Tombol tambah hanya muncul kalau milik admin yang login --}}
-                                    @if($t->submitted_by_NIP === session('user')['nip'])
-                                        <button type="button"
-                                            onclick="openModalDok({{ $t->id_transaksi }})"
-                                            class="text-[#faa938] hover:text-[#fd9a10] text-xs underline">
-                                            + Tambah
-                                        </button>
+                                                Lihat
+                                            </a>
+                                            @if($t->submitted_by_NIP === session('user')['nip'])
+                                                <form action="{{ route('admin.lembur.destroyDoc', $t->id_transaksi) }}" method="POST"
+                                                    onsubmit="return confirm('Hapus dokumentasi ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-400 hover:text-red-600">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     @else
-                                        <span class="text-gray-300">-</span>
+                                        @if($t->submitted_by_NIP === session('user')['nip'])
+                                            <button type="button"
+                                                onclick="openModalDok({{ $t->id_transaksi }})"
+                                                class="text-[#faa938] hover:text-[#fd9a10] text-xs underline">
+                                                + Tambah
+                                            </button>
+                                        @else
+                                            <span class="text-gray-300">-</span>
+                                        @endif
                                     @endif
+                                @else
+                                    <span class="text-gray-300">-</span>
                                 @endif
-                            @else
-                                <span class="text-gray-300">-</span>
-                            @endif
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="10" class="px-3 py-8 text-center text-sm text-gray-400">
-                            Belum ada pengajuan lembur.
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="10" class="px-3 py-8 text-center text-sm text-gray-400">
+                                Belum ada pengajuan lembur.
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        </div>
-
-        {{-- MODAL DOKUMENTASI --}}
-        <div id="modalDok" class="fixed inset-0 z-50 hidden">
-            <div class="absolute inset-0 bg-black/40" onclick="closeModalDok()"></div>
-            <div class="relative flex min-h-screen items-center justify-center p-4">
-                <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
-                    <div class="flex items-center justify-between border-b px-6 py-4">
-                        <h2 class="text-base font-semibold text-gray-900">Tambah Dokumentasi</h2>
-                        <button onclick="closeModalDok()" class="text-gray-500 hover:text-gray-700 text-xl leading-none">&times;</button>
-                    </div>
-                    <form id="formDok" method="POST" class="px-6 py-5 space-y-4">
-                        @csrf
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Link Google Drive</label>
-                            <input type="url" name="file_path" required
-                                placeholder="https://drive.google.com/..."
-                                class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"/>
-                            <p class="mt-1 text-xs text-gray-400"></p>
-                        </div>
-                        <div class="flex justify-end gap-3 pt-1">
-                            <button type="button" onclick="closeModalDok()"
-                                class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
-                                Batal
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-    </div>
 
         {{-- Pagination --}}
         @if($transaksi->hasPages())
-        <div class="flex justify-center mt-6">
-            <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
-                @if($transaksi->onFirstPage())
-                    <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                        </svg>
-                    </span>
-                @else
-                    <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]" href="{{ $transaksi->previousPageUrl() }}">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                        </svg>
-                    </a>
-                @endif
+            <div class="flex justify-center mt-6">
+                <nav class="inline-flex items-center p-1 rounded bg-white space-x-2">
 
-                <p class="text-gray-500 text-sm">Page {{ $transaksi->currentPage() }} of {{ $transaksi->lastPage() }}</p>
+                    @if($transaksi->onFirstPage())
+                        <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </span>
+                    @else
+                        <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]"
+                            href="{{ $transaksi->previousPageUrl() }}">
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </a>
+                    @endif
 
-                @if($transaksi->hasMorePages())
-                    <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]" href="{{ $transaksi->nextPageUrl() }}">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
-                    </a>
-                @else
-                    <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
-                    </span>
-                @endif
-            </nav>
-        </div>
+                    <p class="text-gray-500 text-sm">Page {{ $transaksi->currentPage() }} of {{ $transaksi->lastPage() }}</p>
+
+                    @if($transaksi->hasMorePages())
+                        <a class="p-1 rounded border text-black bg-white hover:text-white hover:bg-[#faa938] hover:border-[#faa938]"
+                            href="{{ $transaksi->nextPageUrl() }}">
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </a>
+                    @else
+                        <span class="p-1 rounded border text-gray-300 cursor-not-allowed">
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </span>
+                    @endif
+
+                </nav>
+            </div>
         @endif
+
     </div>
 </div>
 
-{{-- MODAL --}}
+{{-- MODAL DOKUMENTASI --}}
+<div id="modalDok" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeModalDok()"></div>
+    <div class="relative flex min-h-screen items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl">
+            <div class="flex items-center justify-between border-b px-6 py-4">
+                <h2 class="text-base font-semibold text-gray-900">Tambah Dokumentasi</h2>
+                <button type="button" onclick="closeModalDok()"
+                    class="text-gray-500 hover:text-gray-700 text-xl leading-none">
+                    &times;
+                </button>
+            </div>
+            <form id="formDok" method="POST" class="px-6 py-5 space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Link Google Drive</label>
+                    <input type="url" name="file_path" required
+                        placeholder="https://drive.google.com/..."
+                        class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"/>
+                    <p class="mt-1 text-xs text-gray-400"></p>
+                </div>
+                <div class="flex justify-end gap-3 pt-1">
+                    <button type="button" onclick="closeModalDok()"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-semibold text-black bg-[#faa938] rounded-lg hover:bg-[#fd9a10] hover:text-white">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL AJUKAN LEMBUR --}}
 <div id="modalAjukan" class="fixed inset-0 z-50 hidden">
     <div id="modalOverlay" class="absolute inset-0 bg-black/40"></div>
-
     <div class="relative flex min-h-screen items-center justify-center p-4">
         <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl">
 
             <div class="flex items-center justify-between border-b px-6 py-4">
                 <h2 class="text-lg font-semibold text-gray-900">Ajukan Lembur</h2>
-                <button id="btnCloseModal" class="text-gray-500 hover:text-gray-700 text-xl leading-none">&times;</button>
+                <button id="btnCloseModal"
+                    class="text-gray-500 hover:text-gray-700 text-xl leading-none">
+                    &times;
+                </button>
             </div>
 
             <form action="{{ route('admin.lembur.store') }}" method="POST" class="px-6 py-5 space-y-5">
                 @csrf
+
                 @if($errors->any())
                     <div class="px-4 py-3 bg-red-100 text-red-700 rounded-lg text-sm">
                         <ul class="list-disc list-inside">
@@ -375,7 +383,7 @@
                     <p id="infoHari" class="mt-1 text-xs text-gray-400 hidden"></p>
                 </div>
 
-                {{-- Jam --}}
+                {{-- Jam Mulai & Selesai --}}
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="jam_mulai" class="block text-sm font-medium text-gray-700 mb-2">Jam Mulai</label>
@@ -402,8 +410,8 @@
                 <div>
                     <label for="uraian" class="block text-sm font-medium text-gray-700 mb-2">Uraian Kegiatan</label>
                     <textarea id="uraian" name="uraian" rows="3" required
-                        class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"
-                        placeholder="Contoh: Penyusunan laporan bulanan..."></textarea>
+                        placeholder="Contoh: Penyusunan laporan bulanan..."
+                        class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"></textarea>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">
@@ -417,13 +425,32 @@
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
 
 @push('scripts')
-
 <script>
+(function () {
+    'use strict';
+
+    // =====================
+    // HELPER
+    // =====================
+    const now = new Date();
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    function makeBtn(text, cls, onClick) {
+        const b = document.createElement('button');
+        b.type        = 'button';
+        b.textContent = text;
+        b.className   = cls;
+        b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
+        return b;
+    }
+
     // =====================
     // MODAL AJUKAN
     // =====================
@@ -438,8 +465,8 @@
         document.body.classList.add('overflow-hidden');
         document.getElementById('wrapperJamSelesai').classList.remove('hidden');
         document.getElementById('jam_selesai').value = '';
-        document.getElementById('jam_mulai').value = '';
-        document.getElementById('tanggal').value = '';
+        document.getElementById('jam_mulai').value   = '';
+        document.getElementById('tanggal').value     = '';
         document.getElementById('infoHari').classList.add('hidden');
         document.getElementById('infoJamMulai').classList.add('hidden');
     }
@@ -512,8 +539,8 @@
 
         if (!mulai || !selesai) { preview.classList.add('hidden'); return; }
 
-        const [jm, mm] = mulai.split(':').map(Number);
-        const [js, ms] = selesai.split(':').map(Number);
+        const [jm, mm]   = mulai.split(':').map(Number);
+        const [js, ms]   = selesai.split(':').map(Number);
         const totalMenit = (js * 60 + ms) - (jm * 60 + mm);
 
         if (totalMenit <= 0) { preview.classList.add('hidden'); return; }
@@ -558,36 +585,22 @@
     });
 
     // =====================
-    // HELPER
-    // =====================
-    const now = new Date();
-    function pad2(n) { return String(n).padStart(2, '0'); }
-    function makeBtn(text, cls, onClick) {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.textContent = text;
-        b.className = cls;
-        b.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
-        return b;
-    }
-
-    // =====================
     // STATE FILTER
     // =====================
-    let selectedNip   = null;
-    let selectedTimId = null;
-    let selectedTanggal = null; // BARU: simpan tanggal yang dipilih
-    let cachedTim     = [];
-    let cachedPegawai = [];
+    let selectedNip     = null;
+    let selectedTimId   = null;
+    let selectedTanggal = null;
+    let cachedTim       = [];
+    let cachedPegawai   = [];
 
     // =====================
     // APPLY FILTER (redirect ke URL)
     // =====================
     function applyFilter() {
         const params = new URLSearchParams();
-        if (selectedTimId)  params.set('tim',     selectedTimId);
-        if (selectedNip)    params.set('nip',     selectedNip);
-        if (selectedTanggal) params.set('tanggal', selectedTanggal); // BARU
+        if (selectedTimId)   params.set('tim',     selectedTimId);
+        if (selectedNip)     params.set('nip',     selectedNip);
+        if (selectedTanggal) params.set('tanggal', selectedTanggal);
         window.location.href = '?' + params.toString();
     }
 
@@ -595,33 +608,14 @@
     // UPDATE EXPORT LINK
     // =====================
     function updateExportLink() {
-        const tim = selectedTimId ?? '';
-        const nip = selectedNip   ?? '';
-
-        // Gunakan tanggal terpilih untuk bulan, fallback ke bulan sekarang
-        let bulan;
-        if (selectedTanggal) {
-            bulan = selectedTanggal.slice(0, 7); // ambil YYYY-MM dari YYYY-MM-DD
-        } else {
-            bulan = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}`;
-        }
+        const tim   = selectedTimId   ?? '';
+        const nip   = selectedNip     ?? '';
+        const bulan = selectedTanggal
+            ? selectedTanggal.slice(0, 7)
+            : `${now.getFullYear()}-${pad2(now.getMonth() + 1)}`;
 
         document.getElementById('btnExport').href =
             `/admin/lembur/export?bulan=${bulan}&tim=${tim}&nip=${nip}`;
-    }
-
-    // =====================
-    // FILTER TABEL (dipanggil oleh date picker)
-    // =====================
-    function filterTabel() {
-        applyFilter();
-    }
-
-    // =====================
-    // RESET BTN (placeholder, bisa dikembangkan)
-    // =====================
-    function updateResetBtn() {
-        // kosong — bisa diisi logika tombol reset filter nanti
     }
 
     // =====================
@@ -634,12 +628,18 @@
     }
 
     async function fetchPegawai(kodeTim = '') {
-        const url = kodeTim
-            ? `/admin/presensi/pegawai?kode_tim=${kodeTim}`
-            : '/admin/presensi/pegawai';
+        const url     = kodeTim ? `/admin/presensi/pegawai?kode_tim=${kodeTim}` : '/admin/presensi/pegawai';
         const res     = await fetch(url);
         cachedPegawai = await res.json();
         populateDropdown('', cachedPegawai);
+    }
+
+    // =====================
+    // TUTUP SEMUA DROPDOWN
+    // =====================
+    function tutupSemuaDropdown() {
+        document.getElementById('dropdownPegawai')?.classList.add('hidden');
+        document.getElementById('dropdownTim')?.classList.add('hidden');
     }
 
     // =====================
@@ -650,15 +650,16 @@
         list.innerHTML = '';
 
         const liSemua = document.createElement('li');
-        liSemua.className = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
+        liSemua.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
         liSemua.textContent = 'Semua tim';
         liSemua.addEventListener('mousedown', (e) => { e.preventDefault(); pilihTim(null); });
         list.appendChild(liSemua);
 
-        data.filter(t => t.nama_tim.toLowerCase().includes(filter.toLowerCase()))
+        data
+            .filter(t => t.nama_tim.toLowerCase().includes(filter.toLowerCase()))
             .forEach(tim => {
                 const li = document.createElement('li');
-                li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+                li.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
                 li.textContent = tim.nama_tim;
                 li.addEventListener('mousedown', (e) => { e.preventDefault(); pilihTim(tim); });
                 list.appendChild(li);
@@ -666,7 +667,7 @@
     }
 
     window.toggleDropdownTim = function () {
-        const dd = document.getElementById('dropdownTim');
+        const dd       = document.getElementById('dropdownTim');
         const isHidden = dd.classList.contains('hidden');
         tutupSemuaDropdown();
         if (isHidden) { populateDropdownTim('', cachedTim); dd.classList.remove('hidden'); }
@@ -679,12 +680,12 @@
 
     function pilihTim(tim) {
         selectedTimId = tim ? tim.kode_tim : null;
-        document.getElementById('searchTim').value = tim ? tim.nama_tim : '';
+        document.getElementById('searchTim').value    = tim ? tim.nama_tim : '';
         document.getElementById('dropdownTim').classList.add('hidden');
         selectedNip = null;
         document.getElementById('searchPegawai').value = '';
         if (tim) fetchPegawai(tim.kode_tim);
-        else fetchPegawai();
+        else     fetchPegawai();
         applyFilter();
     }
 
@@ -696,15 +697,16 @@
         list.innerHTML = '';
 
         const liSemua = document.createElement('li');
-        liSemua.className = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
+        liSemua.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-400 hover:bg-gray-50';
         liSemua.textContent = 'Semua pegawai';
         liSemua.addEventListener('mousedown', (e) => { e.preventDefault(); pilihPegawai(null); });
         list.appendChild(liSemua);
 
-        data.filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
+        data
+            .filter(e => `${e.nama} ${e.nip}`.toLowerCase().includes(filter.toLowerCase()))
             .forEach(emp => {
                 const li = document.createElement('li');
-                li.className = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
+                li.className   = 'cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50';
                 li.textContent = `${emp.nama} - ${emp.nip}`;
                 li.addEventListener('mousedown', (e) => { e.preventDefault(); pilihPegawai(emp); });
                 list.appendChild(li);
@@ -712,7 +714,7 @@
     }
 
     window.toggleDropdown = function () {
-        const dd = document.getElementById('dropdownPegawai');
+        const dd       = document.getElementById('dropdownPegawai');
         const isHidden = dd.classList.contains('hidden');
         tutupSemuaDropdown();
         if (isHidden) { populateDropdown('', cachedPegawai); dd.classList.remove('hidden'); }
@@ -728,14 +730,6 @@
         document.getElementById('searchPegawai').value = emp ? `${emp.nama} - ${emp.nip}` : '';
         document.getElementById('dropdownPegawai').classList.add('hidden');
         applyFilter();
-    }
-
-    // =====================
-    // TUTUP SEMUA DROPDOWN
-    // =====================
-    function tutupSemuaDropdown() {
-        document.getElementById('dropdownPegawai')?.classList.add('hidden');
-        document.getElementById('dropdownTim')?.classList.add('hidden');
     }
 
     // =====================
@@ -770,63 +764,68 @@
         let selDay    = null;
 
         function setDate(y, m, d) {
-            selYear = y; selMonth = m; selDay = d;
+            selYear  = y;
+            selMonth = m;
+            selDay   = d;
+
+            const tanggalStr      = `${y}-${pad2(m + 1)}-${pad2(d)}`;
             dateLabel.textContent = `${d} ${monthShort[m]} ${y}`;
+            dateValue.value       = tanggalStr;
+            selectedTanggal       = tanggalStr;
 
-            const tanggalStr = `${y}-${pad2(m + 1)}-${pad2(d)}`;
-            dateValue.value  = tanggalStr;
-
-            // Update state filter tanggal
-            selectedTanggal = tanggalStr;
-
-            // Update export link pakai bulan dari tanggal terpilih
             updateExportLink();
-
-            // Redirect dengan filter tanggal
-            filterTabel();
-            updateResetBtn();
+            applyFilter();
         }
 
         function openPanel() {
-            viewYear = now.getFullYear(); viewMonth = now.getMonth();
-            renderDay(); panel.classList.remove('hidden');
+            viewYear  = now.getFullYear();
+            viewMonth = now.getMonth();
+            renderDay();
+            panel.classList.remove('hidden');
         }
 
-        function closePanel() { panel.classList.add('hidden'); }
+        function closePanel() {
+            panel.classList.add('hidden');
+        }
 
         function renderDay() {
             view = 'day';
             navLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
-            navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
+            navLabel.className   = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
             grid.innerHTML = '';
 
             const header = document.createElement('div');
             header.className = 'grid grid-cols-7 mb-1';
             dayNames.forEach(d => {
                 const span = document.createElement('span');
-                span.className = 'text-center text-xs text-gray-400 py-1';
+                span.className   = 'text-center text-xs text-gray-400 py-1';
                 span.textContent = d;
                 header.appendChild(span);
             });
             grid.appendChild(header);
 
-            const dayGrid = document.createElement('div');
+            const dayGrid     = document.createElement('div');
             dayGrid.className = 'grid grid-cols-7 gap-y-1';
-            const base = 'text-sm rounded-lg py-1 transition border ';
+            const base        = 'text-sm rounded-lg py-1 transition border ';
 
             const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
             const firstDay    = new Date(viewYear, viewMonth, 1).getDay();
             const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
 
+            // Trailing days from previous month
             for (let i = firstDay - 1; i >= 0; i--) {
                 const d = daysInPrev - i;
                 dayGrid.appendChild(makeBtn(d, base + 'border-transparent text-gray-300', () => {
                     let m = viewMonth - 1, y = viewYear;
                     if (m < 0) { m = 11; y--; }
-                    setDate(y, m, d); viewYear = y; viewMonth = m; renderDay();
+                    setDate(y, m, d);
+                    viewYear  = y;
+                    viewMonth = m;
+                    renderDay();
                 }));
             }
 
+            // Days in current month
             for (let d = 1; d <= daysInMonth; d++) {
                 const isSelected = (selDay === d && selMonth === viewMonth && selYear === viewYear);
                 const isToday    = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
@@ -836,9 +835,13 @@
                         ? 'bg-[#faa938]/20 text-[#faa938] border-transparent'
                         : 'border-transparent text-gray-700 hover:border-[#faa938] hover:text-[#faa938]';
                 const _d = d;
-                dayGrid.appendChild(makeBtn(_d, base + cls, () => { setDate(viewYear, viewMonth, _d); closePanel(); }));
+                dayGrid.appendChild(makeBtn(_d, base + cls, () => {
+                    setDate(viewYear, viewMonth, _d);
+                    closePanel();
+                }));
             }
 
+            // Leading days for next month
             const total     = firstDay + daysInMonth;
             const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
             for (let d = 1; d <= remaining; d++) {
@@ -846,19 +849,25 @@
                 dayGrid.appendChild(makeBtn(_d, base + 'border-transparent text-gray-300', () => {
                     let m = viewMonth + 1, y = viewYear;
                     if (m > 11) { m = 0; y++; }
-                    setDate(y, m, _d); viewYear = y; viewMonth = m; renderDay();
+                    setDate(y, m, _d);
+                    viewYear  = y;
+                    viewMonth = m;
+                    renderDay();
                 }));
             }
+
             grid.appendChild(dayGrid);
         }
 
         function renderMonth() {
             view = 'month';
             navLabel.textContent = String(viewYear);
-            navLabel.className = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
+            navLabel.className   = 'text-sm font-medium text-gray-900 cursor-pointer hover:text-[#faa938] select-none';
             grid.innerHTML = '';
+
             const g = document.createElement('div');
             g.className = 'grid grid-cols-3 gap-2';
+
             monthNames.forEach((name, m) => {
                 const isSelected = (m === selMonth && viewYear === selYear);
                 const isNow      = (m === now.getMonth() && viewYear === now.getFullYear());
@@ -868,9 +877,11 @@
                         ? 'border-[#faa938] text-[#faa938] bg-white'
                         : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
                 g.appendChild(makeBtn(name.slice(0, 3), 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
-                    viewMonth = m; renderDay();
+                    viewMonth = m;
+                    renderDay();
                 }));
             });
+
             grid.appendChild(g);
         }
 
@@ -878,10 +889,12 @@
             view = 'year';
             const startYear = Math.floor(viewYear / 12) * 12;
             navLabel.textContent = `${startYear} - ${startYear + 11}`;
-            navLabel.className = 'text-sm font-medium text-gray-400 select-none cursor-default';
+            navLabel.className   = 'text-sm font-medium text-gray-400 select-none cursor-default';
             grid.innerHTML = '';
+
             const g = document.createElement('div');
             g.className = 'grid grid-cols-3 gap-2';
+
             for (let y = startYear; y < startYear + 12; y++) {
                 const isSelected = (y === selYear);
                 const isNow      = (y === now.getFullYear());
@@ -892,9 +905,11 @@
                         : 'border-gray-200 text-gray-800 hover:border-[#faa938] hover:text-[#faa938]';
                 const _y = y;
                 g.appendChild(makeBtn(_y, 'px-2 py-2 text-sm rounded-lg border transition ' + cls, () => {
-                    viewYear = _y; renderMonth();
+                    viewYear = _y;
+                    renderMonth();
                 }));
             }
+
             grid.appendChild(g);
         }
 
@@ -902,32 +917,56 @@
             e.stopPropagation();
             panel.classList.contains('hidden') ? openPanel() : closePanel();
         });
+
         navLabel.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (view === 'day') renderMonth();
+            if (view === 'day')        renderMonth();
             else if (view === 'month') renderYear();
         });
+
         btnPrev?.addEventListener('click', (e) => {
             e.stopPropagation();
             if (view === 'day')        { viewMonth--; if (viewMonth < 0)  { viewMonth = 11; viewYear--; } renderDay(); }
             else if (view === 'month') { viewYear--;  renderMonth(); }
             else if (view === 'year')  { viewYear -= 12; renderYear(); }
         });
+
         btnNext?.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (view === 'day')        { viewMonth++; if (viewMonth > 11) { viewMonth = 0;  viewYear++; } renderDay(); }
+            if (view === 'day')        { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderDay(); }
             else if (view === 'month') { viewYear++;  renderMonth(); }
             else if (view === 'year')  { viewYear += 12; renderYear(); }
         });
+
         btnToday?.addEventListener('click', (e) => {
             e.stopPropagation();
-            viewYear = now.getFullYear(); viewMonth = now.getMonth();
+            viewYear  = now.getFullYear();
+            viewMonth = now.getMonth();
             setDate(now.getFullYear(), now.getMonth(), now.getDate());
             closePanel();
         });
+
         btnClose?.addEventListener('click', (e) => { e.stopPropagation(); closePanel(); });
-        document.addEventListener('click', (e) => { if (!picker.contains(e.target)) closePanel(); });
+
+        document.addEventListener('click', (e) => {
+            if (!picker.contains(e.target)) closePanel();
+        });
     })();
+
+    // =====================
+    // MODAL DOKUMENTASI
+    // =====================
+    window.openModalDok = function (idTransaksi) {
+        const base = "{{ url('admin/lembur') }}";
+        document.getElementById('formDok').action = `${base}/${idTransaksi}/dokumentasi`;
+        document.getElementById('modalDok').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    window.closeModalDok = function () {
+        document.getElementById('modalDok').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    };
 
     // =====================
     // INIT
@@ -938,10 +977,10 @@
         updateExportLink();
 
         // Restore state dari URL
-        const params        = new URLSearchParams(window.location.search);
-        const timParam      = params.get('tim')     ?? '';
-        const nipParam      = params.get('nip')     ?? '';
-        const tanggalParam  = params.get('tanggal') ?? '';
+        const params       = new URLSearchParams(window.location.search);
+        const timParam     = params.get('tim')     ?? '';
+        const nipParam     = params.get('nip')     ?? '';
+        const tanggalParam = params.get('tanggal') ?? '';
 
         if (timParam) {
             selectedTimId = timParam;
@@ -965,7 +1004,6 @@
 
         if (tanggalParam) {
             selectedTanggal = tanggalParam;
-            // Tampilkan label tanggal terpilih di button date picker
             const parts = tanggalParam.split('-');
             if (parts.length === 3) {
                 const monthShort = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
@@ -990,22 +1028,8 @@
         });
     });
 
-    // =====================
-    // DOKUMENTASI
-    // =====================
-    function openModalDok(idTransaksi) {
-        const base = "{{ url('admin/lembur') }}";
-        document.getElementById('formDok').action = `${base}/${idTransaksi}/dokumentasi`;
-        document.getElementById('modalDok').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-    }
-
-    function closeModalDok() {
-        document.getElementById('modalDok').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-    }
+})();
 </script>
-
 @endpush
 
 @endsection

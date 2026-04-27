@@ -1,54 +1,5 @@
 <body class="flex bg-slate-50 min-h-screen">
 
-    {{-- ===================== --}}
-    {{-- MINI SIDEBAR (md only) --}}
-    {{-- ===================== --}}
-    {{-- <aside class="hidden md:flex lg:hidden flex-col items-center w-16 min-h-screen bg-slate-900 py-5 gap-1 shrink-0"> --}}
-
-        {{-- Logo --}}
-        {{-- <a href="#" class="flex items-center justify-center w-16 h-16 mb-4">
-            <img src="../images/logo.png" alt="Logo" class="w-16 h-auto" />
-        </a> --}}
-
-        {{-- <div class="w-8 border-t border-white/10 mb-3"></div> --}}
-
-        {{-- Nav --}}
-        {{-- @php
-        $miniNav = [
-            ['path' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', 'active' => false],
-            ['path' => 'M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'active' => true],
-            ['path' => 'M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2', 'active' => false],
-        ];
-        @endphp
-
-        @foreach ($miniNav as $item)
-            <a href="#" class="relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors
-                {{ $item['active']
-                    ? 'bg-[#faa938]/15 text-[#faa938]'
-                    : 'text-slate-500 hover:bg-white/5 hover:text-slate-300' }}">
-                @if ($item['active'])
-                    <span class="absolute left-0 top-3 bottom-3 w-0.75 bg-[#faa938] rounded-full -translate-x-2.5"></span>
-                @endif
-                <svg class="w-5 h-5 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ $item['active'] ? '2.25' : '1.75' }}" d="{{ $item['path'] }}"/>
-                </svg>
-            </a>
-        @endforeach --}}
-
-        {{-- <div class="w-8 border-t border-white/10 my-3"></div>
-
-        {{-- Presensi --}}
-        {{-- <a href="#" class="relative flex items-center justify-center w-11 h-11 rounded-xl text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-colors">
-            <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                <path d="M528 320C528 434.9 434.9 528 320 528C205.1 528 112 434.9 112 320C112 205.1 205.1 112 320 112C434.9 112 528 205.1 528 320zM64 320C64 461.4 178.6 576 320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320zM296 184L296 320C296 328 300 335.5 306.7 340L402.7 404C413.7 411.4 428.6 408.4 436 397.3C443.4 386.2 440.4 371.4 429.3 364L344 307.2L344 184C344 170.7 333.3 160 320 160C306.7 160 296 170.7 296 184z"/>
-            </svg>
-        </a>  --}}
-
-    {{-- </aside> --}}
-
-    {{-- ===================== --}}
-    {{-- FULL SIDEBAR (lg+)    --}}
-    {{-- ===================== --}}
     <aside class="hidden lg:flex flex-col w-64 min-h-screen bg-slate-900 py-5 shrink-0">
 
         {{-- Brand --}}

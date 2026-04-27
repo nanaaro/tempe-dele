@@ -104,10 +104,12 @@
                     </div>
                 </div>
 
-                <div class="overflow-hidden">
+                <div class="overflow-visible">
                     <table class="min-w-full rounded-xl">
                         <thead>
                             <tr class="bg-gray-50 text-xs font-semibold text-gray-600 uppercase tracking-wide">
+
+                                {{-- Kolom tanpa tooltip --}}
                                 <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-tl-xl">
                                     Tanggal
                                 </th>
@@ -117,30 +119,34 @@
                                 <th scope="col" class="p-5 text-center text-sm leading-6 font-semibold text-gray-900 capitalize">
                                     Jam Disetujui
                                 </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HB 2
+
+                                {{-- Kolom dengan tooltip --}}
+                                @php
+                                $tooltips = [
+                                    'HB 2' => 'Hari Biasa, lembur 2 jam',
+                                    'HB 3' => 'Hari Biasa, lembur 3 jam',
+                                    'HB 4' => 'Hari Biasa, lembur 4 jam',
+                                    'HL 2' => 'Hari Libur, lembur 2 jam',
+                                    'HL 3' => 'Hari Libur, lembur 3 jam',
+                                    'HL 4' => 'Hari Libur, lembur 4 jam',
+                                    'HL 5' => 'Hari Libur, lembur 5 jam',
+                                    'HL 6' => 'Hari Libur, lembur 6 jam',
+                                ];
+                                @endphp
+
+                                @foreach($tooltips as $label => $desc)
+                                <th scope="col" class="p-5 text-center text-sm leading-6 font-semibold text-gray-900 capitalize relative group
+                                                    {{ $loop->last ? 'rounded-tr-xl' : '' }}">
+                                    {{ $label }}
+                                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max
+                                                rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white
+                                                opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                                                pointer-events-none z-10 normal-case font-normal tracking-normal whitespace-nowrap">
+                                        {{ $desc }}
+                                    </span>
                                 </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HB 3
-                                </th>
-                                <th scope="col" class="p-5 text-center text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HB 4
-                                </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HL 2
-                                </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HL 3
-                                </th>
-                                <th scope="col" class="p-5 text-center text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HL 4
-                                </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                                    HL 5
-                                </th>
-                                <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-tr-xl">
-                                    HL 6
-                                </th>
+                                @endforeach
+
                             </tr>
                         </thead>
 
@@ -159,21 +165,13 @@
                                 <td class="p-5 whitespace-nowrap text-sm font-medium text-gray-900">{{ $r['jenis_hari'] }}</td>
                                 <td class="p-5 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $jam }}</td>
 
-                                {{-- HB2 --}}
                                 <td class="p-5 text-center">{!! ($isHb && $jam == 2) ? $centang : '' !!}</td>
-                                {{-- HB3 --}}
                                 <td class="p-5 text-center">{!! ($isHb && $jam == 3) ? $centang : '' !!}</td>
-                                {{-- HB4 --}}
                                 <td class="p-5 text-center">{!! ($isHb && $jam == 4) ? $centang : '' !!}</td>
-                                {{-- HL2 --}}
                                 <td class="p-5 text-center">{!! ($isHl && $jam == 2) ? $centang : '' !!}</td>
-                                {{-- HL3 --}}
                                 <td class="p-5 text-center">{!! ($isHl && $jam == 3) ? $centang : '' !!}</td>
-                                {{-- HL4 --}}
                                 <td class="p-5 text-center">{!! ($isHl && $jam == 4) ? $centang : '' !!}</td>
-                                {{-- HL5 --}}
                                 <td class="p-5 text-center">{!! ($isHl && $jam == 5) ? $centang : '' !!}</td>
-                                {{-- HL6 --}}
                                 <td class="p-5 text-center">{!! ($isHl && $jam == 6) ? $centang : '' !!}</td>
                             </tr>
                             @empty
@@ -206,6 +204,7 @@
                         </tfoot>
                     </table>
                 </div>
+
             </div>
         </div>
 

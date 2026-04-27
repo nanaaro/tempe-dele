@@ -14,15 +14,11 @@ class LemburController extends Controller
 {
     public function index(Request $request)
     {
-        $bulan    = $request->query('bulan', now()->format('Y-m'));
+        $bulan    = $request->query('bulan');
         $tanggal  = $request->query('tanggal');
         $tim      = $request->query('tim');
         $nip      = $request->query('nip');
         $nipUser  = session('user')['nip'];
-
-        $periode      = Carbon::parse($bulan . '-01');
-        $startOfMonth = $periode->copy()->startOfMonth()->toDateString();
-        $endOfMonth   = $periode->copy()->endOfMonth()->toDateString();
 
         $query = DB::table('t_transaksi as t')
             ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
@@ -37,10 +33,12 @@ class LemburController extends Controller
                 'md.file_path as file_dokumentasi'
             );
 
-        // 🔥 LOGIC FILTER (AMAN)
         if ($tanggal) {
             $query->whereDate('t.date', $tanggal);
-        } else {
+        } elseif ($bulan) {
+            $periode      = Carbon::parse($bulan . '-01');
+            $startOfMonth = $periode->copy()->startOfMonth()->toDateString();
+            $endOfMonth   = $periode->copy()->endOfMonth()->toDateString();
             $query->whereBetween('t.date', [$startOfMonth, $endOfMonth]);
         }
 
@@ -85,9 +83,8 @@ class LemburController extends Controller
                 }
             }
         }
-
         return view('admin.lembur', compact('transaksi', 'ketuaTim', 'bulan'));
-    }   
+    }
 
     public function store(Request $request)
     {

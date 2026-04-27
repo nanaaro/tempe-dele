@@ -4,20 +4,81 @@
 <head>
 <meta charset="UTF-8">
 <style>
-    body { font-family: Arial, sans-serif; font-size: 11pt; margin: 0; padding: 20px; }
-    .title { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { border: 1px solid black; padding: 6px 8px; }
-    th { text-align: center; background-color: #f0f0f0; }
-    .ttd-box { text-align: center; margin-top: 30px; float: right; width: 40%; }
-    .ttd-space { height: 70px; }
-    .clearfix::after { content: ''; display: block; clear: both; }
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 13pt;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 6px 8px;
+    }
+
+    th {
+        text-align: center;
+        background-color: #f0f0f0;
+    }
+
+    /* ============================================================
+     * THEAD REPEAT SAAT GANTI HALAMAN
+     * ------------------------------------------------------------
+     * "display: table-header-group" memberitahu renderer bahwa
+     * elemen ini adalah kepala tabel dan harus diulang di setiap
+     * halaman baru saat di-print atau di-export ke PDF.
+     *
+     * Didukung oleh:
+     *   - Browser (Chrome/Edge/Firefox) Print / Save as PDF  ✅
+     *   - wkhtmltopdf                                         ✅
+     *
+     * Tidak didukung oleh:
+     *   - DomPDF                                              ❌
+     * ============================================================ */
+    thead {
+        display: table-header-group;
+    }
+
+    /* Mencegah satu baris terpotong di tengah saat ganti halaman */
+    tbody tr {
+        page-break-inside: avoid;
+    }
+
+    .ttd-box {
+        text-align: center;
+        margin-top: 30px;
+        float: right;
+        width: 40%;
+    }
+
+    .ttd-space {
+        height: 70px;
+    }
+
+    .clearfix::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
 </style>
 </head>
 <body>
 
 <div class="title">
-    LAPORAN HASIL KERJA LEMBUR BULAN {{ strtoupper($bulanLabel) }} TAHUN {{ $tahun }}<br>
+    LAPORAN HASIL KERJA LEMBUR BULAN {{ strtoupper($bulanLabel) }} TAHUN {{ $tahun }}
 </div>
 
 <table>

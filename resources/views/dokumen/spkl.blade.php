@@ -16,16 +16,16 @@
         width: 100%;
     }
 
+    /* Bug fix: "display: flex" tidak berlaku pada <table>, dan semicolon hilang di kode asli.
+       Karena ini adalah <table>, cukup andalkan perilaku tabel bawaan. */
     .surat-header {
-        display: flex
-        align-items: center;
         margin-bottom: 10px;
-        gap: 12px;
     }
 
     .surat-header td {
         border: none;
-        vertical-align: start
+        /* Bug fix: "vertical-align: start" tidak valid di CSS — diganti ke top */
+        vertical-align: top;
         text-align: left;
     }
 
@@ -112,6 +112,29 @@
 
     .text-center {
         text-align: center;
+    }
+
+    /* ============================================================
+     * THEAD REPEAT SAAT GANTI HALAMAN
+     * ------------------------------------------------------------
+     * "display: table-header-group" memberitahu renderer bahwa
+     * elemen ini adalah kepala tabel dan harus diulang di setiap
+     * halaman baru saat di-print atau di-export ke PDF.
+     *
+     * Didukung oleh:
+     *   - Browser (Chrome/Edge/Firefox) Print / Save as PDF  ✅
+     *   - wkhtmltopdf                                         ✅
+     *
+     * Tidak didukung oleh:
+     *   - DomPDF                                              ❌
+     * ============================================================ */
+    thead {
+        display: table-header-group;
+    }
+
+    /* Mencegah satu baris terpotong di tengah saat ganti halaman */
+    tbody tr {
+        page-break-inside: avoid;
     }
 
     .ttd-table {
@@ -203,8 +226,8 @@
         <tr>
             <td class="ttd-box">
                 <div style="height: 60px;">
-                Pejabat Pembuat Komitmen<br>
-                BPS Provinsi Jawa Tengah
+                    Pejabat Pembuat Komitmen<br>
+                    BPS Provinsi Jawa Tengah
                 </div>
                 <div class="ttd-space"></div>
                 <span class="nama-pejabat">{{ $ppk->nama ?? '' }}</span><br>
@@ -212,9 +235,8 @@
             </td>
             <td class="ttd-box">
                 Mengetahui, {{ $tanggalTtd }}<br>
-                a.n.Kepala BPS Provinsi Jawa Tengah<br>
+                a.n. Kepala BPS Provinsi Jawa Tengah<br>
                 Kepala Bagian Umum
-                <br>
                 <div class="ttd-space"></div>
                 <span class="nama-pejabat">{{ $kbu->nama ?? '' }}</span>
                 {{-- <div class="nip-text">NIP {{ $kbu->nip_lama ?? '' }}</div> --}}
@@ -222,6 +244,6 @@
         </tr>
     </table>
 
-</div>
+</div>{{-- /.page --}}
 </body>
 </html>

@@ -107,6 +107,7 @@ class AuthController extends Controller
                 Session::put('logged_in', true);
                 Session::put('jenis_user', $jenisUser);
                 Session::put('id_pegawai', $pegawaiData->id_pegawai ?? null);
+                // Session::put('jenis_user', 'ketua_tim');
                 Session::put('role', $pegawaiData->role ?? 'user');
 
                 $role = $pegawaiData->role ?? 'user';

@@ -67,38 +67,67 @@ class AuthController extends Controller
 
                 $pegawaiData = DB::table('m_pegawai')->where('nip', $data['nip'])->first();
 
-                $responseTim = Http::withHeaders([
-                    'Content-Type'  => 'application/json',
-                    'Authorization' => 'Bearer ' . config('services.kipapp.token'),
-                    'Origin'        => 'https://jateng.web.bps.go.id',
-                ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
-                    'tahun' => '2025',
-                    'type'  => '1',
-                ]);
-
+                $tahunSekarang = date('Y');
+                $nipUser = $data['nip'];
                 $jenisUser = null;
+
+                // fungsi ambil timkerja
+                $getTimKerja = function ($tahun) {
+                    return Http::withHeaders([
+                        'Content-Type'  => 'application/json',
+                        'Authorization' => 'Bearer ' . config('services.kipapp.token'),
+                        'Origin'        => 'https://jateng.web.bps.go.id',
+                    ])->post('https://kipapp.bps.go.id/api/v3/timkerja', [
+                        'tahun' => (string) $tahun,
+                        'type'  => '1',
+                    ]);
+                };
+
+                // fungsi cari role user + validasi ketua aktif
+                $cekJenisUser = function ($timData, $nipUser) {
+                    foreach ($timData as $tim) {
+
+                        // cek ketua tim (harus aktif kalau ada field status)
+                        if (
+                            ($tim['nipbaru_ketua'] ?? null) == $nipUser &&
+                            (($tim['status_ketua'] ?? 'aktif') === 'aktif')
+                        ) {
+                            return 'ketua_tim';
+                        }
+
+                        // cek anggota
+                        if (!empty($tim['anggota_tim'])) {
+                            foreach ($tim['anggota_tim'] as $anggota) {
+                                if (($anggota['nipbaru'] ?? null) == $nipUser) {
+                                    return 'anggota';
+                                }
+                            }
+                        }
+                    }
+
+                    return null;
+                };
+
+                // ambil tahun sekarang
+                $responseTim = $getTimKerja($tahunSekarang);
 
                 if ($responseTim->successful()) {
                     $timBody = $responseTim->json();
 
                     if (isset($timBody['data'])) {
-                        $semuaTim = $timBody['data'];
-                        $nipUser  = $data['nip'];
+                        $jenisUser = $cekJenisUser($timBody['data'], $nipUser);
+                    }
+                }
 
-                        foreach ($semuaTim as $tim) {
-                            if (($tim['nipbaru_ketua'] ?? null) == $nipUser) {
-                                $jenisUser = 'ketua_tim';
-                                break;
-                            }
+                // fallback kalau belum ketemu
+                if ($jenisUser === null) {
+                    $responseTim = $getTimKerja($tahunSekarang - 1);
 
-                            if (!empty($tim['anggota_tim'])) {
-                                foreach ($tim['anggota_tim'] as $anggota) {
-                                    if (($anggota['nipbaru'] ?? null) == $nipUser) {
-                                        $jenisUser = 'anggota';
-                                        break 2;
-                                    }
-                                }
-                            }
+                    if ($responseTim->successful()) {
+                        $timBody = $responseTim->json();
+
+                        if (isset($timBody['data'])) {
+                            $jenisUser = $cekJenisUser($timBody['data'], $nipUser);
                         }
                     }
                 }
@@ -107,6 +136,7 @@ class AuthController extends Controller
                 Session::put('logged_in', true);
                 Session::put('jenis_user', $jenisUser);
                 Session::put('id_pegawai', $pegawaiData->id_pegawai ?? null);
+                Session::put('jenis_user', 'ketua_tim');
                 Session::put('role', $pegawaiData->role ?? 'user');
 
                 $role = $pegawaiData->role ?? 'user';

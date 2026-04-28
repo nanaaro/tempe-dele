@@ -188,6 +188,8 @@
   if (el) {
     el.textContent = `${getGreeting(new Date().getHours())}, {{ session('user')['nama'] ?? 'User' }}`;
   }
+
+  console.log("DEBUG TIMKERJA:", @json(session('debug_timkerja')));
 </script>
 
 @endsection

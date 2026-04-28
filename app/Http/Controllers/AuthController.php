@@ -83,6 +83,9 @@ class AuthController extends Controller
                     ]);
                 };
 
+                $responseNow = $getTimKerja($tahunSekarang);
+                $responsePrev = $getTimKerja($tahunSekarang - 1);
+
                 // fungsi cari role user + validasi ketua aktif
                 $cekJenisUser = function ($timData, $nipUser) {
                     foreach ($timData as $tim) {
@@ -111,6 +114,12 @@ class AuthController extends Controller
                 // ambil tahun sekarang
                 $responseTim = $getTimKerja($tahunSekarang);
 
+                Log::info('Timkerja tahun berjalan', [
+                    'tahun'  => $tahunSekarang,
+                    'status' => $responseTim->status(),
+                    'body'   => $responseTim->json(),
+                ]);
+
                 if ($responseTim->successful()) {
                     $timBody = $responseTim->json();
 
@@ -119,9 +128,20 @@ class AuthController extends Controller
                     }
                 }
 
+                Log::info('Hasil cek jenis user tahun berjalan', [
+                    'nip'        => $nipUser,
+                    'jenis_user' => $jenisUser,
+                ]);
+
                 // fallback kalau belum ketemu
                 if ($jenisUser === null) {
                     $responseTim = $getTimKerja($tahunSekarang - 1);
+
+                Log::info('Timkerja tahun sebelumnya (fallback)', [
+                    'tahun'  => $tahunSekarang - 1,
+                    'status' => $responseTim->status(),
+                    'body'   => $responseTim->json(),
+                ]);
 
                     if ($responseTim->successful()) {
                         $timBody = $responseTim->json();
@@ -130,7 +150,22 @@ class AuthController extends Controller
                             $jenisUser = $cekJenisUser($timBody['data'], $nipUser);
                         }
                     }
+                Log::info('Hasil cek jenis user tahun sebelumnya', [
+        'nip'        => $nipUser,
+        'jenis_user' => $jenisUser,
+    ]);
                 }
+
+                Session::put('debug_timkerja', [
+    'tahun_sekarang' => [
+        'tahun' => $tahunSekarang,
+        'data'  => $responseNow->json() ?? null,
+    ],
+    'tahun_sebelumnya' => [
+        'tahun' => $tahunSekarang - 1,
+        'data'  => $responsePrev->json() ?? null,
+    ],
+]);
 
                 Session::put('user', $data);
                 Session::put('logged_in', true);

@@ -6,27 +6,26 @@
 
 {{-- Hero --}}
 <section class="mx-auto max-w-7xl py-8 px-4 sm:px-8 md:px-10 lg:px-20">
-  <div
-    class="relative flex w-full flex-col items-center bg-[#f9b800]
-           rounded-[30px] px-10 py-10 lg:py-12 lg:flex-row
-           overflow-visible min-h-55"
-  >
-    <div class="text-center md:text-left lg:flex-1 max-w-xl">
-      <h2 id="greeting" class="mb-4 text-2xl lg:text-3xl font-semibold leading-tight">
+  <div class="relative flex flex-col lg:flex-row items-center bg-[#f9b800]
+              rounded-[30px] px-8 py-10 lg:py-12 overflow-visible">
+
+    <!-- Teks -->
+    <div class="text-center lg:text-left lg:flex-1 lg:pr-[440px]">
+      <h2 class="mb-3 text-2xl lg:text-3xl font-semibold leading-tight">
         Selamat Datang, {{ session('user')['nama'] }}
       </h2>
-      <p class="text-[18px] leading-relaxed text-gray-900">
+      <p class="text-[17px] leading-relaxed text-gray-900">
         Kelola pengajuan lembur dan pantau perkembangannya dengan lebih mudah.
       </p>
     </div>
 
     <img
-      class="order-2 w-full max-w-130 object-contain
-             lg:order-0 lg:absolute lg:right-0 lg:-top-16
-             drop-shadow-xl"
+      class="mt-6 w-full max-w-[300px] object-contain drop-shadow-xl
+             lg:mt-0 lg:absolute lg:right-0 lg:-top-12 lg:max-w-[460px]"
       src="{{ asset('images/2.svg') }}"
       alt=""
     />
+
   </div>
 </section>
 

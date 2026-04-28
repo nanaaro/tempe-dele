@@ -102,7 +102,7 @@
             </p>
 
             <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Semua kebutuhan lembur dalam satu sistem
+                Semua administrasi lembur dalam satu sistem
             </h2>
 
             <p class="mt-4 text-base leading-7 text-slate-600">
@@ -239,7 +239,7 @@
     {{-- Kanan: Tim SID --}}
     <div class="flex items-center gap-1.5">
         <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
-        <span class="text-xs text-slate-400">Tim SID &mdash; BPS Jawa Tengah</span>
+        <span class="text-xs text-slate-400">Tim SID &mdash; BPS Provinsi Jawa Tengah</span>
     </div>
 
 </footer>

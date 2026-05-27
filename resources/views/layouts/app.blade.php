@@ -51,21 +51,23 @@
     {{-- end flex min-h-screen --}}
 
     {{-- LOADING OVERLAY --}}
-    <div id="loadingOverlay"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm
-                opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="flex flex-col items-center gap-4 rounded-2xl bg-white border border-slate-200 shadow-xl px-10 py-8">
-            <svg class="h-8 w-8 animate-spin text-[#fd9a10]" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-            </svg>
-            <div class="text-center">
-                <p class="text-sm font-semibold text-slate-800">Memuat data...</p>
-                <p class="text-xs text-slate-400 mt-1">Mohon tunggu sebentar</p>
+    @if(!$__env->hasSection('hideLoading'))
+        <div id="loadingOverlay"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm
+                    opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="flex flex-col items-center gap-4 rounded-2xl bg-white border border-slate-200 shadow-xl px-10 py-8">
+                <svg class="h-8 w-8 animate-spin text-[#fd9a10]" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+                <div class="text-center">
+                    <p class="text-sm font-semibold text-slate-800">Memuat data...</p>
+                    <p class="text-xs text-slate-400 mt-1">Mohon tunggu sebentar</p>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     {{-- SCRIPTS --}}
     @stack('scripts')

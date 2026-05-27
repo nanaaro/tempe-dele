@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('hideLoading', true)
 
 @section('title', 'Daftar Hadir')
 

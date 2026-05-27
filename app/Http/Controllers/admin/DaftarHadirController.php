@@ -56,7 +56,7 @@ class DaftarHadirController extends Controller
             ->join('m_pegawai as p', 't.submitted_by_NIP', '=', 'p.nip')
             ->leftJoin('m_tim as mt', 't.tim_kode_tim', '=', 'mt.kode_tim')
             ->where('t.status', 'approved')
-            ->where('eligible', 1)
+            ->where('t.eligible', 1)
             ->whereDate('t.date', $tanggal)
             ->select(
                 't.date', 't.jam_mulai_disetujui', 't.jam_selesai_disetujui',

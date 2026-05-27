@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (canvas && window.SignaturePad) {
         signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgb(249, 250, 251)',
+            backgroundColor: 'rgb(0, 0, 0, 0)',
             penColor: 'rgb(17, 24, 39)'
         });
     }

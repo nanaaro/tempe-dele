@@ -138,7 +138,7 @@
     {{-- TANDA TANGAN --}}
     <table class="ttd-table">
         <tr>
-            <td class="ttd-box">
+            <td class="ttd-box" style="padding-top: 15px;">
                 <div style="height: 60px;">
                     Pejabat Pembuat Komitmen<br>
                     BPS Provinsi Jawa Tengah

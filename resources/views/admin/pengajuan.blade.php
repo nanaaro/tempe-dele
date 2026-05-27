@@ -13,7 +13,7 @@
             {{-- Datepicker --}}
             <div class="relative w-full sm:w-auto shrink-0" id="datePicker">
                 <button type="button" id="dateBtn"
-                    class="inline-flex w-full sm:w-auto items-center justify-between sm:justify-start h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl sm:rounded-full hover:border-[#faa938] transition-colors">
+                    class="inline-flex w-full sm:w-auto items-center justify-between sm:justify-start h-10 gap-2 px-4 text-sm font-medium border border-gray-200 bg-white text-gray-700 rounded-xl hover:border-[#faa938] transition-colors">
 
                     <span class="inline-flex items-center gap-2 min-w-0">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current shrink-0">
@@ -70,10 +70,10 @@
             </div>
 
             {{-- Filter Pegawai --}}
-            <div class="relative w-full sm:w-64 shrink-0">
+            <div class="relative w-full lg:flex-1 lg:min-w-[260px]">
                 <input type="text" id="searchPegawai" placeholder="Cari nama pegawai..."
                     onclick="toggleDropdownPegawai()" oninput="filterDropdownPegawai()" autocomplete="off"
-                    class="w-full h-10 rounded-xl sm:rounded-full border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
+                    class="w-full h-10 rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 focus:border-[#faa938] focus:outline-none focus:ring-2 focus:ring-[#faa938]/20"/>
 
                 <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="h-3 w-3 text-gray-400">

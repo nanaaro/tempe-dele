@@ -105,7 +105,7 @@
                     <th class="p-3 sm:p-5 text-center text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Tanggal
                     </th>
-                    <th class="p-3 sm:p-5 text-left text-xs sm:text-sm font-semibold text-gray-900 rounded-tr-xl">
+                    <th class="p-3 sm:p-5 text-center text-xs sm:text-sm font-semibold text-gray-900 rounded-tr-xl">
                         Uraian Kegiatan
                     </th>
                 </tr>
